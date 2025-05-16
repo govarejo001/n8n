@@ -1,0 +1,1635 @@
+{
+  "createdAt": "2025-04-10T19:48:44.399Z",
+  "updatedAt": "2025-05-06T20:12:49.877Z",
+  "id": "gmzfRFMuvaLrb7PN",
+  "name": "Atualização - portal v1",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "users",
+          "mode": "list",
+          "cachedResultName": "users"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "user_name",
+              "condition": "LIKE",
+              "value": "file%.ovpn"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        140,
+        -20
+      ],
+      "id": "e471ade3-a4a0-467e-8811-9fb88b07ff74",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.all()\nreturn data.map((item)=>{\n  return {\n    user_login:item.json.user_email.split('@')[0]\n  }\n})"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        360,
+        -20
+      ],
+      "id": "34e6aa83-dcb3-4382-95dd-22469b5b3f58",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select user_login,user_ovpn from users \ninner join gunits on gunit_user_id=user_id\ninner join units on unit_gunit_id=gunit_id\nwhere user_block=false and gunit_block=false and unit_block=false",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        360,
+        -220
+      ],
+      "id": "36f31eed-16a4-4287-a447-d6c3d87f85d0",
+      "name": "Postgres1",
+      "credentials": {
+        "postgres": {
+          "id": "r6ETUCB3B88HozZb",
+          "name": "Main"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "user_login",
+        "joinMode": "keepNonMatches",
+        "outputDataFrom": "input1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        580,
+        -120
+      ],
+      "id": "dcab7964-96c3-4ba3-b177-f5a21de1f2f7",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "users",
+          "mode": "list",
+          "cachedResultName": "users"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "user_active": true,
+            "user_analytics_access": false,
+            "user_portal_access": false,
+            "user_api_access": false,
+            "user_all_units": false,
+            "user_email": "={{ `${$json.user_login}@govarejo.com` }}",
+            "user_updated_at": "={{new Date().toISOString().replace('T',' ').replace('Z','')}}",
+            "user_profile_id": "32336894-fb32-48d1-8b11-7bb480ffba25",
+            "user_password": "=$2b$08$ypmL6ywDxTrweSGTUrdqge87w8RvIS9m735lbYNCD3uAFLcb9p4RG",
+            "user_name": "={{ $json.user_ovpn }}",
+            "user_id": "={{ randomUUID() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "user_active",
+              "displayName": "user_active",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_all_units",
+              "displayName": "user_all_units",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "user_created_at",
+              "displayName": "user_created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_email",
+              "displayName": "user_email",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_name",
+              "displayName": "user_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_password",
+              "displayName": "user_password",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_updated_at",
+              "displayName": "user_updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_profile_id",
+              "displayName": "user_profile_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_analytics_access",
+              "displayName": "user_analytics_access",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_portal_access",
+              "displayName": "user_portal_access",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_api_access",
+              "displayName": "user_api_access",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1020,
+        -120
+      ],
+      "id": "fab26fc8-6827-4823-a3ae-10e468974944",
+      "name": "Postgres2",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "function generateUUID() {\n  return \"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx\".replace(/[xy]/g, function (c) {\n    const r = (Math.random() * 16) | 0;\n    const v = c === \"x\" ? r : (r & 0x3) | 0x8;\n    return v.toString(16);\n  });\n}\n\nconst data = $input.all();\nreturn data.map((item) => {\n  return {\n    user_id: generateUUID(),\n    user_email: `${item.json.user_login}@govarejo.com`,\n    user_all_units: false,\n    user_name: item.json.user_ovpn,\n    user_active: true,\n    user_password: '$2b$08$ypmL6ywDxTrweSGTUrdqge87w8RvIS9m735lbYNCD3uAFLcb9p4RG',\n    user_updated_at: new Date().toISOString().replace('T',' ').replace('Z',''),\n        user_created_at: new Date().toISOString().replace('T',' ').replace('Z',''),\n    user_analytics_access:false,\n    user_portal_access:false,\n    user_api_access:true,\n    user_profile_id:'32336894-fb32-48d1-8b11-7bb480ffba25'\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        -120
+      ],
+      "id": "30f42970-f086-4701-9eb6-6c7e1af85a13",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select gunit_id,gunit_name from gunits where gunit_block=false",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        140,
+        180
+      ],
+      "id": "9ff70859-7d31-4887-8c9b-121c0adde1bb",
+      "name": "Postgres4",
+      "credentials": {
+        "postgres": {
+          "id": "r6ETUCB3B88HozZb",
+          "name": "Main"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select group_of_unit_id as gunit_id,group_of_unit_name as gunit_name from group_of_units",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        140,
+        380
+      ],
+      "id": "606e2aa1-6983-47b8-87e9-ff09e4b433db",
+      "name": "Postgres3",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "gunit_id",
+        "joinMode": "keepNonMatches",
+        "outputDataFrom": "input1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        360,
+        280
+      ],
+      "id": "5d9bbf9e-9066-4ba9-8aca-3709ec1abb50",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "group_of_units",
+          "mode": "list",
+          "cachedResultName": "group_of_units"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "group_of_unit_active": false,
+            "group_of_unit_id": 0
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "group_of_unit_id",
+              "displayName": "group_of_unit_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "group_of_unit_name",
+              "displayName": "group_of_unit_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "group_of_unit_active",
+              "displayName": "group_of_unit_active",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "group_of_unit_created_at",
+              "displayName": "group_of_unit_created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "group_of_unit_updated_at",
+              "displayName": "group_of_unit_updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        800,
+        280
+      ],
+      "id": "eed6cdd0-506a-49cf-bbbc-7f6ebc0f6948",
+      "name": "Postgres5",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "function generateUUID() {\n  return \"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx\".replace(/[xy]/g, function (c) {\n    const r = (Math.random() * 16) | 0;\n    const v = c === \"x\" ? r : (r & 0x3) | 0x8;\n    return v.toString(16);\n  });\n}\n\nconst data = $input.all();\nreturn data.map((item) => {\n  return {\n    group_of_unit_id: item.json.gunit_id,\n    group_of_unit_active: true,\n    group_of_unit_name: item.json.gunit_name,\n    group_of_unit_updated_at: new Date().toISOString().replace('T',' ').replace('Z',''),\n        group_of_unit_created_at: new Date().toISOString().replace('T',' ').replace('Z','')\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        580,
+        280
+      ],
+      "id": "e2935682-adc9-45c0-a0c6-385b1d93d4ae",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select unit_id,unit_name,unit_gunit_id from units where unit_block=false",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        140,
+        580
+      ],
+      "id": "8ca6f327-e729-490b-8ea0-1f454e166098",
+      "name": "Postgres6",
+      "credentials": {
+        "postgres": {
+          "id": "r6ETUCB3B88HozZb",
+          "name": "Main"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select unit_id as unit_id,unit_name as unit_name from units",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        140,
+        780
+      ],
+      "id": "be58513f-f411-4f05-930a-8d081c27aace",
+      "name": "Postgres7",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "unit_id",
+        "joinMode": "keepNonMatches",
+        "outputDataFrom": "input1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        360,
+        680
+      ],
+      "id": "b8b35cfd-4552-4d50-aebb-0bf7084ec246",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "units",
+          "mode": "list",
+          "cachedResultName": "units"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "unit_active": false,
+            "unit_id": 0,
+            "unit_group_of_unit_id": 0
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "unit_id",
+              "displayName": "unit_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_name",
+              "displayName": "unit_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_company",
+              "displayName": "unit_company",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_cnpj",
+              "displayName": "unit_cnpj",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_active",
+              "displayName": "unit_active",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_created_at",
+              "displayName": "unit_created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_updated_at",
+              "displayName": "unit_updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_consultant_id",
+              "displayName": "unit_consultant_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "unit_coordinator_id",
+              "displayName": "unit_coordinator_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "unit_group_of_unit_id",
+              "displayName": "unit_group_of_unit_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_region_id",
+              "displayName": "unit_region_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        800,
+        680
+      ],
+      "id": "6658d42c-7f25-417c-8f8a-96a8748910af",
+      "name": "Postgres8",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "function generateUUID() {\n  return \"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx\".replace(/[xy]/g, function (c) {\n    const r = (Math.random() * 16) | 0;\n    const v = c === \"x\" ? r : (r & 0x3) | 0x8;\n    return v.toString(16);\n  });\n}\n\nconst data = $input.all();\nreturn data.map((item) => {\n  return {\n    unit_id: item.json.unit_id,\n    unit_active: true,\n    unit_name: item.json.unit_name,\n    unit_company: item.json.unit_name,\n    unit_group_of_unit_id: item.json.unit_gunit_id,\n    unit_cnpj: `000${item.json.unit_id}`,\n    unit_region_id: '70626b43-afba-4422-9b30-4ee9a7c86a5a',\n    unit_updated_at: new Date().toISOString().replace('T',' ').replace('Z',''),\n        unit_created_at: new Date().toISOString().replace('T',' ').replace('Z','')\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        580,
+        680
+      ],
+      "id": "c53bbfd1-6782-4201-a87e-5caa327e0f5b",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select unit_id,user_login || '@govarejo.com' as user_email from units\ninner join gunits on unit_gunit_id=gunit_id\ninner join users on gunit_user_id=user_id\nwhere unit_block=false and gunit_block=false and user_block=false",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        140,
+        980
+      ],
+      "id": "107ee0f7-49b9-40ca-95b3-d99f924a357d",
+      "name": "Postgres9",
+      "credentials": {
+        "postgres": {
+          "id": "r6ETUCB3B88HozZb",
+          "name": "Main"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select user_email,user_unit_unit_id as unit_id from users\ninner join users_units on user_unit_user_id=user_id  \nwhere user_email like ('200%@govarejo.com')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        140,
+        1180
+      ],
+      "id": "0dbb2904-844f-4f76-92f4-08cde18242ce",
+      "name": "Postgres10",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "user_email",
+              "field2": "user_email"
+            },
+            {
+              "field1": "unit_id",
+              "field2": "unit_id"
+            }
+          ]
+        },
+        "joinMode": "keepNonMatches",
+        "outputDataFrom": "input1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        360,
+        1080
+      ],
+      "id": "632894b6-90b0-4167-9269-8b4973f49dad",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {
+        "jsCode": "function generateUUID() {\n  return \"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx\".replace(/[xy]/g, function (c) {\n    const r = (Math.random() * 16) | 0;\n    const v = c === \"x\" ? r : (r & 0x3) | 0x8;\n    return v.toString(16);\n  });\n}\n\nconst data = $input.all();\nreturn data.map((item) => {\n  return {\n    user_email:item.json.user_email,\n    user_unit_id: generateUUID(),\n    user_unit_active: true,\n    user_unit_unit_id: item.json.unit_id,\n    user_unit_updated_at: new Date().toISOString().replace('T',' ').replace('Z',''),\n        user_unit_created_at: new Date().toISOString().replace('T',' ').replace('Z','')\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        580,
+        1180
+      ],
+      "id": "9e1b6666-7186-4358-a0bb-bc53e2740877",
+      "name": "Code4"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "users_units",
+          "mode": "list",
+          "cachedResultName": "users_units"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "user_unit_active": false,
+            "user_unit_unit_id": 0
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "user_unit_id",
+              "displayName": "user_unit_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_unit_user_id",
+              "displayName": "user_unit_user_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_unit_unit_id",
+              "displayName": "user_unit_unit_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_unit_active",
+              "displayName": "user_unit_active",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_unit_created_at",
+              "displayName": "user_unit_created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "user_unit_updated_at",
+              "displayName": "user_unit_updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1240,
+        1080
+      ],
+      "id": "e0bcbd2b-92f9-4b48-8214-5add37942ab9",
+      "name": "Postgres11",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "user_email",
+              "field2": "user_email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        800,
+        1080
+      ],
+      "id": "c1cec521-c207-4fa8-b3be-10b594504ac1",
+      "name": "Merge4"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select user_id as user_unit_user_id,user_email from users where user_email = '{{ $json.user_email }}'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        580,
+        980
+      ],
+      "id": "defaeba0-79e0-40df-89f9-e19d0afb5e2d",
+      "name": "Postgres12",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.all()\nconst keys = {}\ndata.forEach((item)=>{\n  if(!keys[item.json.user_unit_id]){\nkeys[item.json.user_unit_id]=item.json.user_unit_id\n  const {user_email,...rest} = item.json\n    keys[item.json.user_unit_id]=rest\n  }\n})\n\nreturn Object.values(keys)"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1020,
+        1080
+      ],
+      "id": "d401cbd9-23e9-4b6b-b0bc-278d850297f5",
+      "name": "Code5"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        780
+      ],
+      "id": "37a14efa-f113-4d3a-92ee-1af35f0e3451",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select unit_id,unit_name,case when unit_block=true then false else true end as unit_active from units",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        140,
+        1380
+      ],
+      "id": "923844c8-9fec-40a1-8dca-ae98d8b86a30",
+      "name": "Postgres13",
+      "credentials": {
+        "postgres": {
+          "id": "r6ETUCB3B88HozZb",
+          "name": "Main"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select unit_id,unit_name,unit_active from units",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        140,
+        1580
+      ],
+      "id": "7d37efee-a74a-49c3-a5e2-139f3ce0b2f8",
+      "name": "Postgres14",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "unit_id,unit_name,unit_active",
+        "joinMode": "keepNonMatches",
+        "outputDataFrom": "input1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        360,
+        1480
+      ],
+      "id": "9500e359-c312-4f8f-9364-9e4b7203aeaf",
+      "name": "Merge5"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "units",
+          "mode": "list",
+          "cachedResultName": "units"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "unit_active": "={{ $json.unit_active }}",
+            "unit_name": "={{ $json.unit_name }}",
+            "unit_company": "={{ $json.unit_name }}",
+            "unit_id": "={{ $json.unit_id }}"
+          },
+          "matchingColumns": [
+            "unit_id"
+          ],
+          "schema": [
+            {
+              "id": "unit_id",
+              "displayName": "unit_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "unit_name",
+              "displayName": "unit_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_company",
+              "displayName": "unit_company",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_cnpj",
+              "displayName": "unit_cnpj",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "unit_active",
+              "displayName": "unit_active",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_created_at",
+              "displayName": "unit_created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "unit_updated_at",
+              "displayName": "unit_updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "unit_consultant_id",
+              "displayName": "unit_consultant_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "unit_coordinator_id",
+              "displayName": "unit_coordinator_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "unit_group_of_unit_id",
+              "displayName": "unit_group_of_unit_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "unit_region_id",
+              "displayName": "unit_region_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        800,
+        1480
+      ],
+      "id": "0ef11b1b-297f-44b7-b32f-711f3453e4d7",
+      "name": "Postgres15",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        580,
+        1480
+      ],
+      "id": "a14aafcf-1b89-4ac8-a43d-fe96ce1c4f85",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select * from units \ninner join parametersunits on parunit_unit_id=unit_id\nwhere unit_block=true and parunit_block=false",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        140,
+        1780
+      ],
+      "id": "89764ded-8b7c-4723-898c-c979f73ab5aa",
+      "name": "Postgres16",
+      "credentials": {
+        "postgres": {
+          "id": "r6ETUCB3B88HozZb",
+          "name": "Main"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "parametersunits",
+          "mode": "list",
+          "cachedResultName": "parametersunits"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "parunit_block": true,
+            "parunit_id": "={{ $json.parunit_id }}"
+          },
+          "matchingColumns": [
+            "parunit_id"
+          ],
+          "schema": [
+            {
+              "id": "parunit_id",
+              "displayName": "parunit_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "parunit_unit_id",
+              "displayName": "parunit_unit_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "parunit_type",
+              "displayName": "parunit_type",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "parunit_dateini",
+              "displayName": "parunit_dateini",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "parunit_datefin",
+              "displayName": "parunit_datefin",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "parunit_block",
+              "displayName": "parunit_block",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        360,
+        1780
+      ],
+      "id": "5ca38fa3-201d-4752-aae1-31170f5a66dd",
+      "name": "Postgres17",
+      "credentials": {
+        "postgres": {
+          "id": "r6ETUCB3B88HozZb",
+          "name": "Main"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Postgres1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres2": {
+      "main": [
+        []
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Postgres2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres4": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres3": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Postgres5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres6": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres7": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "Postgres8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres5": {
+      "main": [
+        []
+      ]
+    },
+    "Postgres9": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres10": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code4": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Postgres12": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge4": {
+      "main": [
+        [
+          {
+            "node": "Code5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code5": {
+      "main": [
+        [
+          {
+            "node": "Postgres11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Postgres1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres6",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres7",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres9",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres10",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres13",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres14",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres16",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres13": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres14": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge5": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Postgres15",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres15": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres16": {
+      "main": [
+        [
+          {
+            "node": "Postgres17",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "a30fd5dd-d014-4c0e-ba61-b9277c3b1981",
+  "triggerCount": 1,
+  "tags": []
+}
