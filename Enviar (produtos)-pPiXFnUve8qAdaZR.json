@@ -1,0 +1,428 @@
+{
+  "createdAt": "2025-01-29T13:17:40.359Z",
+  "updatedAt": "2025-04-05T01:11:15.031Z",
+  "id": "pPiXFnUve8qAdaZR",
+  "name": "Enviar (produtos)",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        520,
+        -400
+      ],
+      "id": "13ebfaef-9676-4deb-9c62-4c5742e22f27",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "const yesterdayFile = $input.all()[0].json.data\nconst todayFile = $input.all()[1].json.data\n\nconst dataYesterday = {};\nconst differentItems = [];\nconst newItems = [];\n\nyesterdayFile.split('\\n').slice(1).forEach((line) => {\n    const product = line.split(';');\n    dataYesterday[product[0]] = line;\n});\n\ntodayFile.split('\\n').slice(1).forEach((line) => {\n    const product = line.split(';');\n    const existing = dataYesterday[product[0]];\n    \n    if (existing && existing !== line) differentItems.push({\n      \"category_name\": product[1],\n      \"subcategory_name\": product[2],\n      \"product_name\": product[3],\n      \"product_code\": product[0],\n      \"unit_type\": \"UN\"\n    });\n    if (!existing) newItems.push({\n      \"category_name\": product[1],\n      \"subcategory_name\": product[2],\n      \"product_name\": product[3],\n      \"product_code\": product[0],\n      \"unit_type\": \"UN\"\n    });\n});\n\nreturn [{ json: { differentItems, newItems } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        740,
+        -400
+      ],
+      "id": "02ec31fc-1672-40e1-86d6-38eb79c73191",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        300,
+        -500
+      ],
+      "id": "f74513f9-e887-47c5-a6b1-252f5a460a09",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        300,
+        -300
+      ],
+      "id": "3583cfac-034b-4e68-bbbb-7f9b89a0a4cf",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.crescevendas.com/admin/integrations/product_import/import",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AdminUser-Token",
+              "value": "Rmi6UU8W3fL5wKhJG-xK"
+            },
+            {
+              "name": "X-AdminUser-Email",
+              "value": "rodrigo@zify.com.br"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "group_id",
+              "value": "0"
+            },
+            {
+              "name": "products_import",
+              "value": "={{ $json.newItems }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        -500
+      ],
+      "id": "5e244a61-4185-4769-8b9f-95bd1ea0f0b4",
+      "name": "HTTP Request",
+      "retryOnFail": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.crescevendas.com/admin/integrations/product_import/import",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AdminUser-Token",
+              "value": "Rmi6UU8W3fL5wKhJG-xK"
+            },
+            {
+              "name": "X-AdminUser-Email",
+              "value": "rodrigo@zify.com.br"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "group_id",
+              "value": "0"
+            },
+            {
+              "name": "products_import",
+              "value": "={{ $json.differentItems }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        -300
+      ],
+      "id": "2efd358f-8ad9-4118-a3a3-602edd173f2b",
+      "name": "HTTP Request1",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \np.id as id,\ns.description as section,\nsc.description as subcategory,\np.description as description\nFROM products p\nINNER JOIN brands b on b.id=p.prod_brand_id\nINNER JOIN subcategories sc on sc.id=p.prod_subcat_id\nINNER JOIN categories c on c.id=sc.subcat_cat_id\nINNER JOIN sections s on s.id=c.cat_sec_id\norder by p.id asc",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        80,
+        -760
+      ],
+      "id": "aeb7baae-693f-4ed7-a762-1eb00df5c1e4",
+      "name": "Buscar Produtos",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "delimiter": ";",
+          "fileName": "products.csv"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        -760
+      ],
+      "id": "718a27ad-8680-441a-b6c8-c3d3285feff9",
+      "name": "Converter para CSV",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "bucketName": "upload",
+        "fileName": "=n8n/products/{{ $now.format('yyyy-LL-dd') }}.csv",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        520,
+        -760
+      ],
+      "id": "1a26a192-8fa0-4e56-9ec4-966b2954db00",
+      "name": "S3",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "30 4 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -140,
+        -400
+      ],
+      "id": "3a9a4a12-dadc-4a5d-9297-65626ed60eca",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "bucketName": "upload",
+        "fileKey": "=n8n/products/{{ $now.minus(1,'days').format('yyyy-LL-dd') }}.csv"
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -500
+      ],
+      "id": "ac890b90-0a91-438c-a259-ac891635f0e0",
+      "name": "S31",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "bucketName": "upload",
+        "fileKey": "=n8n/products/{{ $now.format('yyyy-LL-dd') }}.csv"
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -300
+      ],
+      "id": "5f1ea6eb-194e-4eb9-96c2-16592022071a",
+      "name": "S32",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 4 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -140,
+        -760
+      ],
+      "id": "e44dd341-0679-4c86-a988-dc4580eb4571",
+      "name": "Schedule Trigger1"
+    }
+  ],
+  "connections": {
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Buscar Produtos": {
+      "main": [
+        [
+          {
+            "node": "Converter para CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Converter para CSV": {
+      "main": [
+        [
+          {
+            "node": "S3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "S31",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "S32",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "S31": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "S32": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Buscar Produtos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v0",
+    "callerPolicy": "workflowsFromSameOwner",
+    "timezone": "America/Sao_Paulo"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    },
+    "node:Schedule Trigger1": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "374dc34c-169d-4696-8bc7-37e5d03d3d1e",
+  "triggerCount": 2,
+  "tags": []
+}
