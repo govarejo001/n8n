@@ -1,0 +1,175 @@
+{
+  "createdAt": "2025-04-04T16:34:29.544Z",
+  "updatedAt": "2025-05-15T11:21:19.502Z",
+  "id": "tTmIgdscXMAkLTmi",
+  "name": "Enviar (carga tradução) - manual",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.crescevendas.com/admin/integrations/shop_product_translations/batch_upsert",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AdminUser-Token",
+              "value": "Rmi6UU8W3fL5wKhJG-xK"
+            },
+            {
+              "name": "X-AdminUser-Email",
+              "value": "rodrigo@zify.com.br"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "data",
+              "value": "={{ [{\n    store_code: $json['Ean Loja'] ,\n    store_id: $json['Código Loja'],\n    master_code: $json['Código Pai']\n},\n]\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        180,
+        -400
+      ],
+      "id": "b705b317-b106-4815-a551-d68aeaf8928b",
+      "name": "HTTP Request",
+      "retryOnFail": false,
+      "executeOnce": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "formTitle": "Carga - Cresce Vendas",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Código Loja",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Ean Loja",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Código Pai",
+              "fieldType": "number",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -100,
+        -400
+      ],
+      "id": "8dadd809-7db3-44e7-bef0-1515e79b2ee7",
+      "name": "On form submission",
+      "webhookId": "139d92fa-2bd0-4062-a1fa-1032bb2da61c",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "dIloHdhJSXNR1WDc",
+          "name": "Cris"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "formTitle": "Carga - Cresce Vendas",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Código Loja",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Ean Loja",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Código Pai",
+              "fieldType": "number",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -100,
+        -600
+      ],
+      "id": "643154ad-a995-4ee6-8b02-cfaa59d8565d",
+      "name": "On form submission1",
+      "webhookId": "03dbc397-3dc6-4fe4-9c91-6db6c43c7fe1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Om3mFSSiK845WPlX",
+          "name": "Andrea"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        []
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "16eec1e0-3015-41cb-8c66-5af552666ca5",
+  "triggerCount": 2,
+  "tags": []
+}
