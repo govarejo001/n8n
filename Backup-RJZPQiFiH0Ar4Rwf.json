@@ -1,0 +1,369 @@
+{
+  "createdAt": "2025-04-06T15:31:02.443Z",
+  "updatedAt": "2025-05-02T11:44:00.862Z",
+  "id": "RJZPQiFiH0Ar4Rwf",
+  "name": "Backup",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -520,
+        -100
+      ],
+      "id": "395a9726-66e8-4146-9f10-61c2d88af3e2",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres3\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nBACKUP_PATH_ON_HOST=\"./tmp/movement-all-databases-backup.sql.gz\"\nBACKUP_PATH_IN_CONTAINER=\"/tmp/movement-all-databases-backup.sql.gz\"\n\necho \"Iniciando backup de todos os bancos de dados no container '$CONTAINER_NAME'...\"\n\n# Executa o comando pg_dumpall dentro do container e já compacta com gzip\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" \"$CONTAINER_NAME\" bash -c \\\n  \"pg_dumpall -U $DB_USER | gzip > $BACKUP_PATH_IN_CONTAINER\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"📦 Backup zipado gerado com sucesso dentro do container.\"\n\n  # Copia o arquivo zipado para fora do container\n  docker cp \"$CONTAINER_NAME:$BACKUP_PATH_IN_CONTAINER\" \"$BACKUP_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"✅ Backup compactado copiado com sucesso para '$BACKUP_PATH_ON_HOST'\"\n  else\n    echo \"❌ Falha ao copiar o backup compactado do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao gerar o backup compactado dentro do container.\"\nfi\n"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -200
+      ],
+      "id": "ffb67c50-56e1-4ad9-8987-b3c91c6c00fd",
+      "name": "Movement",
+      "credentials": {
+        "sshPassword": {
+          "id": "ftUJlupDyyWkdbHW",
+          "name": "Movement"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://function-bun-production-62e9.up.railway.app/api/upload-url?path=backup&filename={{$now.format('yyyyMMdd')}}-{{ $json.stdout.split('\\n').last().replaceAll(\"'\",'').split('./').last().split('/')[1] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -80,
+        -200
+      ],
+      "id": "95463c7b-1a54-4044-a70b-d26f0dd6f836",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "command": "=curl -X PUT \"{{ $json.url }}\" \\\n  -H \"Content-Type: application/gzip\" \\\n  --upload-file \"/tmp/{{ $json.url.split('?')[0].split('/').last().slice(9) }}\""
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        140,
+        -200
+      ],
+      "id": "6d70d79f-751d-428a-baa4-f9989f750916",
+      "name": "SSH2",
+      "credentials": {
+        "sshPassword": {
+          "id": "ftUJlupDyyWkdbHW",
+          "name": "Movement"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nBACKUP_PATH_ON_HOST=\"./tmp/crm-all-databases-backup.sql.gz\"\nBACKUP_PATH_IN_CONTAINER=\"/tmp/crm-all-databases-backup.sql.gz\"\n\necho \"Iniciando backup de todos os bancos de dados no container '$CONTAINER_NAME'...\"\n\n# Executa o comando pg_dumpall dentro do container e já compacta com gzip\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" \"$CONTAINER_NAME\" bash -c \\\n  \"pg_dumpall -U $DB_USER | gzip > $BACKUP_PATH_IN_CONTAINER\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"📦 Backup zipado gerado com sucesso dentro do container.\"\n\n  # Copia o arquivo zipado para fora do container\n  docker cp \"$CONTAINER_NAME:$BACKUP_PATH_IN_CONTAINER\" \"$BACKUP_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"✅ Backup compactado copiado com sucesso para '$BACKUP_PATH_ON_HOST'\"\n  else\n    echo \"❌ Falha ao copiar o backup compactado do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao gerar o backup compactado dentro do container.\"\nfi\n"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        200
+      ],
+      "id": "3ed6d0ce-e0a1-4f57-82f3-a207ac84b0dd",
+      "name": "CRM",
+      "credentials": {
+        "sshPassword": {
+          "id": "JWAGqDX43N4X5vi1",
+          "name": "CRM"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://function-bun-production-62e9.up.railway.app/api/upload-url?path=backup&filename={{$now.format('yyyyMMdd')}}-{{ $json.stdout.split('\\n').last().replaceAll(\"'\",'').split('./').last().split('/')[1] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -80,
+        200
+      ],
+      "id": "e36a8ddb-7ece-4315-b97e-90b4cd75047b",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "command": "=curl -X PUT \"{{ $json.url }}\" \\\n  -H \"Content-Type: application/gzip\" \\\n  --upload-file \"/tmp/{{ $json.url.split('?')[0].split('/').last().slice(9) }}\""
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        140,
+        200
+      ],
+      "id": "cd501ed2-b3b0-472f-b89d-afe69137730f",
+      "name": "SSH",
+      "credentials": {
+        "sshPassword": {
+          "id": "JWAGqDX43N4X5vi1",
+          "name": "CRM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://function-bun-production-62e9.up.railway.app/api/upload-url?path=backup&filename={{$now.format('yyyyMMdd')}}-{{ $json.stdout.split('\\n').last().replaceAll(\"'\",'').split('./').last().split('/')[1] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -80,
+        0
+      ],
+      "id": "08875631-11c9-408c-9a40-8b0bacecb625",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "command": "=curl -X PUT \"{{ $json.url }}\" \\\n  -H \"Content-Type: application/gzip\" \\\n  --upload-file \"/tmp/{{ $json.url.split('?')[0].split('/').last().slice(9) }}\""
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        140,
+        0
+      ],
+      "id": "f981363c-b30f-4091-827c-903eb27c4d73",
+      "name": "SSH1",
+      "credentials": {
+        "sshPassword": {
+          "id": "bSdC4LS3x0m5NBdj",
+          "name": "Gestor"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=#!/bin/bash\n\n# Configurações\nDB_USER=\"postgres\"\n\nBACKUP_PATH_ON_HOST=\"./tmp/main-all-databases-backup.sql.gz\"\n\necho \"Iniciando backup de todos os bancos de dados no host...\"\n\n# Executa o comando pg_dumpall e compacta com gzip\npg_dumpall -U \"$DB_USER\" | gzip > \"$BACKUP_PATH_ON_HOST\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"✅ Backup de todos os bancos realizado com sucesso em '$BACKUP_PATH_ON_HOST'\"\nelse\n  echo \"❌ Falha ao realizar o backup dos bancos de dados.\"\nfi\n"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -400
+      ],
+      "id": "60ecc641-a62a-49e2-8e4e-ed1b56b33d2a",
+      "name": "Movement1",
+      "credentials": {
+        "sshPassword": {
+          "id": "wkEaprvqnDaw6G0p",
+          "name": "Main"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://function-bun-production-62e9.up.railway.app/api/upload-url?path=backup&filename={{$now.format('yyyyMMdd')}}-{{ $json.stdout.split('\\n').last().replaceAll(\"'\",'').split('./').last().split('/')[1] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -80,
+        -400
+      ],
+      "id": "522ee7ed-b9b6-4fa3-b06a-47cffdc69668",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "command": "=curl -X PUT \"{{ $json.url }}\" \\\n  -H \"Content-Type: application/gzip\" \\\n  --upload-file \"/tmp/{{ $json.url.split('?')[0].split('/').last().slice(9) }}\""
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        140,
+        -400
+      ],
+      "id": "d8d66082-5157-4516-8525-685b72c81a16",
+      "name": "SSH3",
+      "credentials": {
+        "sshPassword": {
+          "id": "wkEaprvqnDaw6G0p",
+          "name": "Main"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=#!/bin/bash\n\n# Configurações\nDB_USER=\"root\"\nDB_PASSWORD=\"ka1@98JAK1@\"\nBACKUP_PATH_ON_HOST=\"./tmp/gestor-all-databases-backup.sql.gz\"\n\necho \"Iniciando backup de todos os bancos de dados MySQL...\"\n\n# Executa o mysqldump e compacta com gzip\nmysqldump -u\"$DB_USER\" -p\"$DB_PASSWORD\" --all-databases | gzip > \"$BACKUP_PATH_ON_HOST\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"✅ Backup compactado gerado com sucesso em '$BACKUP_PATH_ON_HOST'\"\nelse\n  echo \"❌ Falha ao gerar o backup.\"\nfi\n"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        0
+      ],
+      "id": "c09c1165-5148-4ef2-8cda-985acb171727",
+      "name": "Gestor",
+      "credentials": {
+        "sshPassword": {
+          "id": "bSdC4LS3x0m5NBdj",
+          "name": "Gestor"
+        }
+      },
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Gestor",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Movement",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Movement1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Movement": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "SSH2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "SSH",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "SSH1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Movement1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "SSH3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gestor": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": null,
+  "pinData": {},
+  "versionId": "f9f332cb-2530-4b97-8424-77575269c566",
+  "triggerCount": 1,
+  "tags": []
+}
