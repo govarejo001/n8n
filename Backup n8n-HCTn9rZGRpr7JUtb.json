@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-16T00:06:05.629Z",
-  "updatedAt": "2025-05-16T00:46:32.216Z",
+  "updatedAt": "2025-05-16T00:47:42.126Z",
   "id": "HCTn9rZGRpr7JUtb",
   "name": "Backup n8n",
   "active": false,
@@ -14,7 +14,7 @@
       "typeVersion": 1,
       "position": [
         -1100,
-        240
+        290
       ],
       "id": "5ee88cb1-1b60-4a33-9358-fd0340ce95e8",
       "name": "n8n",
@@ -33,7 +33,7 @@
       "typeVersion": 3,
       "position": [
         -880,
-        240
+        290
       ],
       "id": "2730e22f-1cb1-4e0d-914a-50bfd62721b5",
       "name": "Loop Over Items"
@@ -132,7 +132,7 @@
       "type": "n8n-nodes-base.github",
       "typeVersion": 1.1,
       "position": [
-        -160,
+        -220,
         40
       ],
       "id": "ee5715a0-bf29-45dd-8dca-4958984972a6",
@@ -242,7 +242,7 @@
       "typeVersion": 1.2,
       "position": [
         -1320,
-        240
+        290
       ],
       "id": "c45be962-4de9-40d3-a10a-bea0646e76e7",
       "name": "Schedule Trigger"
@@ -269,8 +269,8 @@
       "type": "n8n-nodes-base.github",
       "typeVersion": 1.1,
       "position": [
-        200,
-        200
+        220,
+        215
       ],
       "id": "74374c28-264b-4c0b-be30-d58f66cdcc51",
       "name": "GitHub3",
@@ -286,13 +286,13 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const data = Buffer.from(JSON.stringify($('Loop Over Items',null,2).item.json),'utf-8').toString('base64')\n\nreturn {\n  json: { data },\n};\n"
+        "jsCode": "const data = Buffer.from(JSON.stringify($('Loop Over Items').item.json),'utf-8').toString('base64')\n\nreturn {\n  json: { data },\n};\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        20,
-        60
+        0,
+        40
       ],
       "id": "ec2976de-888b-4513-b66b-b85c3d0630fc",
       "name": "Code"
@@ -451,7 +451,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "62357d80-3774-45f9-978e-e5556dd8e1ce",
+  "versionId": "19f89ac8-bc7f-4835-abf8-00ead3c57761",
   "triggerCount": 0,
   "tags": []
 }
