@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-16T00:06:05.629Z",
-  "updatedAt": "2025-05-16T00:53:06.874Z",
+  "updatedAt": "2025-05-16T11:08:27.555Z",
   "id": "HCTn9rZGRpr7JUtb",
   "name": "Backup n8n",
   "active": true,
@@ -14,7 +14,7 @@
       "typeVersion": 1,
       "position": [
         -1100,
-        290
+        270
       ],
       "id": "5ee88cb1-1b60-4a33-9358-fd0340ce95e8",
       "name": "n8n",
@@ -33,7 +33,7 @@
       "typeVersion": 3,
       "position": [
         -880,
-        290
+        270
       ],
       "id": "2730e22f-1cb1-4e0d-914a-50bfd62721b5",
       "name": "Loop Over Items"
@@ -62,7 +62,7 @@
       "typeVersion": 1.1,
       "position": [
         -660,
-        -60
+        -80
       ],
       "id": "7e42cc79-3650-450f-80d7-f936c99785d1",
       "name": "GitHub",
@@ -105,7 +105,7 @@
       "typeVersion": 2.2,
       "position": [
         -440,
-        -60
+        -80
       ],
       "id": "9fa413c7-330f-4d79-95cc-b45fa2692943",
       "name": "existe"
@@ -133,7 +133,7 @@
       "typeVersion": 1.1,
       "position": [
         -220,
-        40
+        20
       ],
       "id": "ee5715a0-bf29-45dd-8dca-4958984972a6",
       "name": "GitHub1",
@@ -156,7 +156,7 @@
       "typeVersion": 2,
       "position": [
         -220,
-        -160
+        -180
       ],
       "id": "85ea59e7-0218-49a3-81ac-346e6eed8e30",
       "name": "Parse"
@@ -189,7 +189,7 @@
       "typeVersion": 2.2,
       "position": [
         0,
-        -160
+        -180
       ],
       "id": "24020acd-ddb0-4cbe-9638-ba690f4adb85",
       "name": "Diferente"
@@ -218,7 +218,7 @@
       "typeVersion": 1.1,
       "position": [
         220,
-        15
+        -180
       ],
       "id": "49ee68c2-772b-4f9d-8413-e2f5c0c499e6",
       "name": "GitHub2",
@@ -242,7 +242,7 @@
       "typeVersion": 1.2,
       "position": [
         -1320,
-        290
+        270
       ],
       "id": "c45be962-4de9-40d3-a10a-bea0646e76e7",
       "name": "Schedule Trigger"
@@ -270,7 +270,7 @@
       "typeVersion": 1.1,
       "position": [
         220,
-        220
+        20
       ],
       "id": "74374c28-264b-4c0b-be30-d58f66cdcc51",
       "name": "GitHub3",
@@ -292,10 +292,60 @@
       "typeVersion": 2,
       "position": [
         0,
-        40
+        20
       ],
       "id": "ec2976de-888b-4513-b66b-b85c3d0630fc",
       "name": "Code"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const data = $('Loop Over Items').item.json\ndata.nodes[15].parameters.bodyParameters.parameters[2].value=null\ndata.nodes[15].parameters.bodyParameters.parameters[3].value=null\nreturn {\n  json: { data },\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        -180
+      ],
+      "id": "c2714515-5362-49a7-86b8-584faa3f49df",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "govarejo001",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://github.com/irodrigoan/n8n"
+        },
+        "filePath": "={{ $('Loop Over Items').item.json.name }}-{{ $('Loop Over Items').item.json.id }}.json",
+        "fileContent": "={{ JSON.stringify($json.data,null,2) }}",
+        "commitMessage": "={{ $now.plus(1,'hour').format('yyyy-MM-dd HH:mm:ss') }}"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        -5
+      ],
+      "id": "37066bc2-7e99-48d6-97e5-1ab2c17b4a52",
+      "name": "GitHub4",
+      "webhookId": "87be57f0-98da-4c99-8047-3b7bafa2973b",
+      "credentials": {
+        "githubApi": {
+          "id": "T8IcHGyl72ySl3oA",
+          "name": "GitHub account"
+        }
+      }
     }
   ],
   "connections": {
@@ -402,7 +452,7 @@
       "main": [
         [
           {
-            "node": "Loop Over Items",
+            "node": "Code1",
             "type": "main",
             "index": 0
           }
@@ -441,6 +491,28 @@
           }
         ]
       ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "GitHub4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub4": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -454,8 +526,26 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "40df650d-3c0e-414a-817c-0da3a6c370d6",
+  "pinData": {
+    "Schedule Trigger": [
+      {
+        "json": {
+          "timestamp": "2025-05-16T00:00:04.008-04:00",
+          "Readable date": "May 16th 2025, 12:00:04 am",
+          "Readable time": "12:00:04 am",
+          "Day of week": "Friday",
+          "Year": "2025",
+          "Month": "May",
+          "Day of month": "16",
+          "Hour": "00",
+          "Minute": "00",
+          "Second": "04",
+          "Timezone": "America/New_York (UTC-04:00)"
+        }
+      }
+    ]
+  },
+  "versionId": "c06a356c-25a3-4832-9ead-62a35228ce94",
   "triggerCount": 1,
   "tags": []
 }
