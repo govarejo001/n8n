@@ -1,0 +1,228 @@
+{
+  "createdAt": "2025-01-16T14:10:05.426Z",
+  "updatedAt": "2025-04-05T01:12:57.606Z",
+  "id": "JrooysewVfCD0Y9r",
+  "name": "Test Arte - Marketing",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        120
+      ],
+      "id": "91e1578b-e8bd-4ac7-ae48-6a326454483b",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://drive.usercontent.google.com/download?id=1B54LFfry3XBTVBTFXNqsertgYPEiTk6B&export=download&authuser=0&confirm=t&uuid=c11a2ae7-148b-40fd-b77f-3ed3e6c3b046&at=AIrpjvNgjcrMdH8kn_NS0vb5fSZV:1737039077987",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        120,
+        -180
+      ],
+      "id": "116d8223-34f7-4cb9-baa9-648a8fea71e4",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "url": "https://drive.usercontent.google.com/download?id=1wTjpl5tDKD2DnuUzJD1CNAi2OLRDuWZI&export=download&authuser=0&confirm=t&uuid=f5121ad1-7e34-4fb3-a196-10ce369ec294&at=AIrpjvO43Np-NLLsgl9fCwS0opz8:1737039071922",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        120,
+        40
+      ],
+      "id": "5a77cb8b-6733-4084-9653-2e6e2643a118",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "url": "https://drive.usercontent.google.com/download?id=11iDMxLowNhtRghZNzyHOs-WlGrR22L74&export=download&authuser=0&confirm=t&uuid=da8e1f41-49dd-4dfb-a2fd-8426aa44a41d&at=AIrpjvNcmfTypAuw5r4rEVmXWLlf:1737039081797",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        100,
+        220
+      ],
+      "id": "814ec1b8-8a58-4ee9-9f5e-b375d5626df6",
+      "name": "HTTP Request4"
+    },
+    {
+      "parameters": {
+        "operation": "composite",
+        "dataPropertyNameComposite": "data2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [
+        620,
+        140
+      ],
+      "id": "3b6192e3-3e3d-463c-89b2-8b9fde2e0d7a",
+      "name": "Edit Image2"
+    },
+    {
+      "parameters": {
+        "url": "https://drive.usercontent.google.com/download?id=10gbOXW4Ml0nJRkuw579-Ap__jJHDlVxp&export=download&authuser=0&confirm=t&uuid=55ba09b3-c7c3-4739-b386-ed23e04f22c0&at=AIrpjvPP5nkm5saBrIarNxNeqOyz:1737039061772",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        100,
+        420
+      ],
+      "id": "cc5cc22a-324d-4f31-b14d-49d8bf4410cd",
+      "name": "HTTP Request6"
+    },
+    {
+      "parameters": {
+        "url": "https://drive.usercontent.google.com/download?id=1_uybv0UEuUqTavJfTcOAknKOexxSaWhp&export=download&authuser=0&confirm=t&uuid=fb5b798f-e541-4685-bd0a-a02884e97381&at=AIrpjvOA6pXUQc144-Er3pI9ffDn:1737040594356",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data2"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        140
+      ],
+      "id": "61760739-d5c5-4604-a4c7-0395fb2e1d0a",
+      "name": "HTTP Request1"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request6": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Edit Image2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "17b85f3e-3db8-4b0f-ac09-ec00c2318662",
+  "triggerCount": 0,
+  "tags": []
+}
