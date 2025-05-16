@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-16T00:06:05.629Z",
-  "updatedAt": "2025-05-16T00:39:06.311Z",
+  "updatedAt": "2025-05-16T00:46:32.216Z",
   "id": "HCTn9rZGRpr7JUtb",
   "name": "Backup n8n",
   "active": false,
@@ -138,12 +138,14 @@
       "id": "ee5715a0-bf29-45dd-8dca-4958984972a6",
       "name": "GitHub1",
       "webhookId": "1669308f-d083-47e9-afe4-12fa115e1cfa",
+      "retryOnFail": false,
       "credentials": {
         "githubApi": {
           "id": "T8IcHGyl72ySl3oA",
           "name": "GitHub account"
         }
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -244,6 +246,56 @@
       ],
       "id": "c45be962-4de9-40d3-a10a-bea0646e76e7",
       "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "govarejo001",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://github.com/irodrigoan/n8n"
+        },
+        "filePath": "={{ $('Loop Over Items').item.json.name }}-{{ $('Loop Over Items').item.json.id }}.json",
+        "fileContent": "={{ $json.data }}",
+        "commitMessage": "={{ $now.plus(1,'hour').format('yyyy-MM-dd HH:mm:ss') }}"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        200
+      ],
+      "id": "74374c28-264b-4c0b-be30-d58f66cdcc51",
+      "name": "GitHub3",
+      "webhookId": "1669308f-d083-47e9-afe4-12fa115e1cfa",
+      "retryOnFail": false,
+      "credentials": {
+        "githubApi": {
+          "id": "T8IcHGyl72ySl3oA",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const data = Buffer.from(JSON.stringify($('Loop Over Items',null,2).item.json),'utf-8').toString('base64')\n\nreturn {\n  json: { data },\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        20,
+        60
+      ],
+      "id": "ec2976de-888b-4513-b66b-b85c3d0630fc",
+      "name": "Code"
     }
   ],
   "connections": {
@@ -307,6 +359,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -360,6 +419,28 @@
           }
         ]
       ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "GitHub3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -370,7 +451,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "c961b004-d2d5-468b-948c-573477c600f8",
+  "versionId": "62357d80-3774-45f9-978e-e5556dd8e1ce",
   "triggerCount": 0,
   "tags": []
 }
