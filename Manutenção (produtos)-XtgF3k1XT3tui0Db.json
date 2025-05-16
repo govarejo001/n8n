@@ -1,0 +1,442 @@
+{
+  "createdAt": "2025-01-08T15:43:27.159Z",
+  "updatedAt": "2025-04-05T01:12:04.548Z",
+  "id": "XtgF3k1XT3tui0Db",
+  "name": "Manutenção (produtos)",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\np.id as prod_code,\np.ean as prod_ean,\np.description as prod_name,\nb.id as brand_id,\nb.description as brand_name,\ns.id as section_id,\ns.description as section_description,\nc.id as category_id,\nc.description as category_name,\nsc.id as subcategory_id,\nsc.description as subcategory_name,\np.ean_valid,\n(select count(pl.id) from productslinked pl where pl.prodl_prod_id=p.id) as qtd,\np.created_at,\np.updated_at\nFROM products p\nINNER JOIN brands b on b.id=p.prod_brand_id\nINNER JOIN subcategories sc on sc.id=p.prod_subcat_id\nINNER JOIN categories c on c.id=sc.subcat_cat_id\nINNER JOIN sections s on s.id=c.cat_sec_id\nWHERE EAN IN (SELECT EAN FROM products GROUP BY EAN HAVING COUNT(ID)>1) ORDER BY p.EAN ASC,qtd desc,p.DESCRIPTION ASC",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        20,
+        -60
+      ],
+      "id": "ae36c584-abe8-4b8b-ad70-b558f45f9dc0",
+      "name": "Buscar Produtos com EAN Duplicado",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        60
+      ],
+      "id": "3f6d11aa-db6a-4d2c-ac6a-5b0b2fc8ba67",
+      "name": "Executar"
+    },
+    {
+      "parameters": {
+        "options": {
+          "delimiter": ";",
+          "fileName": "products-with-duplicate-ean.csv"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        -60
+      ],
+      "id": "36c58243-e644-4ca9-97f1-cfb82c853fc0",
+      "name": "Converter para CSV",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n    p.id AS prod_code,\n    p.ean AS prod_ean,\n    p.description AS prod_name,\n    b.id AS brand_id,\n    b.description AS brand_name,\n    s.id AS section_id,\n    s.description AS section_description,\n    c.id AS category_id,\n    c.description AS category_name,\n    sc.id AS subcategory_id,\n    sc.description AS subcategory_name,\n    p.ean_valid,\n  (select count(pl.id) from productslinked pl where pl.prodl_prod_id=p.id) as qtd,\n    p.created_at,\n    p.updated_at\nFROM products p\nINNER JOIN brands b ON b.id = p.prod_brand_id\nINNER JOIN subcategories sc ON sc.id = p.prod_subcat_id\nINNER JOIN categories c ON c.id = sc.subcat_cat_id\nINNER JOIN sections s ON s.id = c.cat_sec_id\nWHERE p.description IN (\n    SELECT description\n    FROM products\n    WHERE description<>''\n    GROUP BY description\n    HAVING COUNT(DISTINCT prod_subcat_id) > 1\n)\nORDER BY p.description ASC,sc.description ASC;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        20,
+        140
+      ],
+      "id": "dbb5ecb4-6dec-484e-b878-cc7c075621bf",
+      "name": "Buscar Produtos com mesmo nome e subcategoria diferente",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "delimiter": ";",
+          "fileName": "products-with-same-name-and-different-subcategory.csv"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        140
+      ],
+      "id": "908538fa-085f-43b2-ae5b-30ebd8a4cb2a",
+      "name": "Converter para CSV1",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "EjZahN6gwdyVjWHn",
+          "mode": "list",
+          "cachedResultName": "Enviar via WhatsApp"
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        240
+      ],
+      "id": "df94d08c-2bd4-4265-b73f-183e25c37644",
+      "name": "Execute Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n    p.id AS prod_code,\n    p.ean AS prod_ean,\n    p.description AS prod_name,\n    b.id AS brand_id,\n    b.description AS brand_name,\n    s.id AS section_id,\n    s.description AS section_description,\n    c.id AS category_id,\n    c.description AS category_name,\n    sc.id AS subcategory_id,\n    sc.description AS subcategory_name,\n    p.ean_valid,\n  (select count(pl.id) from productslinked pl where pl.prodl_prod_id=p.id) as qtd,\n    p.created_at,\n    p.updated_at\nFROM products p\nINNER JOIN brands b ON b.id = p.prod_brand_id\nINNER JOIN subcategories sc ON sc.id = p.prod_subcat_id\nINNER JOIN categories c ON c.id = sc.subcat_cat_id\nINNER JOIN sections s ON s.id = c.cat_sec_id\nWHERE p.description IN (\n    SELECT description\n    FROM products\n    WHERE description<>''\n    GROUP BY description\n    HAVING COUNT(DISTINCT ean) > 1\n)\nORDER BY p.description ASC,sc.description ASC;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        20,
+        340
+      ],
+      "id": "1a65a4b9-3ed0-483c-ac53-a0dd474df291",
+      "name": "Buscar Produtos com mesmo nome e ean diferente",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "delimiter": ";",
+          "fileName": "products-with-same-name-and-different-ean.csv"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        340
+      ],
+      "id": "25d5f0bd-3be1-423f-a7f9-c69d0f02c66c",
+      "name": "Converter para CSV2",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select * from productslinked where prodl_prod_id in (select id from products where description='')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        20,
+        -260
+      ],
+      "id": "462361a0-5a46-4826-ba6e-4f3adc988147",
+      "name": "Buscar Produtos com Descrição vazia e produto vinculado",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select * from (select *,(SELECT COUNT(id) FROM productslinked pl where pl.prodl_prod_id=p.id) as col0 from products p) as db where col0=0 order by description",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        20,
+        -460
+      ],
+      "id": "72e386c2-4030-4f97-927e-89d63c670ae9",
+      "name": "Buscar Produtos sem Vinculação",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update productslinked set linked_at=null, prodl_prod_id=1 where id = {{ $json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        220,
+        -260
+      ],
+      "id": "24fe8f41-ec4f-45e5-af00-b2aa8e9b4d98",
+      "name": "MySQL",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "delete from products where id = {{ $json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        220,
+        -460
+      ],
+      "id": "f2413782-bb5d-4d00-917d-68a845f542df",
+      "name": "MySQL1",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n    p.id AS prod_code,\n    p.ean AS prod_ean,\n    p.description AS prod_name,\n    b.id AS brand_id,\n    b.description AS brand_name,\n    s.id AS section_id,\n    s.description AS section_description,\n    c.id AS category_id,\n    c.description AS category_name,\n    sc.id AS subcategory_id,\n    sc.description AS subcategory_name,\n    p.ean_valid,\n  (select count(pl.id) from productslinked pl where pl.prodl_prod_id=p.id) as qtd,\n    p.created_at,\n    p.updated_at\nFROM products p\nINNER JOIN brands b ON b.id = p.prod_brand_id\nINNER JOIN subcategories sc ON sc.id = p.prod_subcat_id\nINNER JOIN categories c ON c.id = sc.subcat_cat_id\nINNER JOIN sections s ON s.id = c.cat_sec_id\nWHERE ean_valid=0\nORDER BY p.description ASC,sc.description ASC;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        20,
+        540
+      ],
+      "id": "73a07e8f-3cb3-4c00-a744-b2348a1ea82b",
+      "name": "Buscar Produtos Pai com Ean Invalido",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "delimiter": ";",
+          "fileName": "products-with-invalid-ean.csv"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        540
+      ],
+      "id": "74f44c95-0e5e-4035-b2fe-652174b57ce7",
+      "name": "Converter para CSV3",
+      "alwaysOutputData": false
+    }
+  ],
+  "connections": {
+    "Buscar Produtos com EAN Duplicado": {
+      "main": [
+        [
+          {
+            "node": "Converter para CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Executar": {
+      "main": [
+        [
+          {
+            "node": "Buscar Produtos com EAN Duplicado",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar Produtos com mesmo nome e subcategoria diferente",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar Produtos com mesmo nome e ean diferente",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar Produtos com Descrição vazia e produto vinculado",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar Produtos sem Vinculação",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar Produtos Pai com Ean Invalido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Converter para CSV": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Produtos com mesmo nome e subcategoria diferente": {
+      "main": [
+        [
+          {
+            "node": "Converter para CSV1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Converter para CSV1": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Produtos com mesmo nome e ean diferente": {
+      "main": [
+        [
+          {
+            "node": "Converter para CSV2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Converter para CSV2": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Produtos com Descrição vazia e produto vinculado": {
+      "main": [
+        [
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Produtos sem Vinculação": {
+      "main": [
+        [
+          {
+            "node": "MySQL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Produtos Pai com Ean Invalido": {
+      "main": [
+        [
+          {
+            "node": "Converter para CSV3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Converter para CSV3": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "timezone": "America/Sao_Paulo"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "b060f0a1-ea2e-4ac4-b07c-25443d06e032",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-04-04T21:03:24.356Z",
+      "updatedAt": "2025-04-04T21:03:24.356Z",
+      "id": "pbUrSOCgI9KocVHT",
+      "name": "Gestor"
+    }
+  ]
+}
