@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-05-16T00:06:05.629Z",
-  "updatedAt": "2025-05-16T00:52:01.650Z",
+  "updatedAt": "2025-05-16T00:53:06.874Z",
   "id": "HCTn9rZGRpr7JUtb",
   "name": "Backup n8n",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -446,12 +446,16 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
   "versionId": "40df650d-3c0e-414a-817c-0da3a6c370d6",
-  "triggerCount": 0,
+  "triggerCount": 1,
   "tags": []
 }
