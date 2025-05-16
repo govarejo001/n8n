@@ -1,0 +1,103 @@
+{
+  "createdAt": "2025-05-08T18:04:58.686Z",
+  "updatedAt": "2025-05-08T18:08:40.448Z",
+  "id": "N26WHEVhNEzNQUnT",
+  "name": "My workflow 3",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "402f6bf4-6bec-47f6-9933-15fb2775cc17",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "__rl": true,
+          "value": "products",
+          "mode": "list",
+          "cachedResultName": "products"
+        },
+        "where": {
+          "values": [
+            {
+              "column": "description",
+              "condition": "LIKE",
+              "value": "%REVELACAO N10%"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        220,
+        0
+      ],
+      "id": "0dd0d7d2-e5bd-4893-8b25-5bdd0e11b517",
+      "name": "MySQL",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -420,
+        -260
+      ],
+      "id": "988015ea-a613-4b48-89be-9f87bc75f0fb",
+      "name": "Convert to File"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "47e66a3c-2fe4-478d-9b08-6e9cefea196c",
+  "triggerCount": 0,
+  "tags": []
+}
