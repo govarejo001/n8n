@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-16T00:06:05.629Z",
-  "updatedAt": "2025-05-16T00:37:13.627Z",
+  "updatedAt": "2025-05-16T00:39:06.311Z",
   "id": "HCTn9rZGRpr7JUtb",
   "name": "Backup n8n",
   "active": false,
@@ -132,7 +132,7 @@
       "type": "n8n-nodes-base.github",
       "typeVersion": 1.1,
       "position": [
-        -220,
+        -160,
         40
       ],
       "id": "ee5715a0-bf29-45dd-8dca-4958984972a6",
@@ -370,7 +370,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "1433ef15-5771-487c-801f-f91af575ef09",
+  "versionId": "c961b004-d2d5-468b-948c-573477c600f8",
   "triggerCount": 0,
   "tags": []
 }
