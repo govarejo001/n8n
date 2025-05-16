@@ -1,0 +1,165 @@
+{
+  "createdAt": "2025-04-10T12:34:42.111Z",
+  "updatedAt": "2025-04-25T17:21:07.867Z",
+  "id": "09pXLBq6INtzKcIx",
+  "name": "Buscar productsLinked",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        -60
+      ],
+      "id": "ccc0eebd-a23f-4a1a-afc5-34192c4bb85c",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "__rl": true,
+          "value": "productslinked",
+          "mode": "list",
+          "cachedResultName": "productslinked"
+        },
+        "where": {
+          "values": [
+            {
+              "column": "description",
+              "value": "BIFE ANCHO KG"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        220,
+        0
+      ],
+      "id": "8bff58e8-871b-4254-aa9c-849ed45c8c92",
+      "name": "MySQL",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "id": "131b0e93-0557-4bd3-bba8-4dd15fc73b48",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "__rl": true,
+          "value": "productslinked",
+          "mode": "list",
+          "cachedResultName": "productslinked"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "ean",
+              "value": "7897765601510"
+            },
+            {
+              "column": "prodl_unit_id",
+              "value": "45"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        80,
+        -360
+      ],
+      "id": "2c62618c-0d9c-47e6-8e4f-da003110fadf",
+      "name": "MySQL1",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        -380
+      ],
+      "id": "f7d223db-cd70-4c24-a2a2-d2956a17f01d",
+      "name": "Convert to File1"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "c5f0e0c4-8e50-40a6-b2c9-02379cba29d2",
+  "triggerCount": 0,
+  "tags": []
+}
