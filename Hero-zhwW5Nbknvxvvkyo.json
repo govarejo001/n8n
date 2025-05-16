@@ -1,0 +1,671 @@
+{
+  "createdAt": "2025-04-06T13:09:46.459Z",
+  "updatedAt": "2025-05-12T10:54:04.434Z",
+  "id": "zhwW5Nbknvxvvkyo",
+  "name": "Hero",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        440
+      ],
+      "id": "2815f703-bb70-4692-b1b1-bb7167075233",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "command": "=curl -X PUT \"{{ $json.url }}\" \\\n  -H \"Content-Type: text/csv\" \\\n  --upload-file \"/tmp/{{ $json.url.split('?')[0].split('/').last()}}\"\n"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        80,
+        440
+      ],
+      "id": "a3029b38-5ffe-460d-ae35-edb60141ce62",
+      "name": "SSH2",
+      "credentials": {
+        "sshPassword": {
+          "id": "ftUJlupDyyWkdbHW",
+          "name": "Movement"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/crm-category.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/crm-category.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=$(cat <<EOF\nCOPY (\nSELECT \n          COUNT(cp.\"couponId\") AS quantity,\n          category,\n          c.\"unitId\" as unit_id,\n          DATE(c.date) AS date\n      FROM coupons_products cp\n      INNER JOIN products_linked pl ON pl.id = cp.\"productLinkedId\"\n      INNER JOIN products p ON p.id = pl.\"productId\"\n      INNER JOIN coupons c ON c.id = cp.\"couponId\"\n      GROUP BY category, c.\"unitId\", DATE(c.date)\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\nEOF\n)\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        640
+      ],
+      "id": "a21288ce-9428-4121-9b5c-c9a86f0fc577",
+      "name": "crm-category.csv",
+      "credentials": {
+        "sshPassword": {
+          "id": "JWAGqDX43N4X5vi1",
+          "name": "CRM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/crm-subcategory.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/crm-subcategory.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=$(cat <<EOF\nCOPY (\nSELECT \n          COUNT(cp.\"couponId\") AS quantity,\n          subcategory,\n          c.\"unitId\" as unit_id,\n          DATE(c.date) AS date\n      FROM coupons_products cp\n      INNER JOIN products_linked pl ON pl.id = cp.\"productLinkedId\"\n      INNER JOIN products p ON p.id = pl.\"productId\"\n      INNER JOIN coupons c ON c.id = cp.\"couponId\"\n      GROUP BY subcategory, c.\"unitId\", DATE(c.date)\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\nEOF\n)\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        240
+      ],
+      "id": "48bd717d-ce3f-4d87-9e87-7f421d68c76b",
+      "name": "crm-subcategory.csv",
+      "credentials": {
+        "sshPassword": {
+          "id": "JWAGqDX43N4X5vi1",
+          "name": "CRM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/crm-section.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/crm-section.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=$(cat <<EOF\nCOPY (\nSELECT \n          COUNT(cp.\"couponId\") AS quantity,\n          section,\n          c.\"unitId\" as unit_id,\n          DATE(c.date) AS date\n      FROM coupons_products cp\n      INNER JOIN products_linked pl ON pl.id = cp.\"productLinkedId\"\n      INNER JOIN products p ON p.id = pl.\"productId\"\n      INNER JOIN coupons c ON c.id = cp.\"couponId\"\n      GROUP BY section, c.\"unitId\", DATE(c.date)\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\nEOF\n)\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        440
+      ],
+      "id": "ac3c7182-3cf8-43c4-abdb-9d038ba535c9",
+      "name": "crm-section.csv",
+      "credentials": {
+        "sshPassword": {
+          "id": "JWAGqDX43N4X5vi1",
+          "name": "CRM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres3\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/movements.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/movements.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=\"COPY (\n  SELECT \n    date AS mov_date,\n    pl.product_id AS mov_product_id,\n    s.unit_id AS mov_unit_id,\n    value AS mov_value,\n    cost AS mov_cost,\n    quantity AS mov_quantity\n  FROM sales s\n  INNER JOIN products_linked pl ON \n    pl.code = s.code AND\n    pl.ean = s.ean AND \n    pl.unit_id = s.unit_id\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\"\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        -160
+      ],
+      "id": "a312067a-ac03-417f-b83c-8ee152cc70ae",
+      "name": "movements.csv",
+      "credentials": {
+        "sshPassword": {
+          "id": "ftUJlupDyyWkdbHW",
+          "name": "Movement"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://function-bun-production-62e9.up.railway.app/api/upload-url?filename={{ $json.stdout.split('\\n').last().replaceAll(\"'\",'').split('/tmp/').last() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -360,
+        240
+      ],
+      "id": "47c89f45-9ef6-41f6-aa43-641147a58d4d",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "command": "=curl -X PUT \"{{ $json.url }}\" \\\n  -H \"Content-Type: text/csv\" \\\n  --upload-file \"/tmp/{{ $json.url.split('?')[0].split('/').last()}}\"\n"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        80,
+        240
+      ],
+      "id": "8416dd7c-060b-4dcb-8a53-1a307940b7b0",
+      "name": "SSH",
+      "credentials": {
+        "sshPassword": {
+          "id": "JWAGqDX43N4X5vi1",
+          "name": "CRM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f0d9cebe-ad84-4dde-bff2-254074f87643",
+              "leftValue": "={{ $json.url }}",
+              "rightValue": "crm",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -140,
+        240
+      ],
+      "id": "4d128f0a-8225-4458-94ce-096c832e1333",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/crm-product.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/crm-product.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=$(cat <<EOF\nCOPY (\nSELECT \n          COUNT(cp.\"couponId\") AS quantity,\n          pl.\"productId\" as product_id,\n          c.\"unitId\" as unit_id,\n          DATE(c.date) AS date\n      FROM coupons_products cp\n      INNER JOIN products_linked pl ON pl.id = cp.\"productLinkedId\"\n      INNER JOIN coupons c ON c.id = cp.\"couponId\"\n      GROUP BY pl.\"productId\", c.\"unitId\", DATE(c.date)\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\nEOF\n)\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        1240
+      ],
+      "id": "2d13c3a9-963f-4f83-b88e-166c993c0bda",
+      "name": "crm-product.csv",
+      "credentials": {
+        "sshPassword": {
+          "id": "JWAGqDX43N4X5vi1",
+          "name": "CRM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres3\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/tickets.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/tickets.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=$(cat <<EOF\nCOPY (\nSELECT id,date as cp_date,unit_id,quantity FROM TICKETS\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\nEOF\n)\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        1040
+      ],
+      "id": "86b2de6b-c108-4133-8aa6-3fb5be0b86bd",
+      "name": "tickets.csv",
+      "credentials": {
+        "sshPassword": {
+          "id": "ftUJlupDyyWkdbHW",
+          "name": "Movement"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres3\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/incomings.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/incomings.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=$(cat <<EOF\nCOPY (\nSELECT \n          date,\n          cnpj,\n          s.unit_id,\n          pl.product_id,\n          SUM(value) AS value,\n          SUM(quantity) AS quantity\n      FROM incomings s\n      INNER JOIN products_linked pl\n      ON pl.unit_id = s.unit_id \n      AND pl.code = s.code\n      AND pl.ean = s.ean\n      GROUP BY date,cnpj, s.unit_id, pl.product_id\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\nEOF\n)\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
+      },
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        840
+      ],
+      "id": "6b554ec2-6718-4638-a373-ed87ced311c6",
+      "name": "incomings.csv",
+      "credentials": {
+        "sshPassword": {
+          "id": "ftUJlupDyyWkdbHW",
+          "name": "Movement"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \np.id as product_code,\np.ean as product_ean,\np.description as product_name,\nb.id as brand_id,\nb.description as brand_name,\ns.id as section_id,\ns.description as section_name,\nc.id as category_id,\nc.description as category_name,\nsc.id as subcategory_id,\nsc.description as subcategory_name,\np.created_at as created_at,\np.updated_at as updated_at\nFROM products p\ninner join brands b on b.id = p.prod_brand_id \ninner join subcategories sc on sc.id=p.prod_subcat_id \ninner join categories c on c.id = sc.subcat_cat_id \ninner join sections s on s.id = c.cat_sec_id ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        -580,
+        -360
+      ],
+      "id": "0688be46-c9a7-4c20-ae98-1d432d170992",
+      "name": "MySQL",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "bucketName": "upload",
+        "fileName": "powerbi/products.csv",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        -360
+      ],
+      "id": "9046080b-8e11-4106-80e6-d5914cdaf5d1",
+      "name": "S3",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "delimiter": ";"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -360,
+        -360
+      ],
+      "id": "7ce4b0cb-44ea-4ee6-bcbd-745daae23e8e",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://login.microsoftonline.com/common/oauth2/token",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "grant_type",
+              "value": "refresh_token"
+            },
+            {
+              "name": "client_id",
+              "value": "6eb29b0e-9951-48af-b640-1bcaa380c8b5"
+            },
+            {
+              "name": "client_secret",
+              "value": null
+            },
+            {
+              "name": "refresh_token",
+              "value": null
+            },
+            {
+              "name": "resource",
+              "value": "https://analysis.windows.net/powerbi/api"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -580,
+        1440
+      ],
+      "id": "cfd91af8-b159-4fc2-8ac4-4c69c396b5e9",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.powerbi.com/v1.0/myorg/groups/132b4054-be8c-47d4-a1f2-ea096349a6f1/datasets/33a14fd6-0e72-43d1-ba3a-f1b230d8d12f/refreshes",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.access_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -360,
+        1440
+      ],
+      "id": "86daeaac-3e5f-4249-9154-92bf592f7548",
+      "name": "PowerBi"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n  unit_id,\n  unit_name,\n  CASE \n    WHEN unit_active = true THEN 0 \n    ELSE 1 \n  END AS unit_block,\n  cluster_name AS unit_region,\n  CASE \n    WHEN unit_id IN ('101','102','105','901','200','201','202','203') OR unit_active = false THEN 1 \n    ELSE 0 \n  END AS ignored\nFROM units u\nINNER JOIN clusters c ON c.cluster_id = u.unit_region_id;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -580,
+        40
+      ],
+      "id": "ed8d1418-9b74-464e-89f3-890673424110",
+      "name": "Postgres",
+      "retryOnFail": true,
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "options": {
+          "delimiter": ";"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -360,
+        640
+      ],
+      "id": "ed925416-5b8e-4677-99e9-03238e832756",
+      "name": "Convert to File1"
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "bucketName": "upload",
+        "fileName": "powerbi/units1.csv",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        640
+      ],
+      "id": "f70cbc9d-cb69-4c8a-886f-0340ad7ba4bf",
+      "name": "S31",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "crm-section.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "crm-subcategory.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "crm-category.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "movements.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "crm-product.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "incomings.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "tickets.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crm-subcategory.csv": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "movements.csv": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crm-section.csv": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crm-category.csv": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "SSH",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SSH2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crm-product.csv": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "incomings.csv": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tickets.csv": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "S3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "PowerBi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Convert to File1": {
+      "main": [
+        [
+          {
+            "node": "S31",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "timezone": "America/Sao_Paulo"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "6e894136-afb5-40a8-985e-10988237df00",
+  "triggerCount": 1,
+  "tags": []
+}
