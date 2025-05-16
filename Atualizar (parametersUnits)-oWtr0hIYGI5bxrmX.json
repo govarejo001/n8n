@@ -1,0 +1,165 @@
+{
+  "createdAt": "2025-01-15T19:25:06.391Z",
+  "updatedAt": "2025-04-25T12:57:34.073Z",
+  "id": "oWtr0hIYGI5bxrmX",
+  "name": "Atualizar (parametersUnits)",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n    stores_with_sales_in_december.unit_id,\n    MIN(all_days.day) AS min_date,\n    MAX(all_days.day) AS max_date\nFROM \n    (SELECT generate_series(\n        DATE_TRUNC('month', CURRENT_DATE)::date, \n        (CURRENT_DATE - INTERVAL '1 day')::date, \n        '1 day'\n    ) AS day) AS all_days\nCROSS JOIN \n    (SELECT DISTINCT unit_id \n     FROM sales \n     WHERE date BETWEEN DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month') AND DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 day') - INTERVAL '1 day') AS stores_with_sales_in_december\nLEFT JOIN \n    (SELECT DISTINCT date, unit_id \n     FROM sales \n     WHERE date BETWEEN DATE_TRUNC('month', CURRENT_DATE) AND (CURRENT_DATE - INTERVAL '1 day')) AS sales_days_current_period\nON \n    all_days.day = sales_days_current_period.date \n    AND stores_with_sales_in_december.unit_id = sales_days_current_period.unit_id\nWHERE \n    sales_days_current_period.date IS NULL\nGROUP BY \n    stores_with_sales_in_december.unit_id\nORDER BY \n    stores_with_sales_in_december.unit_id;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        200,
+        -320
+      ],
+      "id": "b439b465-c3c2-4cbb-9f67-019991d96d78",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "o5qqKlZfmjuOVpBT",
+          "name": "7000"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE parametersunits set parunit_dateini='{{ $json.min_date }}',parunit_datefin='{{ $json.max_date }}' where parunit_unit_id='{{ $json.unit_id }}' and parunit_type in ('ERP','INCOMING')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        420,
+        -320
+      ],
+      "id": "17b985c3-9d89-4f22-b4cd-2543e03e130b",
+      "name": "Postgres1",
+      "credentials": {
+        "postgres": {
+          "id": "r6ETUCB3B88HozZb",
+          "name": "Main"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 2 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -20,
+        -320
+      ],
+      "id": "f70f1bbb-5cd2-4f01-8bd9-f3ae6a5108e5",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE parametersunits set parunit_dateini='{{ $now.minus(3,'days').format('yyyy-MM-dd') }}',parunit_datefin='{{ $now.plus(1,'days').format('yyyy-MM-dd') }}' where parunit_type='CRM'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        200,
+        -60
+      ],
+      "id": "ecc98bc4-980f-4590-afbc-d92eae06605b",
+      "name": "Postgres3",
+      "credentials": {
+        "postgres": {
+          "id": "r6ETUCB3B88HozZb",
+          "name": "Main"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 0 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -20,
+        -60
+      ],
+      "id": "fd3ebdaa-f003-4497-937f-0f6ed8aafbd7",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "connections": {
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Postgres1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Postgres3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    },
+    "node:Schedule Trigger1": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": null,
+  "pinData": {},
+  "versionId": "c88eea19-6906-4d5b-984a-48c4fa5eccba",
+  "triggerCount": 2,
+  "tags": []
+}
