@@ -1,0 +1,70 @@
+{
+  "createdAt": "2025-01-07T23:24:29.323Z",
+  "updatedAt": "2025-01-12T14:32:00.198Z",
+  "id": "2pIiDb7zFUsy52Mi",
+  "name": "Enviar via E-mail",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -220,
+        -220
+      ],
+      "id": "03868e79-7ee6-4961-97a5-241e69668618",
+      "name": "Enviar E-mail",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Z5N7pF06Ll5QHk1Q",
+          "name": "Resend"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -220
+      ],
+      "id": "d3842fc9-b6fc-412c-ae2b-7f97860c448a",
+      "name": "Executar"
+    }
+  ],
+  "connections": {
+    "Executar": {
+      "main": [
+        [
+          {
+            "node": "Enviar E-mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "5150ce95-7811-4472-ad47-468546f08136",
+  "triggerCount": 0,
+  "tags": []
+}
