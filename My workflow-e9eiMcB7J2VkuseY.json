@@ -1,0 +1,932 @@
+{
+  "createdAt": "2025-04-30T13:50:58.603Z",
+  "updatedAt": "2025-04-30T21:02:41.116Z",
+  "id": "e9eiMcB7J2VkuseY",
+  "name": "My workflow",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -40,
+        1300
+      ],
+      "id": "5947e4df-dc25-4635-94f6-bd1fe5fad9d6",
+      "name": "When chat message received",
+      "webhookId": "8f5eba11-74b5-46fc-9675-35b62dd02346",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Produto: {{ $json.product }}\n\nMarcas: {{ $json.brands }}\n\nSubcategorias: {{ $json.subcategories }}",
+        "options": {
+          "systemMessage": "=Você é um especialista em cadastro e gestão de produtos.\n\nSua tarefa é identificar a marca (brand) e a subcategoria (subcategory) de um produto com base nas informações fornecidas.\n\nRegras importantes:\n\nSomente retorne valores se tiver alta confiança.\nSe a informação fornecida for ambígua, irrelevante ou insuficiente para identificar com segurança a marca ou a subcategoria, retorne null.\n\nNunca faça suposições ou \"chutes\".\nSe não tiver certeza, prefira sempre null.\n\nA saída deve ter o seguinte formato JSON:\n\n{\n  \"brand\": \"Nome da Marca ou null\",\n  \"subcategory\": \"Nome da Subcategoria ou null\"\n}\n\nExemplos de quando retornar null:\n\nA descrição não menciona nenhuma marca clara.\n\nA descrição não tem relação evidente com nenhuma subcategoria conhecida.\n\nHá mais de uma possibilidade com igual probabilidade."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -40,
+        -440
+      ],
+      "id": "7195ec05-6da3-42af-98c5-5743fdabcc5c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        48,
+        -220
+      ],
+      "id": "c939bdf9-be07-4dbb-8b9f-36a90b8b3e1d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "746NrtVty7PbaSTv",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "__rl": true,
+          "value": "sections",
+          "mode": "list",
+          "cachedResultName": "sections"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySqlTool",
+      "typeVersion": 2.4,
+      "position": [
+        -40,
+        1560
+      ],
+      "id": "7d06f4be-3fe3-4b3c-9743-43b74850cc59",
+      "name": "MySQL",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "__rl": true,
+          "value": "productslinked",
+          "mode": "list",
+          "cachedResultName": "productslinked"
+        },
+        "where": {
+          "values": [
+            {
+              "column": "prodl_prod_id",
+              "value": "1"
+            },
+            {
+              "column": "prodl_unit_id",
+              "value": "105"
+            }
+          ]
+        },
+        "options": {
+          "outputColumns": [
+            "ean",
+            "description"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        -40,
+        320
+      ],
+      "id": "c64f3a93-1910-4cbe-b3b4-d3a70ee1b28f",
+      "name": "MySQL1",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "__rl": true,
+          "value": "productslinked",
+          "mode": "list",
+          "cachedResultName": "productslinked"
+        },
+        "limit": 10,
+        "where": {
+          "values": [
+            {
+              "column": "description",
+              "condition": "LIKE",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySqlTool",
+      "typeVersion": 2.4,
+      "position": [
+        -40,
+        1800
+      ],
+      "id": "f4ad4e34-5a25-40a8-be1a-0a4f360b38ae",
+      "name": "MySQL2",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "__rl": true,
+          "value": "categories",
+          "mode": "list",
+          "cachedResultName": "categories"
+        },
+        "returnAll": true,
+        "options": {
+          "outputColumns": [
+            "description"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        -40,
+        1040
+      ],
+      "id": "6c9d41ff-2aa2-40a2-976e-d89067e21e84",
+      "name": "MySQL3",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "function isValidEAN13(code) {\n  if (!/^\\d{13}$/.test(code)) {\n    return false; // Deve ter exatamente 13 dígitos numéricos\n  }\n\n  const digits = code.split('').map(Number);\n  const checkDigit = digits[12];\n\n  // Soma ponderada dos primeiros 12 dígitos\n  let sum = 0;\n  for (let i = 0; i < 12; i++) {\n    sum += digits[i] * (i % 2 === 0 ? 1 : 3);\n  }\n\n  // Calcula dígito verificador esperado\n  const expectedCheck = (10 - (sum % 10)) % 10;\n\n  return checkDigit === expectedCheck;\n}\n\nconst valids = []\n\n$input.all().forEach((item)=>{\n  if(isValidEAN13(item.json.ean)){\n    valids.push({...item.json,manufacturerCode:String(item.json.ean).substring(0,9)})\n  }\n})\n\nreturn valids"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        180,
+        320
+      ],
+      "id": "a386f63f-c339-4174-8c83-eb5ff6b0a5ee",
+      "name": "Code"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -1140
+      ],
+      "id": "04c8fcc7-b6e4-4976-b508-a66ebdc90a05",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select b.description as brand,s.description as subcategory,pl.description as description1 from productslinked pl\ninner join products p on pl.prodl_prod_id=p.id\ninner join subcategories s on s.id=p.prod_subcat_id\ninner join brands b on b.id=p.prod_brand_id\nwhere pl.prodl_prod_id<>1 and pl.ean like ('{{ $json.manufacturerCode }}%') group by brand,subcategory,description1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        620,
+        70
+      ],
+      "id": "0a8b5c0a-7a36-417f-b114-c5e0be154029",
+      "name": "MySQL5",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        400,
+        320
+      ],
+      "id": "790b9242-d85d-4b12-a18d-fe7f57ff3386",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b33c0a56-15d8-4b12-82b5-c4ac8fb06b49",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        840,
+        70
+      ],
+      "id": "476110be-b8c7-44af-af1d-279bc2051bd5",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select b.description as brand,s.description as subcategory,pl.description as description1 from productslinked pl\ninner join products p on pl.prodl_prod_id=p.id\ninner join subcategories s on s.id=p.prod_subcat_id\ninner join brands b on b.id=p.prod_brand_id\nwhere pl.prodl_prod_id<>1 and pl.ean like ('{{ $('Loop Over Items').item.json.manufacturerCode.substring(0,8)  }}%') group by brand,subcategory,description1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        1060,
+        -5
+      ],
+      "id": "dadaa310-5e2f-42bd-88d2-71459bb42b12",
+      "name": "MySQL6",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b33c0a56-15d8-4b12-82b5-c4ac8fb06b49",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1280,
+        -5
+      ],
+      "id": "7c30f785-08b5-4c39-895d-03851e1c8c7a",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select b.description as brand,s.description as subcategory,pl.description as description1 from productslinked pl\ninner join products p on pl.prodl_prod_id=p.id\ninner join subcategories s on s.id=p.prod_subcat_id\ninner join brands b on b.id=p.prod_brand_id\nwhere pl.prodl_prod_id<>1 and pl.ean like ('{{ $('Loop Over Items').item.json.manufacturerCode.substring(0,7)  }}%') group by brand,subcategory,description1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        1500,
+        -80
+      ],
+      "id": "6a61e503-e597-484c-b419-34f04f8e531a",
+      "name": "MySQL7",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b33c0a56-15d8-4b12-82b5-c4ac8fb06b49",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1720,
+        -80
+      ],
+      "id": "a540ab82-28cc-4e8a-a426-8434e283057d",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const brands = {};\nconst subcategories = {};\nconst products ={ }\n\n$input.all().forEach((item) => {\n  if (!brands[item.json.brand]) {\n    brands[item.json.brand] = item.json.brand;\n  }\n  if (!subcategories[item.json.subcategory]) {\n    subcategories[item.json.subcategory] = item.json.subcategory;\n  }\n    if (!products[item.json.description1]) {\n    products[item.json.description1] = item.json.description1;\n  }\n});\n\nreturn {\n  json: {\n    brands: Object.values(brands),\n    subcategories: Object.values(subcategories),\n    products:Object.values(products),\n    product: $(\"Loop Over Items\").first().json.description,\n  },\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1940,
+        145
+      ],
+      "id": "90414db0-f7dc-4b13-8c44-edd6ccdedab1",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/embeddings",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"model\": \"text-embedding-3-small\",\n  \"input\": [\n    \"Pix Recebido\",\n    \"Fatura Cartão Nubank\",\n    \"Mercado Carrefour\"\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -40,
+        780
+      ],
+      "id": "5e2e9f85-8e29-4d2c-b01d-ca771c8094ec",
+      "name": "HTTP Request",
+      "credentials": {
+        "openAiApi": {
+          "id": "746NrtVty7PbaSTv",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/embeddings",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"model\": \"text-embedding-3-small\",\n  \"input\": [\"Nubank\"]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -40,
+        580
+      ],
+      "id": "9a85bc72-bb5d-4595-97b5-80027288ea84",
+      "name": "HTTP Request1",
+      "credentials": {
+        "openAiApi": {
+          "id": "746NrtVty7PbaSTv",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        180,
+        680
+      ],
+      "id": "72521e3e-222d-4e00-a3bc-49888f4345e0",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "function cosineSimilarity(a, b) {\n  const dot = a.reduce((sum, ai, i) => sum + ai * b[i], 0);\n  const normA = Math.sqrt(a.reduce((sum, ai) => sum + ai * ai, 0));\n  const normB = Math.sqrt(b.reduce((sum, bi) => sum + bi * bi, 0));\n  return dot / (normA * normB);\n}\n\n// Embedding da nova descrição (resultado do HTTP anterior)\nconst novoEmbedding = $input.first().json.data[0].embedding\n\n// Lista de produtos conhecidos\nconst conhecidos = $input.last().json.data\n\nlet melhor = { nome: null, score: 0 };\n\nlet item1 =0 \n\nfor (const item of conhecidos) {\n  item1+=1\n  const score = cosineSimilarity(novoEmbedding, item.embedding);\n  if (score > melhor.score) {\n    melhor = { score,item1 };\n  }\n}\n\nreturn [\n  {\n    json: {\n      similaridade: melhor.score,\n      item1:melhor.item1\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        680
+      ],
+      "id": "87bb05a2-5910-4dfb-bb76-ffa408ddb5dc",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.1,
+      "position": [
+        620,
+        -1140
+      ],
+      "id": "e4068962-024f-4cdb-8eef-8fbff0c1f276",
+      "name": "Postgres PGVector Store",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        -920
+      ],
+      "id": "05e1bc0f-fe61-4625-a0bf-92ed15a8a0d9",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "746NrtVty7PbaSTv",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        160,
+        -777.5
+      ],
+      "id": "b89143b6-8d9d-4bdc-a5b7-243ce787dc80",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "__rl": true,
+          "value": "productslinked",
+          "mode": "list",
+          "cachedResultName": "productslinked"
+        },
+        "limit": 10,
+        "where": {
+          "values": [
+            {
+              "column": "prodl_prod_id",
+              "value": "1"
+            },
+            {
+              "column": "prodl_unit_id",
+              "value": "105"
+            }
+          ]
+        },
+        "options": {
+          "outputColumns": [
+            "description"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        180,
+        -1140
+      ],
+      "id": "ec453c03-eccb-4cf2-98ed-9f612e86b0a2",
+      "name": "MySQL4",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -780
+      ],
+      "id": "f9423186-c9bb-4b28-b14f-5aa0a6fa6507",
+      "name": "Token Splitter"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n\nreturn {json:{data:$input.all().map((item)=>item.json)}}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        -1140
+      ],
+      "id": "81681763-9e05-4967-b027-f3dbd4bc7584",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        760,
+        -920
+      ],
+      "id": "93b46b52-1feb-414a-aef6-063c556c3b14",
+      "name": "Default Data Loader1"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+      "typeVersion": 1,
+      "position": [
+        860,
+        -700
+      ],
+      "id": "d961b6d0-a8f1-4a1a-9267-db1b65d531fb",
+      "name": "Token Splitter1"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL": {
+      "ai_tool": [
+        []
+      ]
+    },
+    "MySQL2": {
+      "ai_tool": [
+        []
+      ]
+    },
+    "MySQL1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "MySQL4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "MySQL5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL5": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "MySQL6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL6": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "MySQL7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL7": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        []
+      ]
+    },
+    "MySQL4": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Token Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader1": {
+      "ai_document": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Token Splitter1": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader1",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "35cecf70-0fee-47cc-a154-5cd845b00e70",
+  "triggerCount": 0,
+  "tags": []
+}
