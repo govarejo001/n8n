@@ -1,0 +1,158 @@
+{
+  "createdAt": "2025-04-07T20:10:32.840Z",
+  "updatedAt": "2025-04-22T11:34:22.123Z",
+  "id": "Pb6lZOVlJPOxESvT",
+  "name": "Clean S3",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 4
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -180,
+        -200
+      ],
+      "id": "6ec3f8c2-2dbd-4129-8544-242be1e3e7ff",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "bucketName": "upload",
+        "returnAll": true,
+        "options": {
+          "folderKey": "backup/"
+        }
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -240
+      ],
+      "id": "44fa57e0-864d-4a03-bbc0-1c94835854a9",
+      "name": "S3",
+      "alwaysOutputData": false,
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6baebf9f-c3d5-47a7-9655-e30ae1824055",
+              "leftValue": "={{ $now.format('yyyy-MM-dd').toDateTime().diffTo($json.LastModified.toDateTime().format('yyyy-MM-dd').toDateTime(), 'days') }}",
+              "rightValue": 6,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        260,
+        -240
+      ],
+      "id": "e306f60a-bcac-4f54-a2d0-1fba7f3cd12e",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "bucketName": "upload",
+        "fileKey": "={{ $json.Key }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        480,
+        -340
+      ],
+      "id": "29ec82e1-5e18-434d-9da2-91cf10c8a66a",
+      "name": "S31",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "S3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "S3": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "S31",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "b355efd8-d072-43fe-aa86-602f4230b670",
+  "triggerCount": 1,
+  "tags": []
+}
