@@ -1,0 +1,162 @@
+{
+  "createdAt": "2025-03-25T11:53:33.962Z",
+  "updatedAt": "2025-04-05T01:13:10.639Z",
+  "id": "ScdXWbOf2nP9e5CM",
+  "name": "Imap",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4fed29f9-232b-417a-882c-00d45068c7c0",
+              "leftValue": "={{ $json.subject }}",
+              "rightValue": "Cresce Vendas: Seu código de verificação em 2 etapas é",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -20,
+        -160
+      ],
+      "id": "533d3be8-ab09-4d6d-8f9f-9df2a890f42e",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cdddde33-6529-4ab5-9a6c-cd8a3f0f5095",
+              "name": "html",
+              "value": "={{ $json.textHtml }}",
+              "type": "string"
+            },
+            {
+              "id": "b8f7fe6b-aad8-4e5a-9633-f4c85a7d18d9",
+              "name": "title",
+              "value": "={{ $json.subject }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        200,
+        -260
+      ],
+      "id": "04b6a297-ba04-47ff-bab6-7081a10c6d38",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        520,
+        -300
+      ],
+      "id": "64941055-b8c0-424a-8146-720c6c185158",
+      "name": "Enviar E-mail",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Z5N7pF06Ll5QHk1Q",
+          "name": "Resend"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const from = \"Rodrigo Novais<oi@zify.com.br>\"\nconst to = ['cristianesantos4097@gmail.com','danirbastos@yahoo.com.br']\n\nreturn {\n  from,\n  to,\n  subject:$input.first().json.title,\n  html:$input.first().json.html,\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        340,
+        -420
+      ],
+      "id": "7b7e1585-d035-46fa-929b-1dea20de95df",
+      "name": "Configuração E-mail"
+    }
+  ],
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Configuração E-mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configuração E-mail": {
+      "main": [
+        [
+          {
+            "node": "Enviar E-mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Email Trigger (IMAP)": {
+      "lastMessageUid": 1329
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "9ac0696d-68e3-451c-b577-4b06e30f2705",
+  "triggerCount": 1,
+  "tags": []
+}
