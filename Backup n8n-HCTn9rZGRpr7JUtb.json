@@ -1,0 +1,376 @@
+{
+  "createdAt": "2025-05-16T00:06:05.629Z",
+  "updatedAt": "2025-05-16T00:11:31.931Z",
+  "id": "HCTn9rZGRpr7JUtb",
+  "name": "Backup n8n",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        -1100,
+        240
+      ],
+      "id": "5ee88cb1-1b60-4a33-9358-fd0340ce95e8",
+      "name": "n8n",
+      "credentials": {
+        "n8nApi": {
+          "id": "7ouFAkAW3l9ZkDdo",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -880,
+        240
+      ],
+      "id": "2730e22f-1cb1-4e0d-914a-50bfd62721b5",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "irodrigoan",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://github.com/irodrigoan/n8n"
+        },
+        "filePath": "={{ $json.name }}-{{ $json.id }}.json",
+        "asBinaryProperty": false,
+        "additionalParameters": {}
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        -660,
+        -60
+      ],
+      "id": "7e42cc79-3650-450f-80d7-f936c99785d1",
+      "name": "GitHub",
+      "webhookId": "45ece5d1-06a2-4289-b8d3-fa41dedbcb5a",
+      "alwaysOutputData": false,
+      "credentials": {
+        "githubApi": {
+          "id": "T8IcHGyl72ySl3oA",
+          "name": "GitHub account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "38e514e0-5f9c-4514-8dbc-68f43d7c13c8",
+              "leftValue": "={{$json.error}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -440,
+        -60
+      ],
+      "id": "9fa413c7-330f-4d79-95cc-b45fa2692943",
+      "name": "existe"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "govarejo001",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://github.com/irodrigoan/n8n"
+        },
+        "filePath": "={{ $('Loop Over Items').item.json.name }}-{{ $('Loop Over Items').item.json.id }}.json",
+        "fileContent": "={{ JSON.stringify($('Loop Over Items').item.json,null,2)}}",
+        "commitMessage": "={{ $now.plus(1,'hour').format('yyyy-MM-dd HH:mm:ss') }}"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        40
+      ],
+      "id": "ee5715a0-bf29-45dd-8dca-4958984972a6",
+      "name": "GitHub1",
+      "webhookId": "1669308f-d083-47e9-afe4-12fa115e1cfa",
+      "credentials": {
+        "githubApi": {
+          "id": "T8IcHGyl72ySl3oA",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const data = JSON.parse(Buffer.from($json.content,'base64'))\n\nreturn {\n  json:{\n    data\n  }\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -220,
+        -160
+      ],
+      "id": "85ea59e7-0218-49a3-81ac-346e6eed8e30",
+      "name": "Parse"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d6e03dc3-286a-4b63-9dc6-2d73cc916306",
+              "leftValue": "={{ JSON.stringify($json.data,null,2) }}",
+              "rightValue": "={{JSON.stringify($('Loop Over Items').item.json,null,2)}}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        -160
+      ],
+      "id": "24020acd-ddb0-4cbe-9638-ba690f4adb85",
+      "name": "Diferente"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "govarejo001",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://github.com/irodrigoan/n8n"
+        },
+        "filePath": "={{ $('Loop Over Items').item.json.name }}-{{ $('Loop Over Items').item.json.id }}.json",
+        "fileContent": "={{ JSON.stringify($('Loop Over Items').item.json,null,2)}}",
+        "commitMessage": "={{ $now.plus(1,'hour').format('yyyy-MM-dd HH:mm:ss') }}"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        15
+      ],
+      "id": "49ee68c2-772b-4f9d-8413-e2f5c0c499e6",
+      "name": "GitHub2",
+      "webhookId": "87be57f0-98da-4c99-8047-3b7bafa2973b",
+      "credentials": {
+        "githubApi": {
+          "id": "T8IcHGyl72ySl3oA",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1320,
+        240
+      ],
+      "id": "c45be962-4de9-40d3-a10a-bea0646e76e7",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "connections": {
+    "n8n": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub": {
+      "main": [
+        [
+          {
+            "node": "existe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "existe": {
+      "main": [
+        [
+          {
+            "node": "Parse",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "GitHub1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse": {
+      "main": [
+        [
+          {
+            "node": "Diferente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Diferente": {
+      "main": [
+        [
+          {
+            "node": "GitHub2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "n8n",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "aa3a3709-72f3-484e-ae79-8f1bdc3a6b32",
+  "triggerCount": 0,
+  "tags": []
+}
