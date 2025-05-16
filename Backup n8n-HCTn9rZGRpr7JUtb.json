@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-16T00:06:05.629Z",
-  "updatedAt": "2025-05-16T00:11:31.931Z",
+  "updatedAt": "2025-05-16T00:37:13.627Z",
   "id": "HCTn9rZGRpr7JUtb",
   "name": "Backup n8n",
   "active": false,
@@ -44,7 +44,7 @@
         "operation": "get",
         "owner": {
           "__rl": true,
-          "value": "irodrigoan",
+          "value": "govarejo001",
           "mode": "name"
         },
         "repository": {
@@ -370,7 +370,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "aa3a3709-72f3-484e-ae79-8f1bdc3a6b32",
+  "versionId": "1433ef15-5771-487c-801f-f91af575ef09",
   "triggerCount": 0,
   "tags": []
 }
