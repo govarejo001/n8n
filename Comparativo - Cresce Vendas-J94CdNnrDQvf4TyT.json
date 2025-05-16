@@ -1,0 +1,265 @@
+{
+  "createdAt": "2025-01-07T17:13:54.562Z",
+  "updatedAt": "2025-04-25T12:57:02.567Z",
+  "id": "J94CdNnrDQvf4TyT",
+  "name": "Comparativo - Cresce Vendas",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -180,
+        -60
+      ],
+      "id": "e3d5d7ce-28d4-4eca-b790-6ba54198e164",
+      "name": "08:00"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "2pIiDb7zFUsy52Mi",
+          "mode": "list",
+          "cachedResultName": "Enviar e-mail"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1160,
+        300
+      ],
+      "id": "0e8852cd-beb4-4c90-b7da-0605e4beec3e",
+      "name": "Enviar E-mail1"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.query }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        500,
+        20
+      ],
+      "id": "d4f0739a-5b06-4b82-8a70-a1dfa33b73e5",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "C8DsN3myOq1XZZ8n",
+          "name": "CRM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const dates = $input.all();\nconst startDate = dates.pop().json.date;\nconst endDate = dates[0].json.date;\nconst query = `SELECT \n    substr(cast(date as text),1,10) as date,\n    \"unitId\",\n    type,\n    COUNT(id) as quantity,\n    SUM(value) as value \nFROM (\n    SELECT \n        c.id, \n        CASE \n            WHEN cpf = '00000000000' THEN 'NÃO IDENTIFICADO' \n            ELSE 'IDENTIFICADO' \n        END as type,\n        \"unitId\",\n        SUM(value) as value,\n        DATE(c.\"date\") as date\n    FROM COUPONS c \n    INNER JOIN coupons_finishers cf ON cf.\"couponId\" = c.id\n    WHERE c.\"date\" >= '${startDate} 00:00:00' \n      AND c.\"date\" <= '${endDate} 23:59:59' \n    GROUP BY c.id, cpf, \"unitId\", DATE(c.\"date\")\n) as db1 \nGROUP BY date, \"unitId\", type \nORDER BY date, \"unitId\", type;\n`;\n\n\nreturn [{ json: { query } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        0
+      ],
+      "id": "97f12b08-ffc4-4738-8fbc-a744897e0fa1",
+      "name": "Pegar Intervalo de D-8 até D-"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = [\n  { \"unitId\": 12, \"name\": \"Chiquinho Supermercado\" },\n  { \"unitId\": 30, \"name\": \"Emporio Supermercado\" },\n  { \"unitId\": 93, \"name\": \"Lima Itanhaém\" },\n  { \"unitId\": 21, \"name\": \"Mega Mercado\" },\n  { \"unitId\": 56, \"name\": \"Mercadinho Vila Candida\" },\n  { \"unitId\": 25, \"name\": \"Mercadinho Vila Maria\" },\n  { \"unitId\": 84, \"name\": \"Mercado Eldorado (Av. Presidente Vargas)\" },\n  { \"unitId\": 83, \"name\": \"Mercado Eldorado (Rua Francisco Osaki)\" },\n  { \"unitId\": 76, \"name\": \"Mercado Madona\" },\n  { \"unitId\": 36, \"name\": \"Supermercado Araújo\" },\n  { \"unitId\": 90, \"name\": \"Supermercado Aurea\" },\n  { \"unitId\": 23, \"name\": \"Supermercado Beira Rio\" },\n  { \"unitId\": 31, \"name\": \"Supermercado Compra Certa\" },\n  { \"unitId\": 29, \"name\": \"Supermercado Duminduim\" },\n  { \"unitId\": 24, \"name\": \"Supermercado Economico\" },\n  { \"unitId\": 22, \"name\": \"Supermercado Estrela\" },\n  { \"unitId\": 11, \"name\": \"Supermercado Gerolamo\" },\n  { \"unitId\": 53, \"name\": \"Supermercado H3P\" },\n  { \"unitId\": 8, \"name\": \"Supermercado Jacob\" },\n  { \"unitId\": 85, \"name\": \"Lima Santos\" },\n  { \"unitId\": 60, \"name\": \"Supermercado Medeiros (Rua Francisco Gama)\" },\n  { \"unitId\": 5, \"name\": \"Supermercado Medeiros (Rua Joaquim Martins)\" },\n  { \"unitId\": 35, \"name\": \"Supermercado Nossa Senhora Aparecida\" },\n  { \"unitId\": 45, \"name\": \"Supermercado Oliveira\" },\n  { \"unitId\": 26, \"name\": \"Supermercado Peg Mais\" },\n  { \"unitId\": 14, \"name\": \"Supermercado Rodrigues\" },\n  { \"unitId\": 33, \"name\": \"Supermercado Rovina\" },\n  { \"unitId\": 96, \"name\": \"Supermercado Santa Cruz\" },\n  { \"unitId\": 86, \"name\": \"Supermercado São Francisco Xavier\" },\n  { \"unitId\": 47, \"name\": \"Supermercado São José\" },\n  { \"unitId\": 94, \"name\": \"Supermercado Silvestre\" },\n  { \"unitId\": 32, \"name\": \"Supermercado Visconde\" }\n]\n\nreturn data"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        60,
+        -200
+      ],
+      "id": "31f60ed6-2e5d-4ded-8e9d-9f381b58c346",
+      "name": "Code4"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "unitId",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        700,
+        -260
+      ],
+      "id": "f5d0fe76-c704-415d-ae04-9b3f5c83eb81",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const dates = [];\nconst yesterday = new Date();\nyesterday.setDate(yesterday.getDate() - 1); \n\n\nfor (let i = 0; i < 7; i++) {\n  const date = new Date(yesterday);\n  date.setDate(yesterday.getDate() - i); \n  dates.push({\n    json: {\n      date: date.toISOString().split('T')[0]\n    }\n  });\n}\n\nreturn dates;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        60,
+        0
+      ],
+      "id": "57650b08-28ea-4dd1-a7fd-21ca4b461648",
+      "name": "Pegar Intervalo de D-8 até D-2"
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        920,
+        -320
+      ],
+      "id": "8b68d91a-fbb2-4de0-aa81-f061fb05cc45",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "jsCode": "const from = \"Rodrigo Novais<rodrigo@zify.com.br>\"\nconst to = ['rodrigo@zify.com.br','danilorb@redevalor.com.br','niltonjr@redevalor.com.br','andreais@redevalor.com.br','luisfl@redevalor.com.br']\nconst subject = \"Relatório de Vendas - Cresce Vendas\"\nconst html = '<p>Bom dia,</p><p>Segue anexado.</p>'\nconst attachments = [\n    {\n      content: $input.first().binary.data.data,\n      filename: $input.first().binary.data.fileName,\n    },\n  ]\nreturn {\n  from,\n  to,\n  attachments,\n  subject,\n  html,\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1260,
+        -280
+      ],
+      "id": "99bb8b11-7d70-4547-b717-4088441a05f3",
+      "name": "Configuração E-mail"
+    }
+  ],
+  "connections": {
+    "08:00": {
+      "main": [
+        [
+          {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Pegar Intervalo de D-8 até D-2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pegar Intervalo de D-8 até D-": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code4": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pegar Intervalo de D-8 até D-2": {
+      "main": [
+        [
+          {
+            "node": "Pegar Intervalo de D-8 até D-",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Configuração E-mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configuração E-mail": {
+      "main": [
+        [
+          {
+            "node": "Enviar E-mail1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    },
+    "node:08:00": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "fa9642d7-d107-46af-8e5a-af95c6e7a325",
+  "triggerCount": 1,
+  "tags": []
+}
