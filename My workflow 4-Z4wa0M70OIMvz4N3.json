@@ -1,0 +1,204 @@
+{
+  "createdAt": "2025-05-19T20:57:55.598Z",
+  "updatedAt": "2025-05-19T21:13:23.368Z",
+  "id": "Z4wa0M70OIMvz4N3",
+  "name": "My workflow 4",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "formTitle": "Produto",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Código Loja",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Ean Loja",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Enviar"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fb158ef2-8c27-493f-99e4-9866f5ee60e5",
+      "name": "On form submission",
+      "webhookId": "f8924ad7-d200-43e1-848c-9866ec3359e4",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Om3mFSSiK845WPlX",
+          "name": "Andrea"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "__rl": true,
+          "value": "productslinked",
+          "mode": "list",
+          "cachedResultName": "productslinked"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "prodl_unit_id",
+              "value": "={{ $json.query.unit_id }}"
+            },
+            {
+              "column": "ean",
+              "value": "={{ $json.query.ean }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        180,
+        -220
+      ],
+      "id": "a8b3b8c2-9b90-4ac8-bf8c-09928023b954",
+      "name": "MySQL",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "respondWith": "redirect",
+        "redirectUrl": "=https://hub.govarejo.com/webhook/19a3ccfe-8bc9-47ac-b185-8038a97254d9?ean={{ $json['Ean Loja'] }}&unit_id={{ $json['Código Loja'] }}"
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "id": "88291192-a102-4745-8e3b-1a4701677252",
+      "name": "Form",
+      "webhookId": "0773817a-45b2-4e63-8a95-c4d6127c7207"
+    },
+    {
+      "parameters": {
+        "jsCode": "let html = `\n<table border=\"1\" cellpadding=\"8\" cellspacing=\"0\">\n  <thead>\n    <tr>\n      <th>ID</th>\n      <th>Código</th>\n      <th>EAN</th>\n      <th>Descrição</th>\n      <th>Unidade ID</th>\n      <th>Produto ID</th>\n      <th>Criação Pendente</th>\n      <th>EAN Válido</th>\n      <th>Importado em</th>\n      <th>Vinculado em</th>\n      <th>Atualizado em</th>\n    </tr>\n  </thead>\n  <tbody>\n`;\n\nfor (const item of $input.all()) {\n  const data = item.json;\n  html += `\n    <tr>\n      <td>${data.id}</td>\n      <td>${data.code}</td>\n      <td>${data.ean}</td>\n      <td>${data.description}</td>\n      <td>${data.prodl_unit_id}</td>\n      <td>${data.prodl_prod_id}</td>\n      <td>${data.creation_pending}</td>\n      <td>${data.ean_valid}</td>\n      <td>${data.imported_at}</td>\n      <td>${data.linked_at}</td>\n      <td>${data.updated_at}</td>\n    </tr>\n  `;\n}\n\nhtml += `\n  </tbody>\n</table>\n`;\n\nreturn [{ json: { html } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        360,
+        -20
+      ],
+      "id": "31752c56-a379-40da-a48c-52d2f8fb02e3",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "path": "19a3ccfe-8bc9-47ac-b185-8038a97254d9",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -60,
+        -200
+      ],
+      "id": "de9422a9-91c8-412b-a623-95a3aefc7a8e",
+      "name": "Webhook",
+      "webhookId": "19a3ccfe-8bc9-47ac-b185-8038a97254d9"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        -200
+      ],
+      "id": "ead948cf-5234-49f2-8f29-a3aa898edcd3",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "36cf8554-77d5-4f3b-8d85-fd8143cc7427",
+  "triggerCount": 2,
+  "tags": []
+}
