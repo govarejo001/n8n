@@ -1,0 +1,419 @@
+{
+  "createdAt": "2025-05-19T15:50:34.902Z",
+  "updatedAt": "2025-05-19T16:48:36.813Z",
+  "id": "AVBKGKnLuBPugDgJ",
+  "name": "Atualizar Loja",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "units",
+          "mode": "list",
+          "cachedResultName": "units"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.unit_id }}",
+            "cnpj": "={{ $json.unit_cnpj.replaceAll('.','').replaceAll('/','').replaceAll('-','') }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "serviceToken",
+              "displayName": "serviceToken",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "isActive",
+              "displayName": "isActive",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "updatedAt",
+              "displayName": "updatedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "serviceEmail",
+              "displayName": "serviceEmail",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "canSendCoupons",
+              "displayName": "canSendCoupons",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "code",
+              "displayName": "code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cnpj",
+              "displayName": "cnpj",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        560,
+        -200
+      ],
+      "id": "53ffeeb5-cefb-4568-8e72-4b70ea16afe8",
+      "name": "Atualizar CNPJ",
+      "credentials": {
+        "postgres": {
+          "id": "C8DsN3myOq1XZZ8n",
+          "name": "CRM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "units",
+          "mode": "list",
+          "cachedResultName": "units"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "cnpj",
+              "condition": "IS NULL"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -100,
+        -300
+      ],
+      "id": "7198a8ff-8ce8-4028-a022-b5279067c5e7",
+      "name": "Buscar lojas",
+      "credentials": {
+        "postgres": {
+          "id": "C8DsN3myOq1XZZ8n",
+          "name": "CRM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "units",
+          "mode": "list",
+          "cachedResultName": "units"
+        },
+        "returnAll": true,
+        "options": {
+          "outputColumns": [
+            "unit_id",
+            "unit_cnpj"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -100,
+        -100
+      ],
+      "id": "aa30ea05-9808-474b-807c-02d22b51f19d",
+      "name": "Buscas lojas - portal",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "id",
+              "field2": "unit_id"
+            }
+          ]
+        },
+        "outputDataFrom": "input2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        120,
+        -200
+      ],
+      "id": "f48023c5-9d84-4403-94e4-08f900f8b5b3",
+      "name": "Combinar"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        340,
+        -200
+      ],
+      "id": "941df9be-e737-4d2b-a6e7-58d71edbc706",
+      "name": "Loop"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 2
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -320,
+        0
+      ],
+      "id": "b8db62b4-7dab-40dd-9918-4b1b62292f1f",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE customers c\nSET \"unitId\" = u.id\nFROM units u\nWHERE c.\"unitId\" IS NULL\n  AND c.\"cnpjRegistration\" = u.cnpj;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -100,
+        100
+      ],
+      "id": "adc6d58e-2428-4643-8619-58d56d1d4a97",
+      "name": "Atualizar unitId",
+      "credentials": {
+        "postgres": {
+          "id": "C8DsN3myOq1XZZ8n",
+          "name": "CRM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE customers c\nSET \"unitId\" = sub.\"unitId\"\nFROM (\n  SELECT DISTINCT ON (cpf) cpf, \"unitId\", \"date\"\n  FROM coupons\n  WHERE \"unitId\" IS NOT NULL\n  ORDER BY cpf, \"date\" DESC\n) sub\nWHERE c.\"unitId\" IS NULL\n  AND c.\"cnpjRegistration\" IS NULL\n  AND c.cpf = sub.cpf;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -100,
+        300
+      ],
+      "id": "dfa82f90-d1c4-45e9-9ccc-a4d2db8fbc4c",
+      "name": "Atualizar ult loja",
+      "credentials": {
+        "postgres": {
+          "id": "C8DsN3myOq1XZZ8n",
+          "name": "CRM"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Atualizar CNPJ": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar lojas": {
+      "main": [
+        [
+          {
+            "node": "Combinar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscas lojas - portal": {
+      "main": [
+        [
+          {
+            "node": "Combinar",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Combinar": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Atualizar CNPJ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Buscar lojas",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscas lojas - portal",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Atualizar unitId",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Atualizar ult loja",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "79fdf77f-1424-4fdf-b0a9-090c4ec29aed",
+  "triggerCount": 1,
+  "tags": []
+}
