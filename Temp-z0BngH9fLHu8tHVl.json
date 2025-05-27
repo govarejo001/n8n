@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-19T17:20:35.200Z",
-  "updatedAt": "2025-05-23T18:05:12.835Z",
+  "updatedAt": "2025-05-26T16:50:37.046Z",
   "id": "z0BngH9fLHu8tHVl",
   "name": "Temp",
   "active": false,
@@ -36,7 +36,7 @@
       "typeVersion": 2.6,
       "position": [
         120,
-        -320
+        -340
       ],
       "id": "20833916-06c1-4c0a-8300-a1f0a54d199a",
       "name": "Postgres2",
@@ -232,14 +232,14 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "WITH months AS (\n  SELECT generate_series(\n    DATE_TRUNC('month', DATE '2024-01-01'),\n    DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '1 month',\n    INTERVAL '1 month'\n  ) AS month\n),\nstores AS (\n  SELECT DISTINCT \"unitId\" FROM customers WHERE \"unitId\" IS NOT NULL\n),\nall_months_stores AS (\n  SELECT m.month, s.\"unitId\"\n  FROM months m\n  CROSS JOIN stores s\n),\naccumulated_base_per_store AS (\n  SELECT\n    ams.month,\n    ams.\"unitId\",\n    COUNT(cu.id) AS total_customers_per_store\n  FROM all_months_stores ams\n  LEFT JOIN customers cu\n    ON cu.\"unitId\" = ams.\"unitId\"\n    AND cu.\"createdAt\" < (ams.month + INTERVAL '1 month')\n  GROUP BY ams.month, ams.\"unitId\"\n),\nnew_customers_per_store AS (\n  SELECT \n    DATE_TRUNC('month', \"createdAt\") AS month,\n    \"unitId\",\n    COUNT(*) AS new_customers_in_month\n  FROM customers\n  WHERE \"unitId\" IS NOT NULL\n  GROUP BY month, \"unitId\"\n),\ntickets_summary AS (\n  SELECT\n    DATE_TRUNC('month', c.date) AS period,\n    c.\"unitId\" AS unit_id,\n\n    COALESCE(SUM(cf.value) FILTER (\n      WHERE cu.cpf IS NOT NULL AND c.date >= cu.\"createdAt\"\n    ), 0) AS identified_value,\n    COALESCE(COUNT(c.id) FILTER (\n      WHERE cu.cpf IS NOT NULL AND c.date >= cu.\"createdAt\"\n    ), 0) AS identified_tickets,\n\n    COALESCE(SUM(cf.value) FILTER (\n      WHERE cu.cpf IS NULL OR c.date < cu.\"createdAt\"\n    ), 0) AS unidentified_value,\n    COALESCE(COUNT(c.id) FILTER (\n      WHERE cu.cpf IS NULL OR c.date < cu.\"createdAt\"\n    ), 0) AS unidentified_tickets,\n\n    SUM(cf.value) AS total_value,\n    COUNT(c.id) AS total_tickets,\n\n    c.\"unitId\"\n  FROM coupons c\n  LEFT JOIN customers cu ON c.cpf = cu.cpf\n  INNER JOIN coupons_finishers cf ON cf.\"couponId\" = c.id\n  WHERE c.date >= DATE '2024-01-01'\n    AND c.date < DATE_TRUNC('month', CURRENT_DATE)\n  GROUP BY period, c.\"unitId\"\n),\nactive_customers_per_store AS (\n  SELECT\n    DATE_TRUNC('month', c.date) AS month,\n    c.\"unitId\",\n    COUNT(DISTINCT c.cpf) AS active_customers\n  FROM coupons c\n  WHERE c.date >= DATE '2024-01-01'\n    AND c.date < DATE_TRUNC('month', CURRENT_DATE)\n    AND c.cpf IS NOT NULL\n  GROUP BY month, c.\"unitId\"\n)\nSELECT\n  to_char(ams.month, 'YYYY-MM') AS period,\n  ams.\"unitId\" AS unit_id,\n\n  COALESCE(ts.identified_value, 0) AS identified_value,\n  COALESCE(ts.identified_tickets, 0) AS identified_tickets,\n\n  COALESCE(ts.unidentified_value, 0) AS unidentified_value,\n  COALESCE(ts.unidentified_tickets, 0) AS unidentified_tickets,\n\n  COALESCE(ts.total_value, 0) AS total_value,\n  COALESCE(ts.total_tickets, 0) AS total_tickets,\n\n  COALESCE(nc.new_customers_in_month, 0) AS new_customers,\n  COALESCE(ba.total_customers_per_store, 0) AS total_customers,\n  COALESCE(ac.active_customers, 0) AS active_customers\n\nFROM all_months_stores ams\nLEFT JOIN tickets_summary ts\n  ON ts.period = ams.month\n  AND ts.unit_id = ams.\"unitId\"\nLEFT JOIN new_customers_per_store nc\n  ON nc.month = ams.month\n  AND nc.\"unitId\" = ams.\"unitId\"\nLEFT JOIN accumulated_base_per_store ba\n  ON ba.month = ams.month\n  AND ba.\"unitId\" = ams.\"unitId\"\nLEFT JOIN active_customers_per_store ac\n  ON ac.month = ams.month\n  AND ac.\"unitId\" = ams.\"unitId\"\nORDER BY ams.\"unitId\", period",
+        "query": "WITH months AS (\n  SELECT generate_series(\n    DATE_TRUNC('month', DATE '2024-01-01'),\n    DATE_TRUNC('month', CURRENT_DATE),\n    INTERVAL '1 month'\n  ) AS month\n),\nstores AS (\n  SELECT DISTINCT \"unitId\" FROM customers WHERE \"unitId\" IS NOT NULL\n),\nall_months_stores AS (\n  SELECT m.month, s.\"unitId\"\n  FROM months m\n  CROSS JOIN stores s\n),\naccumulated_base_per_store AS (\n  SELECT\n    ams.month,\n    ams.\"unitId\",\n    COUNT(cu.id) AS total_customers_per_store\n  FROM all_months_stores ams\n  LEFT JOIN customers cu\n    ON cu.\"unitId\" = ams.\"unitId\"\n    AND cu.\"createdAt\" < (ams.month + INTERVAL '1 month')\n  GROUP BY ams.month, ams.\"unitId\"\n),\nnew_customers_per_store AS (\n  SELECT \n    DATE_TRUNC('month', \"createdAt\") AS month,\n    \"unitId\",\n    COUNT(*) AS new_customers_in_month\n  FROM customers\n  WHERE \"unitId\" IS NOT NULL\n  GROUP BY month, \"unitId\"\n),\nunique_finishers AS (\n  SELECT DISTINCT ON (cf.\"couponId\") *\n  FROM coupons_finishers cf\n  ORDER BY cf.\"couponId\", cf.id\n),\ntickets_summary AS (\n  SELECT\n    DATE_TRUNC('month', c.date) AS period,\n    c.\"unitId\" AS unit_id,\n\n    COALESCE(SUM(cf.value) FILTER (\n      WHERE cu.cpf IS NOT NULL AND c.date >= cu.\"createdAt\"\n    ), 0) AS identified_value,\n    COALESCE(COUNT(c.id) FILTER (\n      WHERE cu.cpf IS NOT NULL AND c.date >= cu.\"createdAt\"\n    ), 0) AS identified_tickets,\n\n    COALESCE(SUM(cf.value) FILTER (\n      WHERE cu.cpf IS NULL OR c.date < cu.\"createdAt\"\n    ), 0) AS unidentified_value,\n    COALESCE(COUNT(c.id) FILTER (\n      WHERE cu.cpf IS NULL OR c.date < cu.\"createdAt\"\n    ), 0) AS unidentified_tickets,\n\n    SUM(cf.value) AS total_value,\n    COUNT(c.id) AS total_tickets,\n\n    c.\"unitId\"\n  FROM coupons c\n  LEFT JOIN customers cu ON c.cpf = cu.cpf\n  INNER JOIN unique_finishers cf ON cf.\"couponId\" = c.id\n  WHERE c.date >= DATE '2024-01-01'\n  GROUP BY period, c.\"unitId\"\n),\nactive_customers_per_store AS (\n  SELECT\n    DATE_TRUNC('month', c.date) AS month,\n    c.\"unitId\",\n    COUNT(DISTINCT c.cpf) AS active_customers\n  FROM coupons c\n  INNER JOIN customers cu ON c.cpf = cu.cpf\n  WHERE c.date >= DATE '2024-01-01'\n    AND cu.\"createdAt\" <= c.date\n  GROUP BY month, c.\"unitId\"\n)\nSELECT\n  to_char(ams.month, 'YYYY-MM') AS period,\n  ams.\"unitId\" AS unit_id,\n\n  COALESCE(ts.identified_value, 0) AS identified_value,\n  COALESCE(ts.identified_tickets, 0) AS identified_tickets,\n\n  COALESCE(ts.unidentified_value, 0) AS unidentified_value,\n  COALESCE(ts.unidentified_tickets, 0) AS unidentified_tickets,\n\n  COALESCE(ts.total_value, 0) AS total_value,\n  COALESCE(ts.total_tickets, 0) AS total_tickets,\n\n  COALESCE(nc.new_customers_in_month, 0) AS new_customers,\n  COALESCE(ba.total_customers_per_store, 0) AS total_customers,\n  COALESCE(ac.active_customers, 0) AS active_customers\n\nFROM all_months_stores ams\nLEFT JOIN tickets_summary ts\n  ON ts.period = ams.month\n  AND ts.unit_id = ams.\"unitId\"\nLEFT JOIN new_customers_per_store nc\n  ON nc.month = ams.month\n  AND nc.\"unitId\" = ams.\"unitId\"\nLEFT JOIN accumulated_base_per_store ba\n  ON ba.month = ams.month\n  AND ba.\"unitId\" = ams.\"unitId\"\nLEFT JOIN active_customers_per_store ac\n  ON ac.month = ams.month\n  AND ac.\"unitId\" = ams.\"unitId\"\nORDER BY ams.\"unitId\", period",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        340,
-        -320
+        320,
+        -400
       ],
       "id": "432e580a-73a6-4782-a0ff-70c60231ac19",
       "name": "Postgres4",
@@ -294,7 +294,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "c87a206f-5644-493e-aa33-74d8392a54a7",
+  "versionId": "c89d78e1-4333-4475-99d4-972c73d96df1",
   "triggerCount": 0,
   "tags": []
 }
