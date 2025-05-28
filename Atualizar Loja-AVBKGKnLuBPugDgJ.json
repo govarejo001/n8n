@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-19T15:50:34.902Z",
-  "updatedAt": "2025-05-19T16:48:36.813Z",
+  "updatedAt": "2025-05-27T14:02:40.835Z",
   "id": "AVBKGKnLuBPugDgJ",
   "name": "Atualizar Loja",
   "active": true,
@@ -258,7 +258,7 @@
         "rule": {
           "interval": [
             {
-              "triggerAtHour": 2
+              "triggerAtHour": 5
             }
           ]
         }
@@ -296,7 +296,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "UPDATE customers c\nSET \"unitId\" = sub.\"unitId\"\nFROM (\n  SELECT DISTINCT ON (cpf) cpf, \"unitId\", \"date\"\n  FROM coupons\n  WHERE \"unitId\" IS NOT NULL\n  ORDER BY cpf, \"date\" DESC\n) sub\nWHERE c.\"unitId\" IS NULL\n  AND c.\"cnpjRegistration\" IS NULL\n  AND c.cpf = sub.cpf;\n",
+        "query": "WITH latest_active_sales AS (\n  SELECT\n    c.cpf,\n    MAX(c.id) AS sale_id\n  FROM coupons c\n  JOIN units u ON u.id = c.\"unitId\"\n  WHERE u.\"isActive\" = true\n  GROUP BY c.cpf\n),\nlatest_any_sales AS (\n  SELECT\n    c.cpf,\n    MAX(c.id) AS sale_id\n  FROM coupons c\n  GROUP BY c.cpf\n),\nresolved_sales AS (\n  SELECT\n    cu.id AS customer_id,\n    cu.cpf,\n    COALESCE(las.sale_id, las2.sale_id) AS final_sale_id\n  FROM customers cu\n  LEFT JOIN latest_active_sales las ON cu.cpf = las.cpf\n  LEFT JOIN latest_any_sales las2 ON cu.cpf = las2.cpf\n  WHERE cu.\"cnpjRegistration\" IS NULL\n),\nfinal_update AS (\n  SELECT\n    rs.customer_id,\n    rs.cpf,\n    c.\"unitId\" AS new_unitId\n  FROM resolved_sales rs\n  JOIN coupons c ON c.id = rs.final_sale_id\n  WHERE c.\"unitId\" IS NOT NULL \n)\nUPDATE customers cu\nSET \"unitId\" = fu.new_unitId\nFROM final_update fu\nWHERE cu.id = fu.customer_id\n  AND cu.\"unitId\" IS DISTINCT FROM fu.new_unitId;\n",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
@@ -413,7 +413,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "79fdf77f-1424-4fdf-b0a9-090c4ec29aed",
+  "versionId": "a876b764-e0e0-42dd-9cd8-1eccb2f4345b",
   "triggerCount": 1,
   "tags": []
 }
