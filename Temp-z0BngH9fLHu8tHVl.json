@@ -1,21 +1,10 @@
 {
   "createdAt": "2025-05-19T17:20:35.200Z",
-  "updatedAt": "2025-05-26T16:50:37.046Z",
+  "updatedAt": "2025-05-27T14:08:00.123Z",
   "id": "z0BngH9fLHu8tHVl",
   "name": "Temp",
-  "active": false,
+  "active": true,
   "nodes": [
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [
-        -100,
-        -320
-      ],
-      "id": "4428ceb9-114c-4ab8-8b25-03489bf86263",
-      "name": "When clicking ‘Test workflow’"
-    },
     {
       "parameters": {
         "operation": "deleteTable",
@@ -249,20 +238,28 @@
           "name": "CRM"
         }
       }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        -360
+      ],
+      "id": "0a980d0c-8e98-4697-9dd1-bc6c422a8aeb",
+      "name": "Schedule Trigger"
     }
   ],
   "connections": {
-    "When clicking ‘Test workflow’": {
-      "main": [
-        [
-          {
-            "node": "Postgres2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Postgres2": {
       "main": [
         [
@@ -284,17 +281,34 @@
           }
         ]
       ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Postgres2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "callerPolicy": "workflowsFromSameOwner"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "c89d78e1-4333-4475-99d4-972c73d96df1",
-  "triggerCount": 0,
+  "versionId": "60372dab-d1d8-49f3-b527-86fcdf5507ca",
+  "triggerCount": 1,
   "tags": []
 }
