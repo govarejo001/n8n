@@ -1,0 +1,60 @@
+{
+  "createdAt": "2025-06-05T19:54:46.294Z",
+  "updatedAt": "2025-06-05T19:59:54.350Z",
+  "id": "sT6unOQRv9KDqgz6",
+  "name": "My workflow 5",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "webhook",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8483857a-140a-496d-9a39-e901f97f2717",
+      "name": "When chat message received",
+      "webhookId": "2d10cb68-9d97-4d8c-bbdb-eead7a977465"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn {\n  json:{\n    \"message\": \"ok\"\n  }\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "2aa35184-847a-4617-998e-3f8e2e9e4039",
+      "name": "Code"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "a588993d-b2f9-41b2-8766-0c04c05eee9a",
+  "triggerCount": 1,
+  "tags": []
+}
