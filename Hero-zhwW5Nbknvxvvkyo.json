@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-04-06T13:09:46.459Z",
-  "updatedAt": "2025-05-16T16:32:32.275Z",
+  "updatedAt": "2025-06-11T14:21:08.204Z",
   "id": "zhwW5Nbknvxvvkyo",
   "name": "Hero",
   "active": true,
@@ -19,7 +19,7 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -2120,
+        -2400,
         380
       ],
       "id": "2815f703-bb70-4692-b1b1-bb7167075233",
@@ -32,7 +32,7 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -1240,
+        -1520,
         480
       ],
       "id": "a3029b38-5ffe-460d-ae35-edb60141ce62",
@@ -51,7 +51,7 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -1900,
+        -2180,
         680
       ],
       "id": "a21288ce-9428-4121-9b5c-c9a86f0fc577",
@@ -70,7 +70,7 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -1900,
+        -2180,
         280
       ],
       "id": "48bd717d-ce3f-4d87-9e87-7f421d68c76b",
@@ -89,7 +89,7 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -1900,
+        -2180,
         480
       ],
       "id": "ac3c7182-3cf8-43c4-abdb-9d038ba535c9",
@@ -108,7 +108,7 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -1900,
+        -2180,
         -120
       ],
       "id": "a312067a-ac03-417f-b83c-8ee152cc70ae",
@@ -128,7 +128,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1680,
+        -1960,
         280
       ],
       "id": "47c89f45-9ef6-41f6-aa43-641147a58d4d",
@@ -141,7 +141,7 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -1240,
+        -1520,
         280
       ],
       "id": "8416dd7c-060b-4dcb-8a53-1a307940b7b0",
@@ -180,7 +180,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1460,
+        -1740,
         280
       ],
       "id": "4d128f0a-8225-4458-94ce-096c832e1333",
@@ -193,7 +193,7 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -1900,
+        -2180,
         1280
       ],
       "id": "2d13c3a9-963f-4f83-b88e-166c993c0bda",
@@ -212,7 +212,7 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -1900,
+        -2180,
         1080
       ],
       "id": "86b2de6b-c108-4133-8aa6-3fb5be0b86bd",
@@ -226,12 +226,12 @@
     },
     {
       "parameters": {
-        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres3\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/incomings.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/incomings.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=$(cat <<EOF\nCOPY (\nSELECT \n          date,\n          cnpj,\n          s.unit_id,\n          pl.product_id,\n          SUM(value) AS value,\n          SUM(quantity) AS quantity\n      FROM incomings s\n      INNER JOIN products_linked pl\n      ON pl.unit_id = s.unit_id \n      AND pl.code = s.code\n      AND pl.ean = s.ean\n      GROUP BY date,cnpj, s.unit_id, pl.product_id\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\nEOF\n)\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
+        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres3\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/incomings.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/incomings.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=$(cat <<EOF\nCOPY (\nSELECT \n    date,\n    cnpj,\n    s.unit_id,\n    CASE \n        WHEN pl.product_id IS NULL THEN 1 \n        ELSE pl.product_id \n    END AS product_id,\n    SUM(value) AS value,\n    SUM(quantity) AS quantity\nFROM incomings s\nLEFT JOIN products_linked pl\n    ON pl.unit_id = s.unit_id \n    AND pl.code = s.code\n    AND pl.ean = s.ean\nGROUP BY \n    date,\n    cnpj,\n    s.unit_id,\n    CASE \n        WHEN pl.product_id IS NULL THEN 1 \n        ELSE pl.product_id \n    END\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\nEOF\n)\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
       },
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -1900,
+        -2180,
         880
       ],
       "id": "6b554ec2-6718-4638-a373-ed87ced311c6",
@@ -252,7 +252,7 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        -1900,
+        -2180,
         -320
       ],
       "id": "0688be46-c9a7-4c20-ae98-1d432d170992",
@@ -274,7 +274,7 @@
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        -1460,
+        -1740,
         -320
       ],
       "id": "9046080b-8e11-4106-80e6-d5914cdaf5d1",
@@ -295,7 +295,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -1680,
+        -1960,
         -320
       ],
       "id": "7ce4b0cb-44ea-4ee6-bcbd-745daae23e8e",
@@ -336,7 +336,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1900,
+        -2180,
         1480
       ],
       "id": "cfd91af8-b159-4fc2-8ac4-4c69c396b5e9",
@@ -364,7 +364,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1680,
+        -1960,
         1480
       ],
       "id": "86daeaac-3e5f-4249-9154-92bf592f7548",
@@ -373,13 +373,13 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT \n  unit_id,\n  unit_name,\n  CASE \n    WHEN unit_active = true THEN 0 \n    ELSE 1 \n  END AS unit_block,\n  cluster_name AS unit_region,\n  CASE \n    WHEN unit_id IN ('101','102','105','901','200','201','202','203') OR unit_active = false THEN 1 \n    ELSE 0 \n  END AS ignored\nFROM units u\nINNER JOIN clusters c ON c.cluster_id = u.unit_region_id;",
+        "query": "SELECT \n  unit_id,\n  unit_name,\n  CASE \n    WHEN unit_active = true THEN 0 \n    ELSE 1 \n  END AS unit_block,\n  cluster_name AS unit_region,\nCASE \n  WHEN unit_id < 200 THEN '1'\n  WHEN unit_id > 900 THEN '3'\n  ELSE '2'\nEND AS cluster,\n  CASE \n    WHEN unit_id IN ('101','102','105','901') OR unit_active = false THEN 1 \n    ELSE 0 \n  END AS ignored\nFROM units u\nINNER JOIN clusters c ON c.cluster_id = u.unit_region_id;",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -1900,
+        -2180,
         80
       ],
       "id": "ed8d1418-9b74-464e-89f3-890673424110",
@@ -402,7 +402,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -1680,
+        -1960,
         680
       ],
       "id": "ed925416-5b8e-4677-99e9-03238e832756",
@@ -418,7 +418,7 @@
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        -1460,
+        -1740,
         680
       ],
       "id": "f70cbc9d-cb69-4c8a-886f-0340ad7ba4bf",
@@ -439,7 +439,7 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        -1900,
+        -2180,
         -520
       ],
       "id": "42f419e6-0396-4519-877b-f9fe064ae390",
@@ -461,7 +461,7 @@
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        -1460,
+        -1740,
         -520
       ],
       "id": "5085580f-91c3-455b-bb53-61ba1c8416cf",
@@ -482,7 +482,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -1680,
+        -1960,
         -520
       ],
       "id": "878bc0ee-0fdd-4e52-b954-1c3de0f8b51f",
@@ -494,12 +494,7 @@
       "main": [
         [
           {
-            "node": "MySQL1",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "MySQL",
+            "node": "Postgres",
             "type": "main",
             "index": 0
           },
@@ -509,7 +504,7 @@
             "index": 0
           },
           {
-            "node": "Postgres",
+            "node": "MySQL",
             "type": "main",
             "index": 0
           },
@@ -520,6 +515,11 @@
           },
           {
             "node": "crm-section.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "MySQL1",
             "type": "main",
             "index": 0
           },
@@ -750,7 +750,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "8041c707-af38-43ce-ad32-90baeb543fd2",
+  "versionId": "9aeb236f-f84f-4f75-a616-bd3d43ce18ac",
   "triggerCount": 1,
   "tags": []
 }
