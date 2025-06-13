@@ -4,6 +4,7 @@
   "id": "tTmIgdscXMAkLTmi",
   "name": "Enviar (carga tradução) - manual",
   "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
