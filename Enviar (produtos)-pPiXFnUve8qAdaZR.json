@@ -4,6 +4,7 @@
   "id": "pPiXFnUve8qAdaZR",
   "name": "Enviar (produtos)",
   "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {},
