@@ -4,6 +4,7 @@
   "id": "ScdXWbOf2nP9e5CM",
   "name": "Imap",
   "active": false,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
