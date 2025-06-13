@@ -4,6 +4,7 @@
   "id": "n9MuXpPW0qlgnE7i",
   "name": "Relatório de vendas",
   "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
