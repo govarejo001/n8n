@@ -4,6 +4,7 @@
   "id": "rt8mJdoUjord4DPu",
   "name": "Enviar (tradução)",
   "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
