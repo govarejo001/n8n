@@ -4,6 +4,7 @@
   "id": "J94CdNnrDQvf4TyT",
   "name": "Comparativo - Cresce Vendas",
   "active": false,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
