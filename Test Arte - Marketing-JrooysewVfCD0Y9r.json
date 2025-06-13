@@ -4,6 +4,7 @@
   "id": "JrooysewVfCD0Y9r",
   "name": "Test Arte - Marketing",
   "active": false,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {},
