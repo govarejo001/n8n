@@ -4,6 +4,7 @@
   "id": "o7q15PdFJ3bwPwUa",
   "name": "Liberar (produtos e produtos vinculados)",
   "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
