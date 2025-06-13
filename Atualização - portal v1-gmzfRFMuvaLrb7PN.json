@@ -4,6 +4,7 @@
   "id": "gmzfRFMuvaLrb7PN",
   "name": "Atualização - portal v1",
   "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
