@@ -4,6 +4,7 @@
   "id": "N26WHEVhNEzNQUnT",
   "name": "My workflow 3",
   "active": false,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {},
