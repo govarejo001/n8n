@@ -4,6 +4,7 @@
   "id": "2pIiDb7zFUsy52Mi",
   "name": "Enviar via E-mail",
   "active": false,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
