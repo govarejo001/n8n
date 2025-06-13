@@ -4,6 +4,7 @@
   "id": "Wyf6wHo92d166Y3N",
   "name": "Atualizar (data último cupom)",
   "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
