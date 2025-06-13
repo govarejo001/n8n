@@ -4,6 +4,7 @@
   "id": "z0BngH9fLHu8tHVl",
   "name": "Temp",
   "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
