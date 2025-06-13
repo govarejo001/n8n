@@ -4,6 +4,7 @@
   "id": "AVBKGKnLuBPugDgJ",
   "name": "Atualizar Loja",
   "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
