@@ -1,9 +1,10 @@
 {
   "createdAt": "2025-04-06T13:09:46.459Z",
-  "updatedAt": "2025-06-11T14:21:08.204Z",
+  "updatedAt": "2025-06-12T12:16:57.780Z",
   "id": "zhwW5Nbknvxvvkyo",
   "name": "Hero",
   "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
@@ -19,8 +20,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -2400,
-        380
+        -2720,
+        440
       ],
       "id": "2815f703-bb70-4692-b1b1-bb7167075233",
       "name": "Schedule Trigger"
@@ -494,37 +495,7 @@
       "main": [
         [
           {
-            "node": "Postgres",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "movements.csv",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "MySQL",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "crm-subcategory.csv",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "crm-section.csv",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "MySQL1",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "crm-category.csv",
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           },
@@ -544,7 +515,37 @@
             "index": 0
           },
           {
-            "node": "HTTP Request",
+            "node": "crm-section.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "crm-category.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "crm-subcategory.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "movements.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "MySQL1",
             "type": "main",
             "index": 0
           }
@@ -750,7 +751,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "9aeb236f-f84f-4f75-a616-bd3d43ce18ac",
+  "versionId": "92478eb6-d6cd-48b8-b0d6-6bbfc4e159a0",
   "triggerCount": 1,
   "tags": []
 }
