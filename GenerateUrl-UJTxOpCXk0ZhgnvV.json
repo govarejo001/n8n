@@ -4,6 +4,7 @@
   "id": "UJTxOpCXk0ZhgnvV",
   "name": "GenerateUrl",
   "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
