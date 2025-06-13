@@ -4,6 +4,7 @@
   "id": "jv1Nb4YLh157EKYf",
   "name": "Enviar (tradução) - manual",
   "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
