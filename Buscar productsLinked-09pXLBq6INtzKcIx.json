@@ -4,6 +4,7 @@
   "id": "09pXLBq6INtzKcIx",
   "name": "Buscar productsLinked",
   "active": false,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {},
