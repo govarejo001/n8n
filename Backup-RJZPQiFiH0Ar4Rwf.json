@@ -4,6 +4,7 @@
   "id": "RJZPQiFiH0Ar4Rwf",
   "name": "Backup",
   "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
