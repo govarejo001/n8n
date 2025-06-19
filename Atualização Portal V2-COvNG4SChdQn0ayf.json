@@ -1,0 +1,2094 @@
+{
+  "createdAt": "2025-06-18T11:33:56.560Z",
+  "updatedAt": "2025-06-19T02:05:38.262Z",
+  "id": "COvNG4SChdQn0ayf",
+  "name": "Atualização Portal V2",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "units",
+          "mode": "list",
+          "cachedResultName": "units"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -220,
+        -200
+      ],
+      "id": "fe56cdb4-b754-45d7-8e56-e46dc608d4f2",
+      "name": "Portal",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "33f9bee8-3a62-4446-a4ad-cfa2e4f9edf3",
+              "name": "id",
+              "value": "={{ String($json.unit_id) }}",
+              "type": "string"
+            },
+            {
+              "id": "4c07abaa-65e2-46fd-ab77-51a8901484d4",
+              "name": "name",
+              "value": "={{ $json.unit_name }}",
+              "type": "string"
+            },
+            {
+              "id": "c7091b22-9c85-410f-af80-59fee67d3dac",
+              "name": "cnpj",
+              "value": "={{ $json.unit_cnpj }}",
+              "type": "string"
+            },
+            {
+              "id": "1a1698fc-d4b2-4a0a-89bb-eadb6519a3ba",
+              "name": "is_active",
+              "value": "={{$json.unit_block===true ? false : true}}",
+              "type": "boolean"
+            },
+            {
+              "id": "6972b390-4ee5-4be2-bdc1-d60fa615e43e",
+              "name": "group_of_unit_id",
+              "value": "={{ $json.unit_gunit_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -220,
+        0
+      ],
+      "id": "48214aaa-d5e0-4d82-ae7f-85a7e0317f94",
+      "name": "Map"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "units",
+          "mode": "list",
+          "cachedResultName": "units"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "is_active": "={{ $('Map').item.json.is_active }}",
+            "name": "={{ $('Map').item.json.name }}",
+            "cnpj": "={{ $('Map').item.json.cnpj }}",
+            "id": "={{ $('Map').item.json.id }}",
+            "group_of_unit_id": "={{ $('Map').item.json.group_of_unit_id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cnpj",
+              "displayName": "cnpj",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "is_active",
+              "displayName": "is_active",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "in_validation",
+              "displayName": "in_validation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "group_of_unit_id",
+              "displayName": "group_of_unit_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        220,
+        -200
+      ],
+      "id": "97a45b22-70c1-42f6-af33-71f516abe212",
+      "name": "Atualizar",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "units",
+          "mode": "list",
+          "cachedResultName": "units"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -440,
+        0
+      ],
+      "id": "450bd458-b29e-457a-aab1-9c882fa70a1f",
+      "name": "Main",
+      "credentials": {
+        "postgres": {
+          "id": "r6ETUCB3B88HozZb",
+          "name": "Main"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -660,
+        300
+      ],
+      "id": "bd924a7a-c408-4904-bc0a-ab1b95c0d0d4",
+      "name": "Cron"
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "id",
+              "field2": "id"
+            }
+          ]
+        },
+        "options": {
+          "skipFields": "created_at,updated_at,in_validation"
+        }
+      },
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        -121
+      ],
+      "id": "600c2015-abd2-4555-a069-9556cc7592cd",
+      "name": "Comparação"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "units",
+          "mode": "list",
+          "cachedResultName": "units"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "is_active": "={{ $json.is_active }}",
+            "in_validation": true,
+            "id": "={{ $json.id }}",
+            "name": "={{ $json.name }}",
+            "cnpj": "={{ $json.cnpj }}",
+            "created_at": "={{ new Date() }}",
+            "updated_at": "={{ new Date() }}",
+            "group_of_unit_id": "={{ $json.group_of_unit_id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cnpj",
+              "displayName": "cnpj",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "is_active",
+              "displayName": "is_active",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "in_validation",
+              "displayName": "in_validation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "group_of_unit_id",
+              "displayName": "group_of_unit_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        220,
+        0
+      ],
+      "id": "9ecdf049-21bf-4a77-993b-d415e27af630",
+      "name": "Cadastrar",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select user_login || '@govarejo.com' as email,user_ovpn,user_block from users",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -440,
+        400
+      ],
+      "id": "f48686aa-65d0-4208-a0a7-bc4d9c1e0c7c",
+      "name": "Main1",
+      "credentials": {
+        "postgres": {
+          "id": "r6ETUCB3B88HozZb",
+          "name": "Main"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "users",
+          "mode": "list",
+          "cachedResultName": "users"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "email",
+              "condition": "LIKE",
+              "value": "%0.%@govarejo.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -220,
+        200
+      ],
+      "id": "0acb06f5-6c5b-4bdd-b4fe-9bac49e9c64e",
+      "name": "Portal1",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "33f9bee8-3a62-4446-a4ad-cfa2e4f9edf3",
+              "name": "email",
+              "value": "={{ $json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "4c07abaa-65e2-46fd-ab77-51a8901484d4",
+              "name": "name",
+              "value": "={{ $json.user_ovpn }}",
+              "type": "string"
+            },
+            {
+              "id": "f1c35fcc-0e3c-43b8-913b-1d242ee1e8e3",
+              "name": "is_active",
+              "value": "={{ $json.user_block===true ? false:true }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -220,
+        400
+      ],
+      "id": "cf986760-bfdb-416f-bf35-803ca9f133b8",
+      "name": "Map1"
+    },
+    {
+      "parameters": {
+        "url": "https://function-bun-production-62e9.up.railway.app/api/generate-cuid",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        400
+      ],
+      "id": "eb50a9b6-8060-48d1-a335-a10650f145da",
+      "name": "cuid2"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "users",
+          "mode": "list",
+          "cachedResultName": "users"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "is_confirmed": true,
+            "is_active": true,
+            "id": "={{ $json.cuid }}",
+            "name": "={{ $('Comparação1').item.json.name }}",
+            "email": "={{ $('Comparação1').item.json.email }}",
+            "password": "$2b$08$ypmL6ywDxTrweSGTUrdqge87w8RvIS9m735lbYNCD3uAFLcb9p4RG",
+            "created_at": "={{ new Date() }}",
+            "updated_at": "={{ new Date() }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "password",
+              "displayName": "password",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "avatar_url",
+              "displayName": "avatar_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "is_confirmed",
+              "displayName": "is_confirmed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "has_two_factor_auth",
+              "displayName": "has_two_factor_auth",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_login_at",
+              "displayName": "last_login_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "is_active",
+              "displayName": "is_active",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "is_admin",
+              "displayName": "is_admin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "can_edit_users",
+              "displayName": "can_edit_users",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "all_units",
+              "displayName": "all_units",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        440,
+        400
+      ],
+      "id": "c660dcef-10e6-44b0-bda2-989d794bd00d",
+      "name": "Cadastrar1",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "users",
+          "mode": "list",
+          "cachedResultName": "users"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "is_active": "={{  $('Map1').item.json.is_active }}",
+            "updated_at": "={{ new Date() }}",
+            "email": "={{ $json.same.email }}",
+            "name": "={{  $('Map1').item.json.name }}"
+          },
+          "matchingColumns": [
+            "email"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "password",
+              "displayName": "password",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "avatar_url",
+              "displayName": "avatar_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "is_confirmed",
+              "displayName": "is_confirmed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "has_two_factor_auth",
+              "displayName": "has_two_factor_auth",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_login_at",
+              "displayName": "last_login_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "is_active",
+              "displayName": "is_active",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "is_admin",
+              "displayName": "is_admin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "can_edit_users",
+              "displayName": "can_edit_users",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "all_units",
+              "displayName": "all_units",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        220,
+        200
+      ],
+      "id": "35111ae6-6ec4-4dc5-a898-285cabd373c5",
+      "name": "Atualizar1",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select \nu.id,\nu.email,\nuu.unit_id as unit_id\nfrom \nusers u\nright join\nuser_units uu on\nuu.user_id = u.id\nwhere \nemail like '%0.%@govarejo.com'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -220,
+        600
+      ],
+      "id": "3b740acd-7465-4ba6-a195-cfe291009a88",
+      "name": "Portal2",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select \nunit_id as unit_id,\nuser_login || '@govarejo.com' as email\nfrom \nusers\ninner join\ngunits on \ngunit_user_id=user_id\ninner join\nunits on\nunit_gunit_id=gunit_id\nwhere\nunit_block=false",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -440,
+        800
+      ],
+      "id": "defe42f7-e601-4060-8260-183599cf73a4",
+      "name": "Main2",
+      "credentials": {
+        "postgres": {
+          "id": "r6ETUCB3B88HozZb",
+          "name": "Main"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "email",
+              "field2": "email"
+            }
+          ]
+        },
+        "options": {
+          "skipFields": "avatar_url,is_confirmed,has_two_factor_auth,created_at,updated_at,is_admin,can_edit_users,all_units,last_login_at,id,password"
+        }
+      },
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        279
+      ],
+      "id": "852728c8-91d0-4af5-9dfa-22d13fa6966a",
+      "name": "Comparação1"
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "email",
+              "field2": "email"
+            },
+            {
+              "field1": "unit_id",
+              "field2": "unit_id"
+            }
+          ]
+        },
+        "options": {
+          "skipFields": "id",
+          "multipleMatches": "all"
+        }
+      },
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        679
+      ],
+      "id": "a81cd76b-1cd7-40bb-866e-081ced7219e9",
+      "name": "Comparação2"
+    },
+    {
+      "parameters": {
+        "url": "https://function-bun-production-62e9.up.railway.app/api/generate-cuid",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        810.5
+      ],
+      "id": "e45f27e0-021b-45d4-b5e1-3fd86e890f14",
+      "name": "cuid"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "user_units",
+          "mode": "list",
+          "cachedResultName": "user_units"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.cuid }}",
+            "user_id": "={{ $('ID do Usuário').item.json.id }}",
+            "unit_id": "={{ $('Comparação2').item.json.unit_id }}",
+            "created_at": "={{ new Date() }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "unit_id",
+              "displayName": "unit_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        660,
+        810.5
+      ],
+      "id": "c2c63df4-b652-4c66-b3cb-b1e67937f1a2",
+      "name": "Cadastrar2",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "33f9bee8-3a62-4446-a4ad-cfa2e4f9edf3",
+              "name": "unit_id",
+              "value": "={{ String($json.unit_id) }}",
+              "type": "string"
+            },
+            {
+              "id": "1a1698fc-d4b2-4a0a-89bb-eadb6519a3ba",
+              "name": "email",
+              "value": "={{ $json.email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -220,
+        800
+      ],
+      "id": "ea11be2d-d374-461d-adff-b659cc0bb88c",
+      "name": "Map2"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "users",
+          "mode": "list",
+          "cachedResultName": "users"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "email",
+              "value": "={{ $json.email }}"
+            }
+          ]
+        },
+        "options": {
+          "outputColumns": [
+            "id"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        220,
+        810.5
+      ],
+      "id": "64052b03-efc2-494c-b486-fc43a7ff09a9",
+      "name": "ID do Usuário",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "user_units",
+          "mode": "list",
+          "cachedResultName": "user_units"
+        },
+        "deleteCommand": "delete",
+        "where": {
+          "values": [
+            {
+              "column": "user_id",
+              "value": "={{ $json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        220,
+        600
+      ],
+      "id": "3e4ad520-dcac-41e0-ad55-4dbf6f5fa4f7",
+      "name": "Deletar",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select \nid,\n'hmxogwe5cxcm9z75ofhlozdh' as access_group_id\nfrom \nusers\nwhere\nemail like ('%0.%@govarejo.com')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -440,
+        1010.5
+      ],
+      "id": "41fdd291-389e-4fb3-859c-6f1a3b6baec9",
+      "name": "Portal3",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select \nu.id,\nuac.access_group_id\nfrom\nusers u\ninner join \nuser_access_groups uac on\nuac.user_id=u.id\nwhere u.email like ('%0.%@govarejo.com')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -440,
+        1221
+      ],
+      "id": "0c60b808-a7b6-4916-8a57-fd978753e684",
+      "name": "Portal4",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "id",
+              "field2": "id"
+            },
+            {
+              "field1": "access_group_id",
+              "field2": "access_group_id"
+            }
+          ]
+        },
+        "options": {
+          "multipleMatches": "all"
+        }
+      },
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        -220,
+        1100
+      ],
+      "id": "54ddf338-425b-4ecd-afac-00de045360df",
+      "name": "Comparação3"
+    },
+    {
+      "parameters": {
+        "url": "https://function-bun-production-62e9.up.railway.app/api/generate-cuid",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        1021
+      ],
+      "id": "7eebfed4-19e4-419e-96a5-c04079226b6b",
+      "name": "cuid1"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "user_access_groups",
+          "mode": "list",
+          "cachedResultName": "user_access_groups"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.cuid }}",
+            "user_id": "={{ $('Comparação3').item.json.id }}",
+            "created_at": "={{ new Date() }}",
+            "access_group_id": "hmxogwe5cxcm9z75ofhlozdh"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "access_group_id",
+              "displayName": "access_group_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        220,
+        1021
+      ],
+      "id": "c5f93ff7-e4cf-4c25-b075-27ed020e6438",
+      "name": "Cadastrar3",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "user_access_groups",
+          "mode": "list",
+          "cachedResultName": "user_access_groups"
+        },
+        "deleteCommand": "delete",
+        "where": {
+          "values": [
+            {
+              "column": "user_id",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "column": "access_group_id",
+              "condition": "!=",
+              "value": "hmxogwe5cxcm9z75ofhlozdh"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        1221
+      ],
+      "id": "185a8a76-a8d3-49c3-8d56-cc72999c5e5a",
+      "name": "Deletar1",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "group_of_units",
+          "mode": "list",
+          "cachedResultName": "group_of_units"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -220,
+        -600
+      ],
+      "id": "7918cbac-e074-42b4-88ab-97dda55544fe",
+      "name": "Portal5",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "gunits",
+          "mode": "list",
+          "cachedResultName": "gunits"
+        },
+        "returnAll": true,
+        "options": {
+          "outputColumns": [
+            "gunit_id",
+            "gunit_block",
+            "gunit_name"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -440,
+        -400
+      ],
+      "id": "1dfe5ede-2842-427a-8e4b-f085a4df36ee",
+      "name": "Main3",
+      "credentials": {
+        "postgres": {
+          "id": "r6ETUCB3B88HozZb",
+          "name": "Main"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "33f9bee8-3a62-4446-a4ad-cfa2e4f9edf3",
+              "name": "id",
+              "value": "={{ String($json.gunit_id) }}",
+              "type": "string"
+            },
+            {
+              "id": "4c07abaa-65e2-46fd-ab77-51a8901484d4",
+              "name": "name",
+              "value": "={{ $json.gunit_name }}",
+              "type": "string"
+            },
+            {
+              "id": "1a1698fc-d4b2-4a0a-89bb-eadb6519a3ba",
+              "name": "is_active",
+              "value": "={{$json.gunit_block===true ? false : true}}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -220,
+        -400
+      ],
+      "id": "1874d6ea-5ce2-4e34-ab96-c8bfba9b6b70",
+      "name": "Map3"
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "id",
+              "field2": "id"
+            }
+          ]
+        },
+        "options": {
+          "skipFields": "created_at,updated_at,in_validation"
+        }
+      },
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        -521
+      ],
+      "id": "35ea1aa9-990d-4a2e-91be-e56f3024b35f",
+      "name": "Comparação4"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "group_of_units",
+          "mode": "list",
+          "cachedResultName": "group_of_units"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "is_active": "={{ $json.is_active }}",
+            "id": "={{ $json.id }}",
+            "name": "={{ $json.name }}",
+            "created_at": "={{ new Date() }}",
+            "updated_at": "={{  new Date() }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "is_active",
+              "displayName": "is_active",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        220,
+        -400
+      ],
+      "id": "62e60684-41d7-4018-ae39-bb863d4c68be",
+      "name": "Cadastrar4",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "group_of_units",
+          "mode": "list",
+          "cachedResultName": "group_of_units"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "is_active": "={{ $('Map3').item.json.is_active }}",
+            "name": "={{ $('Map3').item.json.name }}",
+            "id": "={{ $('Map3').item.json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "is_active",
+              "displayName": "is_active",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        220,
+        -600
+      ],
+      "id": "eb6fb9eb-2706-4817-a9fa-24ffc6c9ac9d",
+      "name": "Atualizar2",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Portal": {
+      "main": [
+        [
+          {
+            "node": "Comparação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map": {
+      "main": [
+        [
+          {
+            "node": "Comparação",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Main": {
+      "main": [
+        [
+          {
+            "node": "Map",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Portal",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Main",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Portal1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Main1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Portal2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Main2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Portal3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Portal4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Portal5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Main3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Comparação": {
+      "main": [
+        [],
+        [],
+        [
+          {
+            "node": "Atualizar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cadastrar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Main1": {
+      "main": [
+        [
+          {
+            "node": "Map1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Portal1": {
+      "main": [
+        [
+          {
+            "node": "Comparação1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map1": {
+      "main": [
+        [
+          {
+            "node": "Comparação1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "cuid2": {
+      "main": [
+        [
+          {
+            "node": "Cadastrar1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cadastrar1": {
+      "main": [
+        []
+      ]
+    },
+    "Portal2": {
+      "main": [
+        [
+          {
+            "node": "Comparação2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Main2": {
+      "main": [
+        [
+          {
+            "node": "Map2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Comparação1": {
+      "main": [
+        [],
+        [],
+        [
+          {
+            "node": "Atualizar1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "cuid2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Comparação2": {
+      "main": [
+        [
+          {
+            "node": "Deletar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [],
+        [
+          {
+            "node": "ID do Usuário",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cuid": {
+      "main": [
+        [
+          {
+            "node": "Cadastrar2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map2": {
+      "main": [
+        [
+          {
+            "node": "Comparação2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "ID do Usuário": {
+      "main": [
+        [
+          {
+            "node": "cuid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Portal3": {
+      "main": [
+        [
+          {
+            "node": "Comparação3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Portal4": {
+      "main": [
+        [
+          {
+            "node": "Comparação3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Comparação3": {
+      "main": [
+        [
+          {
+            "node": "cuid1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [],
+        [
+          {
+            "node": "Deletar1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cuid1": {
+      "main": [
+        [
+          {
+            "node": "Cadastrar3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Main3": {
+      "main": [
+        [
+          {
+            "node": "Map3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Portal5": {
+      "main": [
+        [
+          {
+            "node": "Comparação4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map3": {
+      "main": [
+        [
+          {
+            "node": "Comparação4",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Comparação4": {
+      "main": [
+        [],
+        [],
+        [
+          {
+            "node": "Atualizar2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cadastrar4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "a4025883-df9a-46b8-a1f3-3d687f95d43e",
+  "triggerCount": 0,
+  "tags": []
+}
