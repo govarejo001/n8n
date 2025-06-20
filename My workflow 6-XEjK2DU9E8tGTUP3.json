@@ -1,0 +1,185 @@
+{
+  "createdAt": "2025-06-19T21:09:33.618Z",
+  "updatedAt": "2025-06-19T21:44:42.089Z",
+  "id": "XEjK2DU9E8tGTUP3",
+  "name": "My workflow 6",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        0
+      ],
+      "id": "0a5fbc2e-4fce-40ed-bee7-83f6acead44f",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n  unit_id,\n  CASE \n    WHEN unit_region_id = '32a9b2ea-47b8-4bb2-83f7-c2893ce47572' THEN 'mmg7qmna6p2yjvjbfpe7g5kq'\n    WHEN unit_region_id = '992b1ca4-7dc2-4a3b-852c-d66f3612fe36' THEN 'i9yb1zxxnxd70uzbn3qp7rfn'\n    WHEN unit_region_id = '70626b43-afba-4422-9b30-4ee9a7c86a5a' THEN 'lla1zhsd1e2k9j9nfqwo4uxr'\n  END AS unit_Region_id\nFROM \n  units;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        40,
+        -20
+      ],
+      "id": "145f65d4-9766-48a9-9a18-a6b85dae88e7",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cluster_units",
+          "mode": "list",
+          "cachedResultName": "cluster_units"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.cuid }}",
+            "cluster_id": "=ckc2cc0foudunf8fmsklliye",
+            "unit_id": "={{ $('Postgres').item.json.unit_id }}",
+            "created_at": "={{ new Date() }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "cluster_id",
+              "displayName": "cluster_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_id",
+              "displayName": "unit_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        400,
+        120
+      ],
+      "id": "00cd8b86-902a-4175-9a33-126681b71db0",
+      "name": "Postgres1",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://function-bun-production-62e9.up.railway.app/api/generate-cuid",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        -140
+      ],
+      "id": "1d4348c6-c637-4033-aa87-b9c08af5db42",
+      "name": "cuid2"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "cuid2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cuid2": {
+      "main": [
+        [
+          {
+            "node": "Postgres1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "41d4a5c3-2ed6-496a-bb5b-eb9163a32eea",
+  "triggerCount": 0,
+  "tags": []
+}
