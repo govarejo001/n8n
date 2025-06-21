@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-19T21:09:33.618Z",
-  "updatedAt": "2025-06-19T21:44:42.089Z",
+  "updatedAt": "2025-06-20T16:13:45.902Z",
   "id": "XEjK2DU9E8tGTUP3",
   "name": "My workflow 6",
   "active": false,
@@ -11,32 +11,11 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -220,
-        0
+        -540,
+        -80
       ],
       "id": "0a5fbc2e-4fce-40ed-bee7-83f6acead44f",
       "name": "When clicking ‘Execute workflow’"
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT \n  unit_id,\n  CASE \n    WHEN unit_region_id = '32a9b2ea-47b8-4bb2-83f7-c2893ce47572' THEN 'mmg7qmna6p2yjvjbfpe7g5kq'\n    WHEN unit_region_id = '992b1ca4-7dc2-4a3b-852c-d66f3612fe36' THEN 'i9yb1zxxnxd70uzbn3qp7rfn'\n    WHEN unit_region_id = '70626b43-afba-4422-9b30-4ee9a7c86a5a' THEN 'lla1zhsd1e2k9j9nfqwo4uxr'\n  END AS unit_Region_id\nFROM \n  units;\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        40,
-        -20
-      ],
-      "id": "145f65d4-9766-48a9-9a18-a6b85dae88e7",
-      "name": "Postgres",
-      "credentials": {
-        "postgres": {
-          "id": "3cA8eJ5zs0paDNWB",
-          "name": "Portal"
-        }
-      }
     },
     {
       "parameters": {
@@ -109,8 +88,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        400,
-        120
+        -80,
+        260
       ],
       "id": "00cd8b86-902a-4175-9a33-126681b71db0",
       "name": "Postgres1",
@@ -129,11 +108,394 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        320,
-        -140
+        -320,
+        300
       ],
       "id": "1d4348c6-c637-4033-aa87-b9c08af5db42",
       "name": "cuid2"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cluster_units",
+          "mode": "list",
+          "cachedResultName": "cluster_units"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "cluster_id",
+              "value": "={{ $json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -100,
+        -280
+      ],
+      "id": "9af3f4bc-1bac-41e2-be68-d6d4ab17cf98",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "clusters",
+          "mode": "list",
+          "cachedResultName": "clusters"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "type_id",
+              "value": "j75r45alyyv4fveqbiraod93"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -320,
+        -280
+      ],
+      "id": "20b23959-7361-42d5-8937-0520d38b730a",
+      "name": "Postgres2",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7247716c-734f-405d-a488-11659103bb9f",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "b169f2a6-b9c6-42ad-8e7d-c8aba48ae120",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "94e7879d-9b4d-4bf6-a1e7-b72818a880cf",
+              "name": "cluster",
+              "value": "={{ $('Postgres2').item.json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        340,
+        -280
+      ],
+      "id": "f376a31b-8d53-46b0-8e32-2f8f21c2fb11",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "units",
+          "mode": "list",
+          "cachedResultName": "units"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "id",
+              "value": "={{ $json.unit_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        120,
+        -280
+      ],
+      "id": "f3747aac-d9b7-4ece-bca6-29994b978a4d",
+      "name": "Postgres3",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "name"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        560,
+        -280
+      ],
+      "id": "de0c0784-bb5f-4006-9988-be707d65ad15",
+      "name": "Sort"
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        780,
+        -280
+      ],
+      "id": "64ebc5ae-a440-433a-bad1-066c45cf7015",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "users",
+          "mode": "list",
+          "cachedResultName": "users"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "user_active",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -200,
+        -140
+      ],
+      "id": "df96bf40-fcfb-4f9e-88bb-92bcc86ccd6e",
+      "name": "Postgres4",
+      "credentials": {
+        "postgres": {
+          "id": "3cA8eJ5zs0paDNWB",
+          "name": "Portal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "users",
+          "mode": "list",
+          "cachedResultName": "users"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -180,
+        60
+      ],
+      "id": "8708e316-27b9-4946-a45d-91c98637bdc3",
+      "name": "Postgres5",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "user_email",
+              "field2": "email"
+            }
+          ]
+        },
+        "joinMode": "keepNonMatches",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        160,
+        -40
+      ],
+      "id": "10961ba2-cb75-4cfe-88f4-70b06a746627",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "43c01403-1a55-4db4-99f5-2ef22550b9b5",
+              "leftValue": "={{ $json.user_email }}",
+              "rightValue": "@govarejo.com",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "e6eb5143-a521-476e-8926-2146e3a3032b",
+              "leftValue": "={{ $json.user_email }}",
+              "rightValue": "@api.clube",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "eaab58f0-f8af-424a-96d3-a9c6b738d9b5",
+              "leftValue": "={{ $json.user_portal_access }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "5bce713c-3000-4f23-990e-675d6acb148a",
+              "leftValue": "={{ $json.user_email }}",
+              "rightValue": "@redevalor.com.br",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "dadeba4f-5cb1-45d2-a354-32750df37221",
+              "leftValue": "={{ $json.user_email }}",
+              "rightValue": "@analytics.com",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        380,
+        -40
+      ],
+      "id": "87990297-5d16-4a33-bcda-c789d878374a",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f05654e1-bd5b-48e7-9471-5792e3a9656d",
+              "name": "email",
+              "value": "={{ $json.user_email }}",
+              "type": "string"
+            },
+            {
+              "id": "99792811-8253-4976-a1e3-a2a4b42c9dfb",
+              "name": "name",
+              "value": "={{ $json.user_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        600,
+        -40
+      ],
+      "id": "2b755f81-11c1-47c4-a51e-62159e7b18df",
+      "name": "Edit Fields1"
     }
   ],
   "connections": {
@@ -141,18 +503,17 @@
       "main": [
         [
           {
-            "node": "Postgres",
+            "node": "Postgres4",
             "type": "main",
             "index": 0
-          }
-        ]
-      ]
-    },
-    "Postgres": {
-      "main": [
-        [
+          },
           {
-            "node": "cuid2",
+            "node": "Postgres5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres2",
             "type": "main",
             "index": 0
           }
@@ -169,6 +530,116 @@
           }
         ]
       ]
+    },
+    "Postgres2": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Postgres3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres4": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres5": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -179,7 +650,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "41d4a5c3-2ed6-496a-bb5b-eb9163a32eea",
+  "versionId": "f6cef379-0504-4094-aee5-1f9ed689d947",
   "triggerCount": 0,
   "tags": []
 }
