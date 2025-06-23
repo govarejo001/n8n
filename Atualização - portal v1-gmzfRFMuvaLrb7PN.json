@@ -1,10 +1,10 @@
 {
   "createdAt": "2025-04-10T19:48:44.399Z",
-  "updatedAt": "2025-06-18T11:33:21.117Z",
+  "updatedAt": "2025-06-22T11:52:31.229Z",
   "id": "gmzfRFMuvaLrb7PN",
   "name": "Atualização - portal v1",
-  "active": true,
-  "isArchived": false,
+  "active": false,
+  "isArchived": true,
   "nodes": [
     {
       "parameters": {
@@ -1630,7 +1630,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "e3d2f723-df95-4f29-a24b-6e4b49e77ea5",
+  "versionId": "8b52410f-bd4a-4ebd-8444-07fe1d922db2",
   "triggerCount": 1,
   "tags": []
 }
