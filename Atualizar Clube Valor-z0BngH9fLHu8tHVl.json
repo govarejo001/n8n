@@ -1,0 +1,337 @@
+{
+  "createdAt": "2025-05-19T17:20:35.200Z",
+  "updatedAt": "2025-06-22T11:59:27.573Z",
+  "id": "z0BngH9fLHu8tHVl",
+  "name": "Atualizar Clube Valor",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "club_summary",
+          "mode": "list",
+          "cachedResultName": "club_summary"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        140,
+        -400
+      ],
+      "id": "20833916-06c1-4c0a-8300-a1f0a54d199a",
+      "name": "Postgres2",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "club_summary",
+          "mode": "list",
+          "cachedResultName": "club_summary"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "identified_value": "={{ $json.identified_value }}",
+            "identified_tickets": "={{ $json.identified_tickets }}",
+            "unidentified_value": "={{ $json.unidentified_value }}",
+            "unidentified_tickets": "={{ $json.unidentified_tickets }}",
+            "total_value": "={{ $json.total_value }}",
+            "total_tickets": "={{ $json.total_tickets }}",
+            "new_customers": "={{ $json.new_customers }}",
+            "total_customers": "={{ $json.total_customers }}",
+            "active_customers": "={{ $json.active_customers }}",
+            "period": "={{ $json.period }}",
+            "unit_id": "={{ $json.unit_id }}",
+            "updated_at": "={{ new Date() }}",
+            "created_at": "={{ new Date() }}",
+            "customers_bought_in_signup_month": "={{ $json.customers_bought_in_signup_month }}",
+            "customers_bought_last_90_days": "={{ $json.customers_bought_last_90_days }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "period",
+              "displayName": "period",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_id",
+              "displayName": "unit_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "identified_value",
+              "displayName": "identified_value",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "identified_tickets",
+              "displayName": "identified_tickets",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unidentified_value",
+              "displayName": "unidentified_value",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unidentified_tickets",
+              "displayName": "unidentified_tickets",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total_value",
+              "displayName": "total_value",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total_tickets",
+              "displayName": "total_tickets",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "new_customers",
+              "displayName": "new_customers",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total_customers",
+              "displayName": "total_customers",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "active_customers",
+              "displayName": "active_customers",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customers_bought_in_signup_month",
+              "displayName": "customers_bought_in_signup_month",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "customers_bought_last_90_days",
+              "displayName": "customers_bought_last_90_days",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        580,
+        -400
+      ],
+      "id": "7c563d56-a6ee-4473-acfa-0ee575fbee66",
+      "name": "Postgres3",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH months AS (\n  SELECT generate_series(\n    DATE_TRUNC('month', DATE '2024-01-01'),\n    DATE_TRUNC('month', CURRENT_DATE),\n    INTERVAL '1 month'\n  ) AS month\n),\nstores AS (\n  SELECT DISTINCT \"unitId\" FROM customers WHERE \"unitId\" IS NOT NULL\n),\nall_months_stores AS (\n  SELECT m.month, s.\"unitId\"\n  FROM months m\n  CROSS JOIN stores s\n),\naccumulated_base_per_store AS (\n  SELECT\n    ams.month,\n    ams.\"unitId\",\n    COUNT(cu.id) AS total_customers_per_store\n  FROM all_months_stores ams\n  LEFT JOIN customers cu\n    ON cu.\"unitId\" = ams.\"unitId\"\n    AND cu.\"createdAt\" < (ams.month + INTERVAL '1 month')\n  GROUP BY ams.month, ams.\"unitId\"\n),\nnew_customers_per_store AS (\n  SELECT \n    DATE_TRUNC('month', \"createdAt\") AS month,\n    \"unitId\",\n    COUNT(*) AS new_customers_in_month\n  FROM customers\n  WHERE \"unitId\" IS NOT NULL\n  GROUP BY month, \"unitId\"\n),\ntickets_summary AS (\n  SELECT\n    DATE_TRUNC('month', c.date) AS period,\n    c.\"unitId\" AS unit_id,\n\n    COALESCE(SUM(cf.value) FILTER (\n      WHERE cu.cpf IS NOT NULL AND c.date >= cu.\"createdAt\"\n    ), 0) AS identified_value,\n    COALESCE(COUNT(DISTINCT c.id) FILTER (\n      WHERE cu.cpf IS NOT NULL AND c.date >= cu.\"createdAt\"\n    ), 0) AS identified_tickets,\n\n    COALESCE(SUM(cf.value) FILTER (\n      WHERE cu.cpf IS NULL OR c.date < cu.\"createdAt\"\n    ), 0) AS unidentified_value,\n    COALESCE(COUNT(DISTINCT c.id) FILTER (\n      WHERE cu.cpf IS NULL OR c.date < cu.\"createdAt\"\n    ), 0) AS unidentified_tickets,\n\n    SUM(cf.value) AS total_value,\n    COUNT(DISTINCT c.id) AS total_tickets,\n\n    c.\"unitId\"\n  FROM coupons c\n  LEFT JOIN customers cu ON c.cpf = cu.cpf\n  INNER JOIN coupons_finishers cf ON cf.\"couponId\" = c.id\n  WHERE c.date >= DATE '2024-01-01'\n  GROUP BY period, c.\"unitId\"\n),\nactive_customers_per_store AS (\n  SELECT\n    DATE_TRUNC('month', c.date) AS month,\n    c.\"unitId\",\n    COUNT(DISTINCT c.cpf) AS active_customers\n  FROM coupons c\n  INNER JOIN customers cu ON c.cpf = cu.cpf\n  WHERE c.date >= DATE '2024-01-01'\n    AND cu.\"createdAt\" <= c.date\n  GROUP BY month, c.\"unitId\"\n),\ncustomers_bought_in_signup_month AS (\n  SELECT\n    DATE_TRUNC('month', cu.\"createdAt\") AS month,\n    cu.\"unitId\",\n    COUNT(DISTINCT cu.cpf) AS customers_bought_in_signup_month\n  FROM customers cu\n  INNER JOIN coupons c\n    ON c.cpf = cu.cpf\n    AND c.date >= cu.\"createdAt\"\n    AND DATE_TRUNC('month', c.date) = DATE_TRUNC('month', cu.\"createdAt\")\n  WHERE cu.\"unitId\" IS NOT NULL\n  GROUP BY month, cu.\"unitId\"\n),\nlast_3_full_months_buyers AS (\n  SELECT\n    m.month AS reference_month,\n    c.\"unitId\",\n    COUNT(DISTINCT c.cpf) AS customers_bought_last_3_full_months\n  FROM months m\n  JOIN coupons c\n    ON DATE_TRUNC('month', c.date) >= m.month - INTERVAL '3 month'\n    AND DATE_TRUNC('month', c.date) < m.month\n  JOIN customers cu\n    ON c.cpf = cu.cpf\n    AND c.date >= cu.\"createdAt\"\n  GROUP BY m.month, c.\"unitId\"\n),\nlast_90_days_buyers AS (\n  SELECT\n    m.month AS reference_month,\n    c.\"unitId\",\n    COUNT(DISTINCT c.cpf) AS customers_bought_last_90_days\n  FROM months m\n  JOIN coupons c ON (\n    CASE \n      WHEN m.month = DATE_TRUNC('month', CURRENT_DATE) THEN\n        CASE \n          WHEN c.date >= CURRENT_DATE - INTERVAL '90 days'\n            AND c.date < CURRENT_DATE THEN TRUE\n          ELSE FALSE\n        END\n      ELSE\n        CASE \n          WHEN DATE_TRUNC('month', c.date) >= m.month - INTERVAL '3 months'\n            AND DATE_TRUNC('month', c.date) < m.month THEN TRUE\n          ELSE FALSE\n        END\n    END\n  )\n  INNER JOIN customers cu\n    ON c.cpf = cu.cpf\n    AND c.date >= cu.\"createdAt\"\n  GROUP BY m.month, c.\"unitId\"\n)\n\nSELECT\n  to_char(ams.month, 'YYYY-MM') AS period,\n  ams.\"unitId\" AS unit_id,\n\n  COALESCE(ts.identified_value, 0) AS identified_value,\n  COALESCE(ts.identified_tickets, 0) AS identified_tickets,\n\n  COALESCE(ts.unidentified_value, 0) AS unidentified_value,\n  COALESCE(ts.unidentified_tickets, 0) AS unidentified_tickets,\n\n  COALESCE(ts.total_value, 0) AS total_value,\n  COALESCE(ts.total_tickets, 0) AS total_tickets,\n\n  COALESCE(nc.new_customers_in_month, 0) AS new_customers,\n  COALESCE(ba.total_customers_per_store, 0) AS total_customers,\n  COALESCE(ac.active_customers, 0) AS active_customers,\n  COALESCE(cbsm.customers_bought_in_signup_month, 0) AS customers_bought_in_signup_month,\n  COALESCE(l3fm.customers_bought_last_3_full_months, 0) AS customers_bought_last_3_full_months,\n  COALESCE(l90d.customers_bought_last_90_days, 0) AS customers_bought_last_90_days\n\nFROM all_months_stores ams\nLEFT JOIN tickets_summary ts\n  ON ts.period = ams.month\n  AND ts.unit_id = ams.\"unitId\"\nLEFT JOIN new_customers_per_store nc\n  ON nc.month = ams.month\n  AND nc.\"unitId\" = ams.\"unitId\"\nLEFT JOIN accumulated_base_per_store ba\n  ON ba.month = ams.month\n  AND ba.\"unitId\" = ams.\"unitId\"\nLEFT JOIN active_customers_per_store ac\n  ON ac.month = ams.month\n  AND ac.\"unitId\" = ams.\"unitId\"\nLEFT JOIN customers_bought_in_signup_month cbsm\n  ON cbsm.month = ams.month\n  AND cbsm.\"unitId\" = ams.\"unitId\"\nLEFT JOIN last_3_full_months_buyers l3fm\n  ON l3fm.reference_month = ams.month\n  AND l3fm.\"unitId\" = ams.\"unitId\"\nLEFT JOIN last_90_days_buyers l90d\n  ON l90d.reference_month = ams.month\n  AND l90d.\"unitId\" = ams.\"unitId\"\nORDER BY ams.\"unitId\", period;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        360,
+        -400
+      ],
+      "id": "432e580a-73a6-4782-a0ff-70c60231ac19",
+      "name": "Postgres4",
+      "credentials": {
+        "postgres": {
+          "id": "C8DsN3myOq1XZZ8n",
+          "name": "CRM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        -400
+      ],
+      "id": "0a980d0c-8e98-4697-9dd1-bc6c422a8aeb",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "connections": {
+    "Postgres2": {
+      "main": [
+        [
+          {
+            "node": "Postgres4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres4": {
+      "main": [
+        [
+          {
+            "node": "Postgres3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Postgres2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "585dace7-c462-4937-9796-82eb3b337084",
+  "triggerCount": 1,
+  "tags": []
+}
