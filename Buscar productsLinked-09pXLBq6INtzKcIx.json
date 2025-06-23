@@ -1,10 +1,10 @@
 {
   "createdAt": "2025-04-10T12:34:42.111Z",
-  "updatedAt": "2025-04-25T17:21:07.867Z",
+  "updatedAt": "2025-06-22T11:53:29.050Z",
   "id": "09pXLBq6INtzKcIx",
   "name": "Buscar productsLinked",
   "active": false,
-  "isArchived": false,
+  "isArchived": true,
   "nodes": [
     {
       "parameters": {},
@@ -160,7 +160,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "c5f0e0c4-8e50-40a6-b2c9-02379cba29d2",
+  "versionId": "b83985d2-3747-4578-b8fe-8ec570b117aa",
   "triggerCount": 0,
   "tags": []
 }
