@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-18T11:33:56.560Z",
-  "updatedAt": "2025-06-22T12:01:59.874Z",
+  "updatedAt": "2025-06-24T16:36:26.903Z",
   "id": "COvNG4SChdQn0ayf",
   "name": "Atualização Portal V2",
   "active": true,
@@ -273,14 +273,14 @@
           ]
         },
         "options": {
-          "skipFields": "created_at,updated_at,in_validation"
+          "skipFields": "created_at,updated_at,in_validation,municipality_id,zip_code,number,neighborhood,corporate_name,complement,address"
         }
       },
       "type": "n8n-nodes-base.compareDatasets",
       "typeVersion": 2.3,
       "position": [
         0,
-        -121
+        -120
       ],
       "id": "600c2015-abd2-4555-a069-9556cc7592cd",
       "name": "Comparação"
@@ -2095,7 +2095,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "fbd40b2c-221f-453c-9648-a6e21ec3f35b",
+  "versionId": "db785340-aac7-4c95-af30-becf1469e885",
   "triggerCount": 1,
   "tags": []
 }
