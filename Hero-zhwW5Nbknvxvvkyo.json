@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-04-06T13:09:46.459Z",
-  "updatedAt": "2025-06-12T12:16:57.780Z",
+  "updatedAt": "2025-06-24T21:31:22.122Z",
   "id": "zhwW5Nbknvxvvkyo",
   "name": "Hero",
   "active": true,
@@ -47,7 +47,7 @@
     },
     {
       "parameters": {
-        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/crm-category.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/crm-category.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=$(cat <<EOF\nCOPY (\nSELECT \n          COUNT(cp.\"couponId\") AS quantity,\n          category,\n          c.\"unitId\" as unit_id,\n          DATE(c.date) AS date\n      FROM coupons_products cp\n      INNER JOIN products_linked pl ON pl.id = cp.\"productLinkedId\"\n      INNER JOIN products p ON p.id = pl.\"productId\"\n      INNER JOIN coupons c ON c.id = cp.\"couponId\"\n      GROUP BY category, c.\"unitId\", DATE(c.date)\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\nEOF\n)\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
+        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/crm-category.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/crm-category.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=$(cat <<EOF\nCOPY (\nSELECT \n          COUNT(cp.\"couponId\") AS quantity,\n          category,\n          c.\"unitId\" as unit_id,\n          DATE(c.date) AS date\n      FROM coupons_products cp\n      INNER JOIN products_linked pl ON pl.id = cp.\"productLinkedId\"\n      INNER JOIN products p ON p.id = pl.\"productId\"\n      INNER JOIN coupons c ON c.id = cp.\"couponId\"\n      GROUP BY category, c.\"unitId\", DATE(c.date)\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\nEOF\n)\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n\n    # Adiciona BOM (EF BB BF) no início do arquivo CSV\n    printf '\\xEF\\xBB\\xBF' | cat - \"$EXPORT_PATH_ON_HOST\" > \"${EXPORT_PATH_ON_HOST}.bom\" && mv \"${EXPORT_PATH_ON_HOST}.bom\" \"$EXPORT_PATH_ON_HOST\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
       },
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
@@ -66,7 +66,7 @@
     },
     {
       "parameters": {
-        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/crm-subcategory.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/crm-subcategory.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=$(cat <<EOF\nCOPY (\nSELECT \n          COUNT(cp.\"couponId\") AS quantity,\n          subcategory,\n          c.\"unitId\" as unit_id,\n          DATE(c.date) AS date\n      FROM coupons_products cp\n      INNER JOIN products_linked pl ON pl.id = cp.\"productLinkedId\"\n      INNER JOIN products p ON p.id = pl.\"productId\"\n      INNER JOIN coupons c ON c.id = cp.\"couponId\"\n      GROUP BY subcategory, c.\"unitId\", DATE(c.date)\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\nEOF\n)\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
+        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/crm-subcategory.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/crm-subcategory.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=$(cat <<EOF\nCOPY (\nSELECT \n          COUNT(cp.\"couponId\") AS quantity,\n          subcategory,\n          c.\"unitId\" as unit_id,\n          DATE(c.date) AS date\n      FROM coupons_products cp\n      INNER JOIN products_linked pl ON pl.id = cp.\"productLinkedId\"\n      INNER JOIN products p ON p.id = pl.\"productId\"\n      INNER JOIN coupons c ON c.id = cp.\"couponId\"\n      GROUP BY subcategory, c.\"unitId\", DATE(c.date)\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\nEOF\n)\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n\n    # Adiciona BOM (EF BB BF) no início do arquivo CSV\n    printf '\\xEF\\xBB\\xBF' | cat - \"$EXPORT_PATH_ON_HOST\" > \"${EXPORT_PATH_ON_HOST}.bom\" && mv \"${EXPORT_PATH_ON_HOST}.bom\" \"$EXPORT_PATH_ON_HOST\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
       },
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
@@ -85,7 +85,7 @@
     },
     {
       "parameters": {
-        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/crm-section.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/crm-section.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=$(cat <<EOF\nCOPY (\nSELECT \n          COUNT(cp.\"couponId\") AS quantity,\n          section,\n          c.\"unitId\" as unit_id,\n          DATE(c.date) AS date\n      FROM coupons_products cp\n      INNER JOIN products_linked pl ON pl.id = cp.\"productLinkedId\"\n      INNER JOIN products p ON p.id = pl.\"productId\"\n      INNER JOIN coupons c ON c.id = cp.\"couponId\"\n      GROUP BY section, c.\"unitId\", DATE(c.date)\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\nEOF\n)\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
+        "command": "=#!/bin/bash\n\n# Carrega variáveis do .env\nset -a\nsource /var/Docker/.env\nset +a\n\n# Configurações\nCONTAINER_NAME=\"postgres\"\nDB_NAME=\"${POSTGRES_DB}\"\nDB_USER=\"postgres\"\nDB_PASSWORD=\"${POSTGRES_PASSWORD}\"\nEXPORT_PATH_IN_CONTAINER=\"/tmp/crm-section.csv\"\nEXPORT_PATH_ON_HOST=\"./tmp/crm-section.csv\"\n\n# Comando SQL para exportar os dados\nSQL_COMMAND=$(cat <<EOF\nCOPY (\nSELECT \n          COUNT(cp.\"couponId\") AS quantity,\n          section,\n          c.\"unitId\" as unit_id,\n          DATE(c.date) AS date\n      FROM coupons_products cp\n      INNER JOIN products_linked pl ON pl.id = cp.\"productLinkedId\"\n      INNER JOIN products p ON p.id = pl.\"productId\"\n      INNER JOIN coupons c ON c.id = cp.\"couponId\"\n      GROUP BY section, c.\"unitId\", DATE(c.date)\n) TO '$EXPORT_PATH_IN_CONTAINER' WITH (FORMAT CSV, DELIMITER ';', HEADER, ENCODING 'UTF8');\nEOF\n)\n\necho \"Exportando dados do PostgreSQL no container '$CONTAINER_NAME'...\"\n\n# Executa o comando dentro do container\ndocker exec -e PGPASSWORD=\"$DB_PASSWORD\" -i \"$CONTAINER_NAME\" psql -U \"$DB_USER\" -d \"$DB_NAME\" -c \"$SQL_COMMAND\"\n\n# Verifica se o comando foi executado com sucesso\nif [ $? -eq 0 ]; then\n  echo \"Dados exportados com sucesso dentro do container.\"\n\n  # Copia o arquivo para fora do container\n  docker cp \"$CONTAINER_NAME:$EXPORT_PATH_IN_CONTAINER\" \"$EXPORT_PATH_ON_HOST\"\n\n  if [ $? -eq 0 ]; then\n    echo \"Arquivo CSV copiado com sucesso para '$EXPORT_PATH_ON_HOST'\"\n\n    # Adiciona BOM (EF BB BF) no início do arquivo CSV\n    printf '\\xEF\\xBB\\xBF' | cat - \"$EXPORT_PATH_ON_HOST\" > \"${EXPORT_PATH_ON_HOST}.bom\" && mv \"${EXPORT_PATH_ON_HOST}.bom\" \"$EXPORT_PATH_ON_HOST\"\n  else\n    echo \"❌ Falha ao copiar o arquivo do container para o host.\"\n  fi\nelse\n  echo \"❌ Falha ao exportar dados do banco.\"\nfi\n"
       },
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
@@ -495,37 +495,17 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "incomings.csv",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "tickets.csv",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "crm-product.csv",
-            "type": "main",
-            "index": 0
-          },
-          {
             "node": "crm-section.csv",
             "type": "main",
             "index": 0
           },
           {
-            "node": "crm-category.csv",
+            "node": "crm-subcategory.csv",
             "type": "main",
             "index": 0
           },
           {
-            "node": "crm-subcategory.csv",
+            "node": "crm-category.csv",
             "type": "main",
             "index": 0
           },
@@ -546,6 +526,26 @@
           },
           {
             "node": "MySQL1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "incomings.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "tickets.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "crm-product.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           }
@@ -751,7 +751,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "92478eb6-d6cd-48b8-b0d6-6bbfc4e159a0",
+  "versionId": "8754be4c-3781-4366-87f5-e4548708785a",
   "triggerCount": 1,
   "tags": []
 }
