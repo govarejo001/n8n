@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-19T17:20:35.200Z",
-  "updatedAt": "2025-06-22T11:59:27.573Z",
+  "updatedAt": "2025-06-25T16:26:02.699Z",
   "id": "z0BngH9fLHu8tHVl",
   "name": "Atualizar Clube Valor",
   "active": true,
@@ -25,8 +25,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        140,
-        -400
+        180,
+        -440
       ],
       "id": "20833916-06c1-4c0a-8300-a1f0a54d199a",
       "name": "Postgres2",
@@ -229,8 +229,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        580,
-        -400
+        620,
+        -440
       ],
       "id": "7c563d56-a6ee-4473-acfa-0ee575fbee66",
       "name": "Postgres3",
@@ -250,8 +250,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        360,
-        -400
+        400,
+        -440
       ],
       "id": "432e580a-73a6-4782-a0ff-70c60231ac19",
       "name": "Postgres4",
@@ -275,11 +275,245 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -80,
-        -400
+        -40,
+        -540
       ],
       "id": "0a980d0c-8e98-4697-9dd1-bc6c422a8aeb",
       "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH months AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', DATE '2024-01-01'),\n        DATE_TRUNC('month', CURRENT_DATE),\n        INTERVAL '1 month'\n    ) AS month_start\n),\noperators AS (\n    SELECT id AS operator_id, name AS operator_name FROM operators\n),\nbase_monthly_operator_store AS (\n    SELECT DISTINCT\n        DATE_TRUNC('month', c.date) AS month_start,\n        c.\"unitId\" AS unit_id,\n        c.\"operatorId\" AS operator_id\n    FROM coupons c\n    WHERE c.date >= DATE '2024-01-01'\n    AND c.\"unitId\" IS NOT NULL\n    AND c.\"operatorId\" IS NOT NULL\n),\nmonthly_operator_transactions AS (\n    SELECT\n        DATE_TRUNC('month', c.date) AS month_start,\n        c.\"unitId\" AS unit_id,\n        c.\"operatorId\" AS operator_id,\n        COALESCE(COUNT(DISTINCT c.id) FILTER (\n            WHERE cu.cpf IS NOT NULL AND c.date >= cu.\"createdAt\"\n        ), 0) AS identified_tickets,\n        COALESCE(COUNT(DISTINCT c.id), 0) AS total_tickets,\n        COALESCE(SUM(cf.value) FILTER (\n            WHERE cu.cpf IS NOT NULL AND c.date >= cu.\"createdAt\"\n        ), 0) AS identified_value,\n        COALESCE(SUM(cf.value), 0) AS total_value\n    FROM coupons c\n    LEFT JOIN customers cu ON c.cpf = cu.cpf\n    INNER JOIN coupons_finishers cf ON cf.\"couponId\" = c.id\n    WHERE c.date >= DATE '2024-01-01'\n    GROUP BY DATE_TRUNC('month', c.date), c.\"unitId\", c.\"operatorId\"\n),\nmonthly_store_transactions AS (\n    SELECT\n        DATE_TRUNC('month', c.date) AS month_start,\n        c.\"unitId\" AS unit_id,\n        COALESCE(COUNT(DISTINCT c.id) FILTER (\n            WHERE cu.cpf IS NOT NULL AND c.date >= cu.\"createdAt\"\n        ), 0) AS store_identified_tickets,\n        COALESCE(COUNT(DISTINCT c.id), 0) AS store_total_tickets,\n        COALESCE(SUM(cf.value) FILTER (\n            WHERE cu.cpf IS NOT NULL AND c.date >= cu.\"createdAt\"\n        ), 0) AS store_identified_value,\n        COALESCE(SUM(cf.value), 0) AS store_total_value\n    FROM coupons c\n    LEFT JOIN customers cu ON c.cpf = cu.cpf\n    INNER JOIN coupons_finishers cf ON cf.\"couponId\" = c.id\n    WHERE c.date >= DATE '2024-01-01'\n    GROUP BY DATE_TRUNC('month', c.date), c.\"unitId\"\n)\nSELECT\n    to_char(bmos.month_start, 'YYYY-MM') AS period_month,\n    o.operator_name,\n    bmos.unit_id,\n    SUM(COALESCE(mot.identified_tickets, 0)) AS tickets_identified_operator,\n    SUM(COALESCE(mot.total_tickets, 0)) AS tickets_total_operator,\n    SUM(COALESCE(mot.identified_value, 0)) AS value_identified_operator,\n    SUM(COALESCE(mot.total_value, 0)) AS value_total_operator,\n    -- Dados da loja continuam sendo os mesmos, pois são por loja/mês\n    MAX(COALESCE(mss.store_identified_tickets, 0)) AS tickets_identified_store,\n    MAX(COALESCE(mss.store_total_tickets, 0)) AS tickets_total_store,\n    MAX(COALESCE(mss.store_identified_value, 0)) AS value_identified_store,\n    MAX(COALESCE(mss.store_total_value, 0)) AS value_total_store\nFROM base_monthly_operator_store bmos\nINNER JOIN operators o ON bmos.operator_id = o.operator_id\nLEFT JOIN monthly_operator_transactions mot\n    ON mot.month_start = bmos.month_start\n    AND mot.unit_id = bmos.unit_id\n    AND mot.operator_id = bmos.operator_id\nLEFT JOIN monthly_store_transactions mss\n    ON mss.month_start = bmos.month_start\n    AND mss.unit_id = bmos.unit_id\nGROUP BY\n    bmos.month_start,\n    bmos.unit_id,\n    o.operator_name\nORDER BY\n    bmos.month_start,\n    bmos.unit_id,\n    o.operator_name;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        400,
+        -640
+      ],
+      "id": "f1885f95-3f38-4ec0-b6c3-7edf5e4d6ed9",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "C8DsN3myOq1XZZ8n",
+          "name": "CRM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "operator_summary",
+          "mode": "list",
+          "cachedResultName": "operator_summary"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        180,
+        -640
+      ],
+      "id": "af401f9a-37e2-4707-b904-1b13461be400",
+      "name": "Postgres5",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "operator_summary",
+          "mode": "list",
+          "cachedResultName": "operator_summary"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "period": "={{ $json.period_month }}",
+            "operator": "={{ $json.operator_name }}",
+            "unit_id": "={{ $json.unit_id }}",
+            "identified_tickets": "={{ $json.tickets_identified_operator }}",
+            "total_tickets": "={{ $json.tickets_total_operator }}",
+            "identified_value": "={{ $json.value_identified_operator }}",
+            "total_value": "={{ $json.value_total_operator }}",
+            "identified_tickets_store": "={{ $json.tickets_identified_store }}",
+            "total_tickets_store": "={{ $json.tickets_total_store }}",
+            "identified_value_store": "={{ $json.value_identified_store }}",
+            "total_value_store": "={{ $json.value_total_store }}",
+            "created_at": "={{ new Date() }}",
+            "updated_at": "={{ new Date() }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "period",
+              "displayName": "period",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "operator",
+              "displayName": "operator",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_id",
+              "displayName": "unit_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "identified_tickets",
+              "displayName": "identified_tickets",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "identified_value",
+              "displayName": "identified_value",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total_value",
+              "displayName": "total_value",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total_tickets",
+              "displayName": "total_tickets",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "identified_tickets_store",
+              "displayName": "identified_tickets_store",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total_tickets_store",
+              "displayName": "total_tickets_store",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "identified_value_store",
+              "displayName": "identified_value_store",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total_value_store",
+              "displayName": "total_value_store",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        620,
+        -640
+      ],
+      "id": "eeaf8c24-6f8e-4871-bb18-cbe4f6a32450",
+      "name": "Postgres6",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
     }
   ],
   "connections": {
@@ -309,7 +543,34 @@
       "main": [
         [
           {
+            "node": "Postgres5",
+            "type": "main",
+            "index": 0
+          },
+          {
             "node": "Postgres2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres5": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Postgres6",
             "type": "main",
             "index": 0
           }
@@ -331,7 +592,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "585dace7-c462-4937-9796-82eb3b337084",
+  "versionId": "78051690-ac1b-4ee3-896e-00caa542bc4a",
   "triggerCount": 1,
   "tags": []
 }
