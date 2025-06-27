@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-04-06T13:09:46.459Z",
-  "updatedAt": "2025-06-24T21:31:22.122Z",
+  "updatedAt": "2025-06-26T20:52:24.105Z",
   "id": "zhwW5Nbknvxvvkyo",
   "name": "Hero",
   "active": true,
@@ -374,7 +374,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT \n  unit_id,\n  unit_name,\n  CASE \n    WHEN unit_active = true THEN 0 \n    ELSE 1 \n  END AS unit_block,\n  cluster_name AS unit_region,\nCASE \n  WHEN unit_id < 200 THEN '1'\n  WHEN unit_id > 900 THEN '3'\n  ELSE '2'\nEND AS cluster,\n  CASE \n    WHEN unit_id IN ('101','102','105','901') OR unit_active = false THEN 1 \n    ELSE 0 \n  END AS ignored\nFROM units u\nINNER JOIN clusters c ON c.cluster_id = u.unit_region_id;",
+        "query": "SELECT\n  u.id AS unit_id,\n  u.name AS unit_name,\n  CASE\n    WHEN u.is_active = TRUE THEN 0\n    ELSE 1\n  END AS unit_block,\n    MAX(CASE WHEN region_clusters.type_id = 'j75r45alyyv4fveqbiraod93' THEN region_clusters.name END) AS unit_region,\n    MAX(CASE WHEN cluster_info.type_id = 'siv8jvkp1djg86q5ojc8oaa7' THEN cluster_info.id END) AS cluster,\n  CASE\n    WHEN u.in_validation = FALSE THEN 0\n    ELSE 1\n  END AS ignored,\n  MAX(CASE WHEN cluster_info.type_id = 'siv8jvkp1djg86q5ojc8oaa7' THEN cluster_info.name END) AS cluster_name\nFROM\n  units AS u\nLEFT JOIN\n  cluster_units AS cu ON u.id = cu.unit_id\nLEFT JOIN\n  clusters AS region_clusters ON cu.cluster_id = region_clusters.id AND region_clusters.type_id = 'j75r45alyyv4fveqbiraod93'\nLEFT JOIN\n  clusters AS cluster_info ON cu.cluster_id = cluster_info.id AND cluster_info.type_id = 'siv8jvkp1djg86q5ojc8oaa7'\nGROUP BY\n  u.id,\n  u.name,\n  u.is_active,\n  u.in_validation;",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
@@ -388,8 +388,8 @@
       "retryOnFail": true,
       "credentials": {
         "postgres": {
-          "id": "3cA8eJ5zs0paDNWB",
-          "name": "Portal"
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
         }
       },
       "onError": "continueErrorOutput"
@@ -506,11 +506,6 @@
           },
           {
             "node": "crm-category.csv",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Postgres",
             "type": "main",
             "index": 0
           },
@@ -751,7 +746,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "8754be4c-3781-4366-87f5-e4548708785a",
+  "versionId": "bd8f74d5-b3df-449d-8a13-70fd104dab9f",
   "triggerCount": 1,
   "tags": []
 }
