@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-04-06T13:09:46.459Z",
-  "updatedAt": "2025-06-26T20:52:24.105Z",
+  "updatedAt": "2025-06-27T17:49:12.609Z",
   "id": "zhwW5Nbknvxvvkyo",
   "name": "Hero",
   "active": true,
@@ -543,6 +543,11 @@
             "node": "HTTP Request",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -746,7 +751,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "bd8f74d5-b3df-449d-8a13-70fd104dab9f",
+  "versionId": "fde27c8a-b612-4772-825a-403ce3657dfc",
   "triggerCount": 1,
   "tags": []
 }
