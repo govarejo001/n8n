@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-17T10:34:28.398Z",
-  "updatedAt": "2025-05-12T11:12:16.743Z",
+  "updatedAt": "2025-07-01T14:35:21.037Z",
   "id": "n9MuXpPW0qlgnE7i",
   "name": "Relatório de vendas",
   "active": true,
@@ -199,7 +199,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "WITH todas_datas AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', CURRENT_DATE - INTERVAL '0 month')::date,\n        CURRENT_DATE-1,\n        '1 day'\n    ) AS dia\n),\nlojas_relevantes AS (\n    SELECT DISTINCT unit_id\n    FROM sales\n    WHERE date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date\n      AND date < DATE_TRUNC('month', CURRENT_DATE)::date\n),\ncomb_lojas_datas AS (\n    SELECT l.unit_id, d.dia\n    FROM lojas_relevantes l\n    CROSS JOIN todas_datas d\n),\nvendas_aggregadas AS (\n    SELECT unit_id, date, SUM(value) AS total_venda\n    FROM sales\n    WHERE date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '0 month')::date\n      AND date <= CURRENT_DATE\n    GROUP BY unit_id, date\n)\nSELECT \n    cd.unit_id,\n    cd.dia,\n    COALESCE(va.total_venda, 0) AS venda_do_dia\nFROM \n    comb_lojas_datas cd\nLEFT JOIN \n    vendas_aggregadas va\n    ON cd.unit_id = va.unit_id AND cd.dia = va.date\nORDER BY \n    cd.unit_id, cd.dia;\n",
+        "query": "WITH todas_datas AS (\n    SELECT generate_series(\n        CASE \n            WHEN EXTRACT(DAY FROM CURRENT_DATE) <= 5 THEN\n                DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date  -- Mês passado completo\n            ELSE\n                DATE_TRUNC('month', CURRENT_DATE)::date  -- Só o mês atual\n        END,\n        CURRENT_DATE - 1,\n        '1 day'\n    ) AS dia\n),\nlojas_relevantes AS (\n    SELECT DISTINCT unit_id\n    FROM sales\n    WHERE date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date\n),\ncomb_lojas_datas AS (\n    SELECT l.unit_id, d.dia\n    FROM lojas_relevantes l\n    CROSS JOIN todas_datas d\n),\nvendas_aggregadas AS (\n    SELECT unit_id, date, SUM(value) AS total_venda\n    FROM sales\n    WHERE date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date\n      AND date <= CURRENT_DATE\n    GROUP BY unit_id, date\n)\nSELECT \n    cd.unit_id,\n    cd.dia,\n    COALESCE(va.total_venda, 0) AS venda_do_dia\nFROM \n    comb_lojas_datas cd\nLEFT JOIN \n    vendas_aggregadas va\n    ON cd.unit_id = va.unit_id AND cd.dia = va.date\nORDER BY \n    cd.unit_id, cd.dia;\n",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
@@ -329,7 +329,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "WITH todas_datas AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', CURRENT_DATE)::date,\n        CURRENT_DATE,\n        '1 day'\n    ) AS dia\n),\nlojas_relevantes AS (\n    SELECT DISTINCT \"unitId\" as unit_id\n    FROM coupons\n    WHERE date >= DATE_TRUNC('month', CURRENT_DATE)::date\n      AND date <= CURRENT_DATE+1\n),\ncomb_lojas_datas AS (\n    SELECT l.unit_id, d.dia\n    FROM lojas_relevantes l\n    CROSS JOIN todas_datas d\n),\nvendas_aggregadas AS (\n    SELECT \n        c.\"unitId\" as unit_id,\n        c.date::date AS dia,\n        SUM(cf.value) AS total_venda\n    FROM coupons c\n    INNER JOIN coupons_finishers cf ON cf.\"couponId\" = c.id\n    WHERE c.date >= DATE_TRUNC('month', CURRENT_DATE)::date\n      AND c.date <= CURRENT_DATE+1\n    GROUP BY c.\"unitId\", dia\n)\nSELECT \n    cd.unit_id,\n    cd.dia,\n    COALESCE(va.total_venda, 0) AS venda_do_dia\nFROM \n    comb_lojas_datas cd\nLEFT JOIN \n    vendas_aggregadas va\n    ON cd.unit_id = va.unit_id AND cd.dia = va.dia\nORDER BY \n    cd.unit_id, cd.dia;\n",
+        "query": "WITH todas_datas AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date, -- Início do mês passado\n        CURRENT_DATE, -- Até a data atual\n        '1 day'\n    ) AS dia\n),\nlojas_relevantes AS (\n    SELECT DISTINCT \"unitId\" as unit_id\n    FROM coupons\n    WHERE date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date\n      AND date <= CURRENT_DATE + 1 -- Ajuste para pegar até o final do dia\n),\ncomb_lojas_datas AS (\n    SELECT l.unit_id, d.dia\n    FROM lojas_relevantes l\n    CROSS JOIN todas_datas d\n),\nvendas_aggregadas AS (\n    SELECT\n        c.\"unitId\" as unit_id,\n        c.date::date AS dia,\n        SUM(cf.value) AS total_venda\n    FROM coupons c\n    INNER JOIN coupons_finishers cf ON cf.\"couponId\" = c.id\n    WHERE c.date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date\n      AND c.date <= CURRENT_DATE + 1\n    GROUP BY c.\"unitId\", dia\n)\nSELECT\n    cd.unit_id,\n    cd.dia,\n    COALESCE(va.total_venda, 0) AS venda_do_dia\nFROM\n    comb_lojas_datas cd\nLEFT JOIN\n    vendas_aggregadas va\n    ON cd.unit_id = va.unit_id AND cd.dia = va.dia\nORDER BY\n    cd.unit_id, cd.dia;",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
@@ -719,7 +719,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "ae9a3e54-8121-4ff7-a017-cd58caccc2ef",
+  "versionId": "cd8ac8ea-b677-4045-a26a-a0fa459ed421",
   "triggerCount": 3,
   "tags": [
     {
