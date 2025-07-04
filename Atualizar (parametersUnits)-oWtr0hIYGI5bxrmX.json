@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-01-15T19:25:06.391Z",
-  "updatedAt": "2025-07-01T14:43:23.144Z",
+  "updatedAt": "2025-07-03T11:53:01.314Z",
   "id": "oWtr0hIYGI5bxrmX",
   "name": "Atualizar (parametersUnits)",
   "active": true,
@@ -9,7 +9,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT\n    s.unit_id,\n    MIN(all_days.day) AS min_date_missing_sale,\n    MAX(all_days.day) AS max_date_missing_sale\nFROM\n    -- Gera todos os dias do período dinâmico\n    (SELECT generate_series(\n        CASE\n            WHEN EXTRACT(DAY FROM CURRENT_DATE) = 1 THEN DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date -- Se for dia 1, pega o mês passado\n            ELSE DATE_TRUNC('month', CURRENT_DATE)::date                                                             -- Se não, pega o mês atual\n        END,\n        (CURRENT_DATE - INTERVAL '1 day')::date, -- Sempre até o dia anterior ao dia atual\n        '1 day'\n    ) AS day) AS all_days\nCROSS JOIN\n    -- Seleciona todas as lojas que tiveram vendas no período relevante\n    (SELECT DISTINCT unit_id\n     FROM sales\n     WHERE date >= CASE\n                        WHEN EXTRACT(DAY FROM CURRENT_DATE) = 1 THEN DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')\n                        ELSE DATE_TRUNC('month', CURRENT_DATE)\n                    END\n       AND date < CURRENT_DATE) AS s -- Aliás 's' para ser usado no SELECT principal e ON clause\nLEFT JOIN\n    -- Seleciona as vendas reais no mesmo período\n    (SELECT DISTINCT date::date AS sale_date, unit_id\n     FROM sales\n     WHERE date >= CASE\n                        WHEN EXTRACT(DAY FROM CURRENT_DATE) = 1 THEN DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')\n                        ELSE DATE_TRUNC('month', CURRENT_DATE)\n                    END\n       AND date < CURRENT_DATE) AS actual_sales\nON\n    all_days.day = actual_sales.sale_date\n    AND s.unit_id = actual_sales.unit_id\nWHERE\n    actual_sales.sale_date IS NULL -- Identifica os dias sem vendas\nGROUP BY\n    s.unit_id\nORDER BY\n    s.unit_id;",
+        "query": "SELECT\n    s.unit_id,\n    MIN(all_days.day) AS min_date,\n    MAX(all_days.day) AS max_date\nFROM\n    -- Gera todos os dias do período dinâmico\n    (SELECT generate_series(\n        CASE\n            WHEN EXTRACT(DAY FROM CURRENT_DATE) = 1 THEN DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date -- Se for dia 1, pega o mês passado\n            ELSE DATE_TRUNC('month', CURRENT_DATE)::date                                                             -- Se não, pega o mês atual\n        END,\n        (CURRENT_DATE - INTERVAL '1 day')::date, -- Sempre até o dia anterior ao dia atual\n        '1 day'\n    ) AS day) AS all_days\nCROSS JOIN\n    -- Seleciona todas as lojas que tiveram vendas no período relevante\n    (SELECT DISTINCT unit_id\n     FROM sales\n     WHERE date >= CASE\n                        WHEN EXTRACT(DAY FROM CURRENT_DATE) = 1 THEN DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')\n                        ELSE DATE_TRUNC('month', CURRENT_DATE)\n                    END\n       AND date < CURRENT_DATE) AS s -- Aliás 's' para ser usado no SELECT principal e ON clause\nLEFT JOIN\n    -- Seleciona as vendas reais no mesmo período\n    (SELECT DISTINCT date::date AS sale_date, unit_id\n     FROM sales\n     WHERE date >= CASE\n                        WHEN EXTRACT(DAY FROM CURRENT_DATE) = 1 THEN DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')\n                        ELSE DATE_TRUNC('month', CURRENT_DATE)\n                    END\n       AND date < CURRENT_DATE) AS actual_sales\nON\n    all_days.day = actual_sales.sale_date\n    AND s.unit_id = actual_sales.unit_id\nWHERE\n    actual_sales.sale_date IS NULL -- Identifica os dias sem vendas\nGROUP BY\n    s.unit_id\nORDER BY\n    s.unit_id;",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
@@ -160,7 +160,7 @@
   },
   "meta": null,
   "pinData": {},
-  "versionId": "3cef76f0-e809-4517-a518-d5eb8271fa34",
+  "versionId": "9060ecda-00a1-4a03-9ca0-9dcc84290473",
   "triggerCount": 2,
   "tags": []
 }
