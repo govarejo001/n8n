@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-04-06T13:09:46.459Z",
-  "updatedAt": "2025-06-27T17:49:12.609Z",
+  "updatedAt": "2025-07-10T12:21:59.845Z",
   "id": "zhwW5Nbknvxvvkyo",
   "name": "Hero",
   "active": true,
@@ -751,7 +751,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "fde27c8a-b612-4772-825a-403ce3657dfc",
+  "versionId": "8451930a-c793-4148-95b3-0738653b8e7f",
   "triggerCount": 1,
   "tags": []
 }
