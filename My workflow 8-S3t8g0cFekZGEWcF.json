@@ -1,0 +1,79 @@
+{
+  "createdAt": "2025-07-14T14:34:34.386Z",
+  "updatedAt": "2025-07-14T14:34:34.386Z",
+  "id": "S3t8g0cFekZGEWcF",
+  "name": "My workflow 8",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d887b70d-c757-4328-a05c-eb53c7eefa60",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": {
+          "__rl": true,
+          "value": "products",
+          "mode": "list",
+          "cachedResultName": "products"
+        },
+        "where": {
+          "values": [
+            {
+              "column": "ean",
+              "value": "7891515558635"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        -20,
+        -120
+      ],
+      "id": "2b9a192c-e785-4f76-b2be-4aa0bd2ac537",
+      "name": "MySQL",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "0dbb224c-1be4-48e8-81e1-124f6fc73fa3",
+  "triggerCount": 0,
+  "tags": []
+}
