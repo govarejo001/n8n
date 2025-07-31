@@ -1,0 +1,453 @@
+{
+  "createdAt": "2025-07-30T12:10:38.390Z",
+  "updatedAt": "2025-07-30T12:52:01.444Z",
+  "id": "bo3JgvRqniSRwhXB",
+  "name": "My workflow 9",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "68b5ff40-f0ec-44de-a698-a7fba741ce2c",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        -520
+      ],
+      "id": "a706f7a4-2bde-4c5b-9e7b-95097b78a0ad",
+      "name": "Webhook",
+      "webhookId": "68b5ff40-f0ec-44de-a698-a7fba741ce2c"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select * from families\nwhere name like ('%{{ $json.query }}%')\norder by name asc limit 10 offset {{ ($input.item.json.page-1) * 10 }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        560,
+        -420
+      ],
+      "id": "ac3efb1e-c462-401a-a5e3-3ae0e708010f",
+      "name": "MySQL",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "040f31a4-4e01-47a9-8fa5-565e91f17d3b",
+              "leftValue": "={{ $json.query.page }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "d631264d-21e6-4019-b159-9fd60da51a4e",
+              "leftValue": "={{ Number($json.query.page) }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -100,
+        -520
+      ],
+      "id": "d3d3ac16-3d33-4b19-9779-03efddb1b838",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "991caeb6-bd28-4b50-99b1-96d6c24bc4e5",
+              "name": "page",
+              "value": "={{ Number($json.query.page) }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        120,
+        -620
+      ],
+      "id": "c163e6a9-59f4-4ac6-b0c2-d2270584b55e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6c437dc8-56fb-4b53-8e17-26afa258d14c",
+              "name": "page",
+              "value": 1,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        120,
+        -420
+      ],
+      "id": "8d5eba63-3e03-4fe6-a1d5-ca3d86fc8fc8",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1220,
+        -520
+      ],
+      "id": "dd791393-963a-4e82-86dc-c2df8ab69bf6",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data =[]\n\nfor (const item of $input.all()) {\n  data.push({id:item.json.id,name:item.json.name,url:item.json.url})\n}\n\nreturn {data,rows:$input.first().json.col0,page:$('page').first().json.page}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        -520
+      ],
+      "id": "2ff3ba64-9278-4559-90f5-25af7a50e7f2",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select count(*) as col0 from families\nwhere name like ('%{{ $json.query }}%')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        560,
+        -620
+      ],
+      "id": "585f6d7a-aabd-4364-ba8e-9897bd87c291",
+      "name": "MySQL1",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        780,
+        -520
+      ],
+      "id": "4eae6949-f914-488d-b205-d232ba0f8ece",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0812317b-6edd-49d4-bb35-f3b5288529a0",
+              "name": "=page",
+              "value": "={{ $json.page }}",
+              "type": "number"
+            },
+            {
+              "id": "7557b7d5-e12a-43bd-ad2d-4bee175ec30e",
+              "name": "query",
+              "value": "={{ $('Webhook').item.json.query.q ?? '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        340,
+        -520
+      ],
+      "id": "e7c4f1b4-ea2c-462d-b695-1f5b1a85cd38",
+      "name": "page"
+    },
+    {
+      "parameters": {
+        "path": "68b5ff40-f0ec-44de-a698-a7fba741ce2e",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        -180
+      ],
+      "id": "a16649a8-8714-4b3b-a629-4b1206ed969c",
+      "name": "Webhook1",
+      "webhookId": "68b5ff40-f0ec-44de-a698-a7fba741ce2c"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select ean,description from family_products \ninner join products p on product_id=p.id\nwhere family_id='{{ $json.query.id }}'\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        0,
+        -160
+      ],
+      "id": "8187eaf0-09c9-4b6d-a0bf-ff1328041785",
+      "name": "MySQL2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data =[]\n\nfor (const item of $input.all()) {\n  data.push(item.json)\n}\n\nreturn {data}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        -120
+      ],
+      "id": "6edf75a5-4efd-4c94-a9fc-abc7a45a6b5e",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        860,
+        -100
+      ],
+      "id": "aaec26b4-f059-42c5-9f84-8580f17cc035",
+      "name": "Respond to Webhook1"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "page": {
+      "main": [
+        [
+          {
+            "node": "MySQL1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "MySQL2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL2": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "71439cb1-7c20-4afb-b5e0-f3afc0a0264b",
+  "triggerCount": 2,
+  "tags": []
+}
