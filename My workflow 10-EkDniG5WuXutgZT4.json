@@ -1,0 +1,65 @@
+{
+  "createdAt": "2025-08-01T01:04:48.534Z",
+  "updatedAt": "2025-08-01T01:04:48.534Z",
+  "id": "EkDniG5WuXutgZT4",
+  "name": "My workflow 10",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e580da46-157d-444a-a854-9c86707672cb",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "bucketName": "upload",
+        "fileKey": "n8n/RP_T4 MAR_-_FINALIZADA.xlsx"
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "884ec969-e71c-4b6c-bc19-7546f64a5ca1",
+      "name": "S3",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "S3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "1850beac-75af-4fd3-be9f-d35704a13805",
+  "triggerCount": 0,
+  "tags": []
+}
