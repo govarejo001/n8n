@@ -1,34 +1,114 @@
 {
   "createdAt": "2025-08-01T01:04:48.534Z",
-  "updatedAt": "2025-08-01T01:04:48.534Z",
+  "updatedAt": "2025-08-02T01:14:01.936Z",
   "id": "EkDniG5WuXutgZT4",
   "name": "My workflow 10",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
+      "parameters": {
+        "formTitle": "Arquivo",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "data",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
       "position": [
-        0,
-        0
+        -120,
+        -220
       ],
-      "id": "e580da46-157d-444a-a854-9c86707672cb",
-      "name": "When clicking ‘Execute workflow’"
+      "id": "678ab84f-fbbb-49cc-874c-b61c2d2f9f35",
+      "name": "On form submission",
+      "webhookId": "70da3345-ccdd-4538-89ad-3f35afe21d68"
     },
     {
       "parameters": {
+        "method": "POST",
+        "url": "https://function-bun-production-4001.up.railway.app/api/upload-excel",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        100,
+        -220
+      ],
+      "id": "e78c5880-a3ea-4117-9931-9f2f35f3be54",
+      "name": "HTTP Request",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return  $input.first().json\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        -320
+      ],
+      "id": "d36e87af-9233-490a-840b-ebf427df9c3a",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.first().json.data.filter((item)=>{ \n  return ['VERSO','CAPA','DESTAQUE CAPA','DESTAQUE VERSO'].includes(item[5])\n}).map((item)=>{\n  return {\n    description:item[1],\n    from:item[8],\n    to:item[10]\n  }\n})"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        540,
+        -320
+      ],
+      "id": "9ab6488d-da49-4e47-a4dd-c9b15f4b7bf0",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        760,
+        -320
+      ],
+      "id": "6a5a9080-d750-4e26-b562-971dcbf5df58",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "upload",
         "bucketName": "upload",
-        "fileKey": "n8n/RP_T4 MAR_-_FINALIZADA.xlsx"
+        "fileName": "n8n/testabcd.csv",
+        "additionalFields": {}
       },
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        220,
-        0
+        980,
+        -320
       ],
-      "id": "884ec969-e71c-4b6c-bc19-7546f64a5ca1",
+      "id": "eb617a4c-aee7-47b4-8c30-1ceef917f817",
       "name": "S3",
       "credentials": {
         "s3": {
@@ -36,14 +116,914 @@
           "name": "S3 account"
         }
       }
+    },
+    {
+      "parameters": {
+        "path": "6c79b8a9-e0ca-4c14-88df-05b928c96b33",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -120,
+        240
+      ],
+      "id": "2b17988f-ec7c-47b7-a139-37f685ea84af",
+      "name": "Webhook",
+      "webhookId": "6c79b8a9-e0ca-4c14-88df-05b928c96b33"
+    },
+    {
+      "parameters": {
+        "bucketName": "upload",
+        "fileKey": "n8n/testabcd.csv"
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        100,
+        240
+      ],
+      "id": "3a1de8b8-87dd-400f-9ebb-27cac2b3863a",
+      "name": "S31",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{\n{data:$input.all().map((item)=>item.json)}\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1640,
+        240
+      ],
+      "id": "c2df7032-0447-4252-ac2d-1dfef39683a3",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        320,
+        240
+      ],
+      "id": "d62ea23b-0aea-4afe-bea7-c78201bc5fcd",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "jsCode": "const descriptions = []\n\nfor (const item of $input.all()) {\n  descriptions.push(item.json)\n}\n\nreturn {data:descriptions.map(({from,to,...rest})=>{\n  return Object.values(rest)[0]\n})}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        540,
+        140
+      ],
+      "id": "2fb6544b-6b71-4e9f-b5e9-497bc79c864a",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.query }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        980,
+        140
+      ],
+      "id": "6d318932-a7d5-413c-8be6-36e61f156e56",
+      "name": "MySQL",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "07ab022f-7342-4bd6-9219-6941daff9372",
+              "name": "query",
+              "value": "=select p.id,p.ean,p.description,b.id as brand_id,b.description as brand,s.id as subcategory_id,s.description as subcategory,c.id as category_id,c.description as category,sc.id as section_id,sc.description as section from products p\ninner join subcategories s on prod_subcat_id=s.id\ninner join brands b on prod_brand_id=b.id\ninner join categories c on s.subcat_cat_id=c.id\ninner join sections sc on c.cat_sec_id=sc.id\nwhere BINARY p.description in ('{{ $json.data.join(\"','\") }}');",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        760,
+        140
+      ],
+      "id": "285a8df4-f763-4923-b0b6-b65022f14bd0",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "description",
+        "joinMode": "enrichInput2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1200,
+        240
+      ],
+      "id": "e70f6447-3993-4c40-98a2-4df111d131eb",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "const descriptions = []\n\nfor (const item of $input.all()) {\n  descriptions.push(item.json)\n}\n\nreturn descriptions.map(({from,to,...rest})=>{\n  return {from,to,description:Object.values(rest)[0]}\n})"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        980,
+        340
+      ],
+      "id": "bac41859-455d-442c-ae0d-1df5efdc21b4",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "section"
+            },
+            {
+              "fieldName": "category"
+            },
+            {
+              "fieldName": "subcategory"
+            },
+            {
+              "fieldName": "description"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        240
+      ],
+      "id": "8589c07c-43d3-4979-8cac-93d2d5930b73",
+      "name": "Sort"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "7206835c-d3c1-40fe-8a76-011b2bdb5e70",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -120,
+        700
+      ],
+      "id": "77ecb819-d841-45ed-a05d-6b56a3be47e4",
+      "name": "Webhook2",
+      "webhookId": "7206835c-d3c1-40fe-8a76-011b2bdb5e70"
+    },
+    {
+      "parameters": {
+        "bucketName": "upload",
+        "fileKey": "n8n/database.csv"
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        100,
+        700
+      ],
+      "id": "e2b8b8b2-1a61-4a11-a349-703957235dbb",
+      "name": "S32",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1200,
+        700
+      ],
+      "id": "3c4ca52f-de6c-4388-aeb7-1bb6625555d1",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "bucketName": "upload",
+        "fileName": "n8n/database.csv",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        980,
+        600
+      ],
+      "id": "277392a1-9075-4d4a-bc4b-a95494886eca",
+      "name": "S33",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.all();\nconst test = {\n  json: {\n    name: $('Webhook2').first().json.body.name,\n    startDate: $('Webhook2').first().json.body.startDate,\n    endDate: $('Webhook2').first().json.body.endDate,\n    type: $('Webhook2').first().json.body.type,\n  },\n};\n\ndata.push(test);\n\nreturn data.map((item) => item.json)\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        540,
+        600
+      ],
+      "id": "ef5fc914-5cd6-4d50-84ba-2e9ad8dd23be",
+      "name": "Code4"
+    },
+    {
+      "parameters": {
+        "options": {
+          "delimiter": ",",
+          "headerRow": false
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        760,
+        800
+      ],
+      "id": "f1e60bc0-1a49-44fe-b31b-79c029bfc9e6",
+      "name": "Convert to File2"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"name\":\"name\",\n  \"startDate\":\"startDate\",\n  \"endDate\":\"endDate\",\n  \"type\":\"type\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        540,
+        800
+      ],
+      "id": "4104ed7d-8cac-4e6a-bd82-a1255bdbd9c5",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "bucketName": "upload",
+        "fileName": "n8n/database.csv",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        980,
+        800
+      ],
+      "id": "11f9233f-b5e4-4b19-8cd2-38cdde71d859",
+      "name": "S34",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "headerRow": true
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        320,
+        600
+      ],
+      "id": "520356d7-12df-42a0-b7a2-535378ef55fc",
+      "name": "Extract from File1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "options": {
+          "headerRow": true
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        760,
+        600
+      ],
+      "id": "7a5a92c3-1762-447f-b36d-15b7048b377a",
+      "name": "Convert to File1"
+    },
+    {
+      "parameters": {
+        "path": "6dfc2248-0fda-423f-abe7-ce7622e42553",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -120,
+        1060
+      ],
+      "id": "6b855e80-5b94-4e88-8e0a-9003b33af812",
+      "name": "Webhook1",
+      "webhookId": "6dfc2248-0fda-423f-abe7-ce7622e42553"
+    },
+    {
+      "parameters": {
+        "bucketName": "upload",
+        "fileKey": "n8n/database.csv"
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        100,
+        1060
+      ],
+      "id": "b915246f-db14-44d6-a60e-df8926b028e5",
+      "name": "S35",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "headerRow": true
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        320,
+        1060
+      ],
+      "id": "a74a15f1-4f5c-4c07-8d84-eb43206b0995",
+      "name": "Extract from File2",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        540,
+        1060
+      ],
+      "id": "56341961-8b2b-4cb8-816a-881d60ba6bcc",
+      "name": "Respond to Webhook3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cff9fec1-a2c0-4bd2-ad23-9d54d3fb3e8c",
+              "name": "startDate",
+              "value": "={{ $json.data[1][1] }}",
+              "type": "string"
+            },
+            {
+              "id": "abdb8841-9595-4f0a-b9ce-8238db80512c",
+              "name": "endDate",
+              "value": "={{ $json.data[1][2] }}",
+              "type": "string"
+            },
+            {
+              "id": "b82d4f32-8f79-409a-9a1a-929664176bda",
+              "name": "name",
+              "value": "={{ $json.data[2][2] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        -120
+      ],
+      "id": "8e7bacb5-72e9-48dd-aeb8-49e54f8d5c47",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "url": "=https://function-bun-production-4001.up.railway.app/api/date/ {{ $json.startDate }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        540,
+        -120
+      ],
+      "id": "135ef93a-4c2b-4e7e-922c-9776b2df0f0f",
+      "name": "HTTP Request1",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "url": "=https://function-bun-production-4001.up.railway.app/api/date/ {{ $('Edit Fields2').item.json.endDate }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        760,
+        -120
+      ],
+      "id": "e833d5fb-b779-41f7-b824-549f19c9e08a",
+      "name": "HTTP Request2",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7aa3c04d-4da1-4818-a6df-f934ed92ec2c",
+              "name": "startDate",
+              "value": "={{ $('HTTP Request1').item.json.date.split('T')[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "dec94071-b66b-437a-995c-dafd2e61f5ed",
+              "name": "endDate",
+              "value": "={{ $json.date.split('T')[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "0983071e-8225-4bc5-b9ee-2128c041ce6b",
+              "name": "name",
+              "value": "={{ `${$('Edit Fields2').item.json.name} - ${$('HTTP Request1').item.json.date.toDateTime().format('dd/MM')} á ${$('HTTP Request2').item.json.date.toDateTime().format('dd/MM')}` }}",
+              "type": "string"
+            },
+            {
+              "id": "a3e00250-f2dd-42e7-b674-c9aabb0379e6",
+              "name": "type",
+              "value": 1,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        980,
+        -120
+      ],
+      "id": "6ea011e0-595b-46d8-ae5c-3fcae5e13af5",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hub.govarejo.com/webhook/7206835c-d3c1-40fe-8a76-011b2bdb5e70",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=startDate",
+              "value": "={{ $json.startDate }}"
+            },
+            {
+              "name": "endDate",
+              "value": "={{ $json.endDate }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $json.name }}"
+            },
+            {
+              "name": "type",
+              "value": "={{ $json.type }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        -120
+      ],
+      "id": "482404e2-7436-4f5b-988d-57487361c124",
+      "name": "HTTP Request3",
+      "onError": "continueErrorOutput"
     }
   ],
   "connections": {
-    "When clicking ‘Execute workflow’": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
       "main": [
         [
           {
             "node": "S3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "S31",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "S31": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook2": {
+      "main": [
+        [
+          {
+            "node": "S32",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "S32": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "S33": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code4": {
+      "main": [
+        [
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File2": {
+      "main": [
+        [
+          {
+            "node": "S34",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "S34": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File1": {
+      "main": [
+        [
+          {
+            "node": "S33",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook2": {
+      "main": [
+        []
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "S35",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "S35": {
+      "main": [
+        [
+          {
+            "node": "Extract from File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
             "type": "main",
             "index": 0
           }
@@ -59,7 +1039,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "1850beac-75af-4fd3-be9f-d35704a13805",
-  "triggerCount": 0,
+  "versionId": "f15b35a5-e8c7-4632-8cc2-623a9239c4fd",
+  "triggerCount": 4,
   "tags": []
 }
