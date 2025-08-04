@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-01T01:04:48.534Z",
-  "updatedAt": "2025-08-02T18:46:44.090Z",
+  "updatedAt": "2025-08-04T02:34:19.204Z",
   "id": "EkDniG5WuXutgZT4",
   "name": "My workflow 10",
   "active": true,
@@ -40,7 +40,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1400,
+        520,
         -400
       ],
       "id": "d36e87af-9233-490a-840b-ebf427df9c3a",
@@ -53,7 +53,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1620,
+        740,
         -400
       ],
       "id": "9ab6488d-da49-4e47-a4dd-c9b15f4b7bf0",
@@ -66,7 +66,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1840,
+        960,
         -400
       ],
       "id": "6a5a9080-d750-4e26-b562-971dcbf5df58",
@@ -82,7 +82,7 @@
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        2060,
+        1180,
         -400
       ],
       "id": "eb617a4c-aee7-47b4-8c30-1ceef917f817",
@@ -96,7 +96,8 @@
     },
     {
       "parameters": {
-        "path": "abcdee",
+        "path": "offer",
+        "authentication": "jwtAuth",
         "responseMode": "responseNode",
         "options": {}
       },
@@ -108,12 +109,18 @@
       ],
       "id": "2b17988f-ec7c-47b7-a139-37f685ea84af",
       "name": "Webhook",
-      "webhookId": "6c79b8a9-e0ca-4c14-88df-05b928c96b33"
+      "webhookId": "6c79b8a9-e0ca-4c14-88df-05b928c96b33",
+      "credentials": {
+        "jwtAuth": {
+          "id": "yCTEedeAq2juXzX5",
+          "name": "JWT Auth account"
+        }
+      }
     },
     {
       "parameters": {
         "bucketName": "upload",
-        "fileKey": "=n8n/{{ $json.query.file }}.csv"
+        "fileKey": "=n8n/{{ $json.query.id }}.csv"
       },
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
@@ -133,13 +140,13 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{\n{data:$input.all().map((item)=>item.json)}\n}}",
+        "responseBody": "={{\n{data:$input.all().map((item)=>item.json)[0].data}\n}}",
         "options": {}
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        1620,
+        2500,
         -40
       ],
       "id": "c2df7032-0447-4252-ac2d-1dfef39683a3",
@@ -379,7 +386,8 @@
     },
     {
       "parameters": {
-        "path": "6dfc2248-0fda-423f-abe7-ce7622e42553",
+        "path": "offers",
+        "authentication": "jwtAuth",
         "responseMode": "responseNode",
         "options": {}
       },
@@ -391,7 +399,13 @@
       ],
       "id": "6b855e80-5b94-4e88-8e0a-9003b33af812",
       "name": "Webhook1",
-      "webhookId": "6dfc2248-0fda-423f-abe7-ce7622e42553"
+      "webhookId": "6dfc2248-0fda-423f-abe7-ce7622e42553",
+      "credentials": {
+        "jwtAuth": {
+          "id": "yCTEedeAq2juXzX5",
+          "name": "JWT Auth account"
+        }
+      }
     },
     {
       "parameters": {
@@ -433,123 +447,17 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ {data:$input.all().map((item)=>item.json).filter((item)=>Object.keys(item).length)} }}",
+        "responseBody": "={{ $json }}",
         "options": {}
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        780,
-        560
+        740,
+        580
       ],
       "id": "56341961-8b2b-4cb8-816a-881d60ba6bcc",
       "name": "Respond to Webhook3"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "cff9fec1-a2c0-4bd2-ad23-9d54d3fb3e8c",
-              "name": "startDate",
-              "value": "={{ $json.data[1][1] }}",
-              "type": "string"
-            },
-            {
-              "id": "abdb8841-9595-4f0a-b9ce-8238db80512c",
-              "name": "endDate",
-              "value": "={{ $json.data[1][2] }}",
-              "type": "string"
-            },
-            {
-              "id": "b82d4f32-8f79-409a-9a1a-929664176bda",
-              "name": "name",
-              "value": "={{ $json.data[2][2] }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        300,
-        -400
-      ],
-      "id": "8e7bacb5-72e9-48dd-aeb8-49e54f8d5c47",
-      "name": "Edit Fields2"
-    },
-    {
-      "parameters": {
-        "url": "=https://function-bun-production-4001.up.railway.app/api/date/ {{ $json.startDate }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        520,
-        -400
-      ],
-      "id": "135ef93a-4c2b-4e7e-922c-9776b2df0f0f",
-      "name": "HTTP Request1",
-      "retryOnFail": true
-    },
-    {
-      "parameters": {
-        "url": "=https://function-bun-production-4001.up.railway.app/api/date/ {{ $('Edit Fields2').item.json.endDate }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        740,
-        -400
-      ],
-      "id": "e833d5fb-b779-41f7-b824-549f19c9e08a",
-      "name": "HTTP Request2",
-      "retryOnFail": true
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "7aa3c04d-4da1-4818-a6df-f934ed92ec2c",
-              "name": "startDate",
-              "value": "={{ $('HTTP Request1').item.json.date.split('T')[0] }}",
-              "type": "string"
-            },
-            {
-              "id": "dec94071-b66b-437a-995c-dafd2e61f5ed",
-              "name": "endDate",
-              "value": "={{ $json.date.split('T')[0] }}",
-              "type": "string"
-            },
-            {
-              "id": "0983071e-8225-4bc5-b9ee-2128c041ce6b",
-              "name": "name",
-              "value": "={{ `${$('Edit Fields2').item.json.name} - ${$('HTTP Request1').item.json.date.toDateTime().format('dd/MM')} á ${$('HTTP Request2').item.json.date.toDateTime().format('dd/MM')}` }}",
-              "type": "string"
-            },
-            {
-              "id": "a3e00250-f2dd-42e7-b674-c9aabb0379e6",
-              "name": "type",
-              "value": 1,
-              "type": "number"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        960,
-        -400
-      ],
-      "id": "6ea011e0-595b-46d8-ae5c-3fcae5e13af5",
-      "name": "Edit Fields3"
     },
     {
       "parameters": {
@@ -560,19 +468,19 @@
           "parameters": [
             {
               "name": "=startDate",
-              "value": "={{ $json.startDate }}"
+              "value": "={{ $('Webhook3').item.json.body.startDate }}"
             },
             {
               "name": "endDate",
-              "value": "={{ $json.endDate }}"
+              "value": "={{ $('Webhook3').item.json.body.endDate }}"
             },
             {
               "name": "name",
-              "value": "={{ $json.name }}"
+              "value": "={{ $('Webhook3').item.json.body.name }}"
             },
             {
               "name": "type",
-              "value": "={{ $json.type }}"
+              "value": "1"
             }
           ]
         },
@@ -581,7 +489,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1180,
+        300,
         -400
       ],
       "id": "482404e2-7436-4f5b-988d-57487361c124",
@@ -684,7 +592,8 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "e26863bd-d3b1-4a0a-97fd-1e30a43cd95d",
+        "path": "offers",
+        "authentication": "jwtAuth",
         "responseMode": "responseNode",
         "options": {}
       },
@@ -696,7 +605,13 @@
       ],
       "id": "e8669ed3-a5f7-48ab-b324-9f3b0265a5a7",
       "name": "Webhook3",
-      "webhookId": "e26863bd-d3b1-4a0a-97fd-1e30a43cd95d"
+      "webhookId": "e26863bd-d3b1-4a0a-97fd-1e30a43cd95d",
+      "credentials": {
+        "jwtAuth": {
+          "id": "yCTEedeAq2juXzX5",
+          "name": "JWT Auth account"
+        }
+      }
     },
     {
       "parameters": {
@@ -705,7 +620,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        2280,
+        1400,
         -400
       ],
       "id": "049868bc-402c-4fc5-aa26-36cce9350e0a",
@@ -726,16 +641,77 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all();"
+        "jsCode": "const page = Number($(\"Webhook1\").first().json.query.page ?? 1);\nconst data = $input.all().length>0 ? $input.all().filter((item)=>item.json && item.json.name && item.json.name.includes(String($('Webhook1').first().json.query.q).toLocaleUpperCase())) : []\nconst data1 = data.slice(page - 1, page * 10).map((item) => item.json);\n\nreturn {\n  rows: data.length,\n  page,\n  data: data1,\n};\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        480,
-        600
+        520,
+        580
       ],
       "id": "b825acc2-78f3-4892-8af6-59e4ab9a6d36",
       "name": "Code7"
+    },
+    {
+      "parameters": {
+        "bucketName": "upload",
+        "fileKey": "=n8n/database.csv"
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        -40
+      ],
+      "id": "39d503da-741e-4ce1-b921-ff2d0ebe388f",
+      "name": "S36",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "enableBOM": true
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        -40
+      ],
+      "id": "7a61d85a-0881-4686-9ffc-e16beb74fbdc",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const test = $input\n  .all()\n  .filter((item) => item.json.id === $(\"Webhook\").first().json.query.id)\n  .map((item) => item.json);\n\nreturn {\n  data: { ...test[0], data: $(\"Code9\").item.json.data },\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2280,
+        -40
+      ],
+      "id": "3c416fd8-68f2-478b-a420-cf53a90b45e6",
+      "name": "Code8"
+    },
+    {
+      "parameters": {
+        "jsCode": "return {data:$input.all().map((item)=>item.json)};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1620,
+        -40
+      ],
+      "id": "0a4d710d-46be-4b26-b5a1-e91dddefbf5d",
+      "name": "Code9"
     }
   ],
   "connections": {
@@ -743,7 +719,7 @@
       "main": [
         [
           {
-            "node": "Edit Fields2",
+            "node": "HTTP Request3",
             "type": "main",
             "index": 0
           }
@@ -880,7 +856,7 @@
       "main": [
         [
           {
-            "node": "Respond to Webhook",
+            "node": "Code9",
             "type": "main",
             "index": 0
           }
@@ -975,50 +951,6 @@
         [
           {
             "node": "Code7",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields2": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request1": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request2": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields3": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request3",
             "type": "main",
             "index": 0
           }
@@ -1134,6 +1066,50 @@
           }
         ]
       ]
+    },
+    "S36": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Code8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code9": {
+      "main": [
+        [
+          {
+            "node": "S36",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code8": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1143,40 +1119,8 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {
-    "Webhook2": [
-      {
-        "json": {
-          "headers": {
-            "host": "hub.govarejo.com",
-            "user-agent": "axios/1.8.3",
-            "content-length": "96",
-            "accept": "application/json,text/html,application/xhtml+xml,application/xml,text/*;q=0.9, image/*;q=0.8, */*;q=0.7",
-            "accept-encoding": "gzip, compress, deflate, br",
-            "content-type": "application/json",
-            "x-forwarded-for": "162.220.232.36",
-            "x-forwarded-host": "hub.govarejo.com",
-            "x-forwarded-proto": "https",
-            "x-railway-edge": "railway/us-west2",
-            "x-railway-request-id": "1la3I_OMTH6SzjZqn6XIxQ",
-            "x-real-ip": "162.220.232.36",
-            "x-request-start": "1754159783657"
-          },
-          "params": {},
-          "query": {},
-          "body": {
-            "startDate": "2025-08-04",
-            "endDate": "2025-08-06",
-            "name": "GUERRILHA 1 - 04/08 á 06/08",
-            "type": 1
-          },
-          "webhookUrl": "https://hub.govarejo.com/webhook/7206835c-d3c1-40fe-8a76-011b2bdb5e70",
-          "executionMode": "production"
-        }
-      }
-    ]
-  },
-  "versionId": "7102dbe7-5688-488d-bf3d-7680f7838404",
+  "pinData": {},
+  "versionId": "2ebac54e-6775-4767-95c9-b3465e6d0117",
   "triggerCount": 4,
   "tags": []
 }
