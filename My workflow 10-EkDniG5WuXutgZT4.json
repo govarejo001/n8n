@@ -1,99 +1,11 @@
 {
   "createdAt": "2025-08-01T01:04:48.534Z",
-  "updatedAt": "2025-08-04T02:34:19.204Z",
+  "updatedAt": "2025-08-14T01:39:48.225Z",
   "id": "EkDniG5WuXutgZT4",
   "name": "My workflow 10",
   "active": true,
   "isArchived": false,
   "nodes": [
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://function-bun-production-4001.up.railway.app/api/upload-excel",
-        "sendBody": true,
-        "contentType": "multipart-form-data",
-        "bodyParameters": {
-          "parameters": [
-            {
-              "parameterType": "formBinaryData",
-              "name": "file",
-              "inputDataFieldName": "file"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        80,
-        -400
-      ],
-      "id": "e78c5880-a3ea-4117-9931-9f2f35f3be54",
-      "name": "HTTP Request",
-      "retryOnFail": true
-    },
-    {
-      "parameters": {
-        "jsCode": "return  $('HTTP Request').first().json\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        520,
-        -400
-      ],
-      "id": "d36e87af-9233-490a-840b-ebf427df9c3a",
-      "name": "Code"
-    },
-    {
-      "parameters": {
-        "jsCode": "return $input.first().json.data.filter((item)=>{ \n  return ['VERSO','CAPA','DESTAQUE CAPA','DESTAQUE VERSO'].includes(item[5])\n}).map((item)=>{\n  return {\n    description:item[1],\n    from:item[8],\n    to:item[10]\n  }\n})"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        740,
-        -400
-      ],
-      "id": "9ab6488d-da49-4e47-a4dd-c9b15f4b7bf0",
-      "name": "Code1"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.convertToFile",
-      "typeVersion": 1.1,
-      "position": [
-        960,
-        -400
-      ],
-      "id": "6a5a9080-d750-4e26-b562-971dcbf5df58",
-      "name": "Convert to File"
-    },
-    {
-      "parameters": {
-        "operation": "upload",
-        "bucketName": "upload",
-        "fileName": "=n8n/{{ $('HTTP Request3').item.json.id }}.csv",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.s3",
-      "typeVersion": 1,
-      "position": [
-        1180,
-        -400
-      ],
-      "id": "eb617a4c-aee7-47b4-8c30-1ceef917f817",
-      "name": "S3",
-      "credentials": {
-        "s3": {
-          "id": "cCGXGEbqFM5KuTWj",
-          "name": "S3 account"
-        }
-      }
-    },
     {
       "parameters": {
         "path": "offer",
@@ -285,7 +197,7 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "7206835c-d3c1-40fe-8a76-011b2bdb5e70",
+        "path": "campaigns",
         "responseMode": "responseNode",
         "options": {}
       },
@@ -301,26 +213,6 @@
     },
     {
       "parameters": {
-        "bucketName": "upload",
-        "fileKey": "n8n/database.csv"
-      },
-      "type": "n8n-nodes-base.s3",
-      "typeVersion": 1,
-      "position": [
-        80,
-        320
-      ],
-      "id": "e2b8b8b2-1a61-4a11-a349-703957235dbb",
-      "name": "S32",
-      "credentials": {
-        "s3": {
-          "id": "cCGXGEbqFM5KuTWj",
-          "name": "S3 account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "respondWith": "json",
         "responseBody": "={{ {id:$('cuid').item.json.cuid} }}",
         "options": {}
@@ -333,56 +225,6 @@
       ],
       "id": "3c4ca52f-de6c-4388-aeb7-1bb6625555d1",
       "name": "Respond to Webhook2"
-    },
-    {
-      "parameters": {
-        "operation": "upload",
-        "bucketName": "upload",
-        "fileName": "n8n/database.csv",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.s3",
-      "typeVersion": 1,
-      "position": [
-        1400,
-        320
-      ],
-      "id": "277392a1-9075-4d4a-bc4b-a95494886eca",
-      "name": "S33",
-      "credentials": {
-        "s3": {
-          "id": "cCGXGEbqFM5KuTWj",
-          "name": "S3 account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "const data = $('csv').all();\n\nreturn {data:data.map((item) => item.json).filter((item)=>Object.keys(item).length>0)}\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        520,
-        320
-      ],
-      "id": "ef5fc914-5cd6-4d50-84ba-2e9ad8dd23be",
-      "name": "Code4"
-    },
-    {
-      "parameters": {
-        "options": {
-          "headerRow": true
-        }
-      },
-      "type": "n8n-nodes-base.convertToFile",
-      "typeVersion": 1.1,
-      "position": [
-        1180,
-        320
-      ],
-      "id": "7a5a92c3-1762-447f-b36d-15b7048b377a",
-      "name": "Convert to File1"
     },
     {
       "parameters": {
@@ -461,43 +303,6 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://hub.govarejo.com/webhook/7206835c-d3c1-40fe-8a76-011b2bdb5e70",
-        "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "=startDate",
-              "value": "={{ $('Webhook3').item.json.body.startDate }}"
-            },
-            {
-              "name": "endDate",
-              "value": "={{ $('Webhook3').item.json.body.endDate }}"
-            },
-            {
-              "name": "name",
-              "value": "={{ $('Webhook3').item.json.body.name }}"
-            },
-            {
-              "name": "type",
-              "value": "1"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        300,
-        -400
-      ],
-      "id": "482404e2-7436-4f5b-988d-57487361c124",
-      "name": "HTTP Request3",
-      "onError": "continueRegularOutput"
-    },
-    {
-      "parameters": {
         "url": "https://function-bun-production-62e9.up.railway.app/api/generate-cuid",
         "options": {}
       },
@@ -510,23 +315,6 @@
       "id": "9017cef8-4ca5-412a-a70a-1be97bb835ca",
       "name": "cuid",
       "retryOnFail": true
-    },
-    {
-      "parameters": {
-        "options": {
-          "enableBOM": true,
-          "headerRow": true
-        }
-      },
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
-      "position": [
-        300,
-        320
-      ],
-      "id": "520356d7-12df-42a0-b7a2-535378ef55fc",
-      "name": "csv",
-      "alwaysOutputData": true
     },
     {
       "parameters": {},
@@ -591,44 +379,7 @@
     },
     {
       "parameters": {
-        "httpMethod": "POST",
-        "path": "offers",
-        "authentication": "jwtAuth",
-        "responseMode": "responseNode",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [
-        -140,
-        -400
-      ],
-      "id": "e8669ed3-a5f7-48ab-b324-9f3b0265a5a7",
-      "name": "Webhook3",
-      "webhookId": "e26863bd-d3b1-4a0a-97fd-1e30a43cd95d",
-      "credentials": {
-        "jwtAuth": {
-          "id": "yCTEedeAq2juXzX5",
-          "name": "JWT Auth account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.4,
-      "position": [
-        1400,
-        -400
-      ],
-      "id": "049868bc-402c-4fc5-aa26-36cce9350e0a",
-      "name": "Respond to Webhook1"
-    },
-    {
-      "parameters": {
-        "jsCode": "const data = $('Code4').first().json.data\nconst test = {\n    \"name\": $('Webhook2').first().json.body.name,\n    startDate: $('Webhook2').first().json.body.startDate,\n    endDate: $('Webhook2').first().json.body.endDate,\n    type: $('Webhook2').first().json.body.type,\n    id: $input.first().json.cuid,\n};\n\ndata.push(test);\n\nreturn data\n"
+        "jsCode": "const data = $('Code4').first().json.data\nconst test = {\n    \"name\": $('Webhook2').first().json.body.name,\n    startDate: $('Webhook2').first().json.body.startDate,\n    endDate: $('Webhook2').first().json.body.endDate,\n    type: $('Webhook2').first().json.body.typeId,\n    id: $input.first().json.cuid,\n};\n\ndata.push(test);\n\nreturn data\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -712,53 +463,96 @@
       ],
       "id": "0a4d710d-46be-4b26-b5a1-e91dddefbf5d",
       "name": "Code9"
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "bucketName": "upload",
+        "fileName": "n8n/database.csv",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        320
+      ],
+      "id": "277392a1-9075-4d4a-bc4b-a95494886eca",
+      "name": "S33",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "headerRow": true
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1180,
+        320
+      ],
+      "id": "7a5a92c3-1762-447f-b36d-15b7048b377a",
+      "name": "Convert to File1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $('csv').all();\n\nreturn {data:data.map((item) => item.json).filter((item)=>Object.keys(item).length>0)}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        320
+      ],
+      "id": "ef5fc914-5cd6-4d50-84ba-2e9ad8dd23be",
+      "name": "Code4"
+    },
+    {
+      "parameters": {
+        "options": {
+          "enableBOM": true,
+          "headerRow": true
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        300,
+        320
+      ],
+      "id": "520356d7-12df-42a0-b7a2-535378ef55fc",
+      "name": "csv",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "bucketName": "upload",
+        "fileKey": "n8n/database.csv"
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        80,
+        320
+      ],
+      "id": "e2b8b8b2-1a61-4a11-a349-703957235dbb",
+      "name": "S32",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
     }
   ],
   "connections": {
-    "HTTP Request": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code": {
-      "main": [
-        [
-          {
-            "node": "Code1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code1": {
-      "main": [
-        [
-          {
-            "node": "Convert to File",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Convert to File": {
-      "main": [
-        [
-          {
-            "node": "S3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Webhook": {
       "main": [
         [
@@ -874,51 +668,6 @@
         ]
       ]
     },
-    "S32": {
-      "main": [
-        [
-          {
-            "node": "csv",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        []
-      ]
-    },
-    "S33": {
-      "main": [
-        [
-          {
-            "node": "Respond to Webhook2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code4": {
-      "main": [
-        [
-          {
-            "node": "cuid",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Convert to File1": {
-      "main": [
-        [
-          {
-            "node": "S33",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Respond to Webhook2": {
       "main": [
         []
@@ -968,28 +717,6 @@
         ]
       ]
     },
-    "csv": {
-      "main": [
-        [
-          {
-            "node": "Code4",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request3": {
-      "main": [
-        [
-          {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "When clicking ‘Execute workflow’": {
       "main": [
         [
@@ -1017,28 +744,6 @@
         [
           {
             "node": "S34",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Webhook3": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "S3": {
-      "main": [
-        [
-          {
-            "node": "Respond to Webhook1",
             "type": "main",
             "index": 0
           }
@@ -1110,6 +815,61 @@
           }
         ]
       ]
+    },
+    "S33": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File1": {
+      "main": [
+        [
+          {
+            "node": "S33",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code4": {
+      "main": [
+        [
+          {
+            "node": "cuid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "csv": {
+      "main": [
+        [
+          {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "S32": {
+      "main": [
+        [
+          {
+            "node": "csv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1120,7 +880,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "2ebac54e-6775-4767-95c9-b3465e6d0117",
-  "triggerCount": 4,
+  "versionId": "240dd99f-14bc-4f52-b319-298732ddde52",
+  "triggerCount": 3,
   "tags": []
 }
