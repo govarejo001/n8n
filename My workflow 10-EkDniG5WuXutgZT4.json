@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-01T01:04:48.534Z",
-  "updatedAt": "2025-08-14T01:39:48.225Z",
+  "updatedAt": "2025-08-16T23:39:57.721Z",
   "id": "EkDniG5WuXutgZT4",
   "name": "My workflow 10",
   "active": true,
@@ -8,7 +8,7 @@
   "nodes": [
     {
       "parameters": {
-        "path": "offer",
+        "path": "campaigns",
         "authentication": "jwtAuth",
         "responseMode": "responseNode",
         "options": {}
@@ -77,7 +77,8 @@
         -40
       ],
       "id": "d62ea23b-0aea-4afe-bea7-c78201bc5fcd",
-      "name": "Extract from File"
+      "name": "Extract from File",
+      "alwaysOutputData": true
     },
     {
       "parameters": {
@@ -167,35 +168,6 @@
     },
     {
       "parameters": {
-        "sortFieldsUi": {
-          "sortField": [
-            {
-              "fieldName": "section"
-            },
-            {
-              "fieldName": "category"
-            },
-            {
-              "fieldName": "subcategory"
-            },
-            {
-              "fieldName": "description"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.sort",
-      "typeVersion": 1,
-      "position": [
-        1400,
-        -40
-      ],
-      "id": "8589c07c-43d3-4979-8cac-93d2d5930b73",
-      "name": "Sort"
-    },
-    {
-      "parameters": {
         "httpMethod": "POST",
         "path": "campaigns",
         "responseMode": "responseNode",
@@ -220,8 +192,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        1620,
-        320
+        2320,
+        280
       ],
       "id": "3c4ca52f-de6c-4388-aeb7-1bb6625555d1",
       "name": "Respond to Webhook2"
@@ -379,7 +351,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const data = $('Code4').first().json.data\nconst test = {\n    \"name\": $('Webhook2').first().json.body.name,\n    startDate: $('Webhook2').first().json.body.startDate,\n    endDate: $('Webhook2').first().json.body.endDate,\n    type: $('Webhook2').first().json.body.typeId,\n    id: $input.first().json.cuid,\n};\n\ndata.push(test);\n\nreturn data\n"
+        "jsCode": "const data = $('Code4').first().json.data\nconst test = {\n    \"name\": $('Webhook2').first().json.body.name,\n    startDate: $('Webhook2').first().json.body.startDate,\n    endDate: $('Webhook2').first().json.body.endDate,\n    type: $('Webhook2').first().json.body.typeId,\n    id: $input.first().json.cuid,\n  units:JSON.stringify($('Webhook2').first().json.body.units),\n  blocks:JSON.stringify($('Webhook2').first().json.body.blocks),\n};\n\ndata.push(test);\n\nreturn data\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -440,7 +412,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const test = $input\n  .all()\n  .filter((item) => item.json.id === $(\"Webhook\").first().json.query.id)\n  .map((item) => item.json);\n\nreturn {\n  data: { ...test[0], data: $(\"Code9\").item.json.data },\n};\n"
+        "jsCode": "const test = $input\n  .all()\n  .filter((item) => item.json.id === $(\"Webhook\").first().json.query.id)\n  .map((item) => item.json);\n\nreturn {\n  data: { ...test[0],units:JSON.parse(test[0].units),\n         blocks:JSON.parse(test[0].blocks),products: $(\"Code9\").item.json.data.filter((item)=>item.name) },\n};\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -550,6 +522,54 @@
           "name": "S3 account"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "return {}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1620,
+        320
+      ],
+      "id": "f500a9d5-d98b-410d-8685-952cf82e6b66",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1840,
+        260
+      ],
+      "id": "b23b8434-ec26-4506-bdb0-002b2334235e",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "bucketName": "upload",
+        "fileName": "=n8n/{{ $('cuid').item.json.cuid }}.csv",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        260
+      ],
+      "id": "fd2d2f8a-16c1-4f9c-ac2e-d47c25db2b71",
+      "name": "S3",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
     }
   ],
   "connections": {
@@ -628,7 +648,7 @@
       "main": [
         [
           {
-            "node": "Sort",
+            "node": "Code9",
             "type": "main",
             "index": 0
           }
@@ -642,17 +662,6 @@
             "node": "Merge",
             "type": "main",
             "index": 1
-          }
-        ]
-      ]
-    },
-    "Sort": {
-      "main": [
-        [
-          {
-            "node": "Code9",
-            "type": "main",
-            "index": 0
           }
         ]
       ]
@@ -820,7 +829,7 @@
       "main": [
         [
           {
-            "node": "Respond to Webhook2",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -870,6 +879,39 @@
           }
         ]
       ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "S3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "S3": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -879,8 +921,199 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "240dd99f-14bc-4f52-b319-298732ddde52",
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "hub.govarejo.com",
+            "user-agent": "PostmanRuntime/7.45.0",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br",
+            "authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzZ2xvZnpxbHNicmpobHA2NnJ1aGFqYXUiLCJhY3Rpb25zIjpbInN4OGgwbXlkajNtN2RhZncyYTE3dm44dyIsIm1wbG9sNTBxNmFnNGZoZmp3cjg4NHFtbiIsInFvenF2a3F1bzY0Z291Y2Y4ZDl5aXBxZyIsInY4cnE1NDRyMnJpbm13d2NzaHEwNmt4ZyIsIm05YWoxenZ3d2doanRjZGZmMmFkM28yNiIsIm8xMTExOW9rNTJmangzbG14ZXc3b3hvMSIsImhtZG4yajF5emczbTBsbXp2NDZ3YXBjNSIsInA5emZnYmo4am0xOHk2N256MGxldnU4OSIsIm9zd2loZmlrZzRpbWJlcjBsYzdpZGxsNiIsInY2ZnZiZmM5dXJ1cTk3N3NpZDI2eHJpaiIsImhnN21zOGF4bnI2bjByZWlocTNjMzVvaCIsInNoanV5MGd5dHpqYXhzZjhrZzIwMDUzcSIsInZ5dGllOWI4M2E4NWV0NTVuOWtxZTN2ciIsInZlOWU0Y3gzNG9lemh1Y3RwYmdzMXhhZCIsImtrNzloaHBidjRjdno3bzRnazE4cmwzdyIsInR0eWtzNTlhbjJ4dDRlOTNqYjl3a3UxaSIsImx3NjIzbXVja2p2ZWFuNmQ5aXVpdm9jdCIsImoyN3d1OXJweG5xNzZsM2t6M2xoYnBwayIsImdjOGk3OHZobmRjYzV2OHVjZnV4dzE5dCIsImRocWpwcmt5dmhzbDc4aGZ0anhuNW4zdCIsInF2ajBxeHdldXFjdHRxY205bXVjcGs3OSIsImZsNmJzZTY2b2Y1YWVrOW53MzJsbmUzcyIsInFpdnI4Mm8zN3ZxcG4zenB6dmNmNHBneSIsInlmc2k5bDJjYnAxaWw4bGJ3ZXM1Zml1eCIsInhzbnU5ZjNieTBxd2F3d2VybzdwNGpnbCIsImpiZHAzZ2plZWFkeW1maXlyODNyMHpoMyIsImE1YjUyampudjh5eWh5dWY1dGttZnYwayIsImVlc3B1dTMyMmkxMHljOWQ3NHpkeTc2eSIsImcyYjhtc2twdmgyMTluNTNydWdxc2J0ZSIsInhzYzFvOThhbmd6Y2plaHhka2h6bnFtNCIsIm00eDN6NDEwcm11ZW1wZG9yaWI5cHNlbyIsImp4bmFkd3M3OHMwbmJzZ2cwZmdoNXJydSIsImJyb3o3dW52OXcwMnB2Zng3MWw3ZDNleCIsImY0MmE5dXd5OGhjMGtuMW1ram9obzA2biIsIm5ra2V2YjBwYXhsM3NlYndyZ2UzM29zbCIsImhvdmVnZmJya3RmbDR3dHczbHVxbnZodSIsImRjbTRpYW54NGU3dmptdGQzeGVjcGVkcCIsInE2Mmw4ODNvd2l0eHdqOWI0aTZqOWVvaCIsInVnbnBrNWd5NTFwb2VwcTIwcXY0M2h2cCIsIm45c285OTJjdWQ2MDd1bmVhYmptaXBxNSIsInF1Mm5iNm05aDVwOHVkbmc1em1lem11MyIsIm9nbzN4bnBjbnVpYzN6M2Nidmg2NW0yNiIsImswejN2MDQ2b2JvaDNpNzdyb2c4MzZjcyIsInRtaGI2dXJpZHl1aHowODQ2MjVzZG03dyIsImp2cmdlM3ZybGtnYjZsczJjMXQ4Z3doOSIsInZvbHNmMXQ5emNmNnBveGl6c3l1MDYxZCIsInp3bnozajBocnZwanlpeXdzMDI2cm5ldSIsInh1NHkwMWFzeGFlcjhpaWVzdnoxazVlYyIsImZ5amd6bmp4aGowZ2V6bnpwcHNqMHhzdSIsImg5NXZsZnA5ajhiZXl3cWNtZ20yeTVvZiIsInBqMWU5N2V5b2hweThiaDJpaTRic3k3MyIsIm93dTRjczA5cml1ZzZrbzAzMzBwZXpibSIsInMxZHcwbjI4ampiYm55cDBpc2F3OWt4OCIsInlkc2Nwb3FldzVpNnU1YndqbWI5ZW51ciIsImRvbTJqYmE1c2UxcmxnenRyZGV5OHY5biIsInZpbXFkOG0zb2RsNWppeXkwejJ1ZmtweSIsImFlYW1rZHR0dmM2dzlybDh4c2I5enY3YSIsInZlZndiYzdvaW9ianFjOGhtem8wa2R0YyIsImE2dWsxcWtxcWl6NGVndDBjNW8xdmFnaSIsImdiZ3F5YWJ6Yml3bzgxcWd2dnE4NnlldiIsImhvZ2NuemxtYzVtYm84MHI5YXdzbTZ1dSIsIm00eHpoMWVibDI1MTBjazYwaXphMnh6YiIsInlmZThjYnh5M3FmMDQ1bGprZmd1dmRzeSIsImkxNXFqMWs3bjg2d205NmgxYWYxMjBlNiIsImNieWxjMWxqeXA4dG55ODdjdXR6NHl0NyIsInNhcWRtNWxyc3plOXZmcWRsZzJ4bHV3dSJdLCJ1bml0cyI6WyIxIiwiMiIsIjMiLCI0IiwiNSIsIjciLCI4IiwiOSIsIjEwIiwiMTEiLCIxMiIsIjEzIiwiMTQiLCIxNSIsIjE2IiwiMjAiLCIyMSIsIjIyIiwiMjMiLCIyNCIsIjI1IiwiMjYiLCIyOCIsIjI5IiwiMzAiLCIzMSIsIjMyIiwiMzMiLCIzNCIsIjM1IiwiMzYiLCIzNyIsIjQ0IiwiNDUiLCI0NiIsIjQ3IiwiNDgiLCI1MCIsIjUxIiwiNTIiLCI1MyIsIjU0IiwiNTUiLCI1NiIsIjU3IiwiNTgiLCI1OSIsIjYwIiwiNjIiLCI2NCIsIjcyIiwiNzMiLCI3NSIsIjc2IiwiNzciLCI3OCIsIjgwIiwiODEiLCI4MiIsIjgzIiwiODQiLCI4NSIsIjg2IiwiODciLCI4OCIsIjg5IiwiOTAiLCI5MSIsIjkyIiwiOTMiLCI5NCIsIjk1IiwiOTYiLCIxMDEiLCIxMDIiLCIxMDQiLCIxMDUiLCIxMDYiLCIxMDciLCIxMDgiLCIxMDkiLCIyMDAiLCIyMDEiLCIyMDIiLCIyMDMiLCI5MDEiXSwiaWF0IjoxNzU1MzczMjc3LCJleHAiOjE3NTU0NTk2Nzd9.BmTB2WAqcYuYiL-DQ0KsVpgEWFxAVYhlSHQFcerQMUw0qvIP9lE5DQb-x3T7wRUGEYY_pg31eNlDa7pRVlc1VLenEIom665De5T0jVsUVe4ITlHQo1e0EWD9HYz1SqH6rnrPVSeWwKRPeBQd7gcm5-jO3aGkjYz2PoWtuiP-H5XIJYuOmRFR5F3rZfmR0yV0ZVWHtQR9vIM9wtvGHoIg6MC2G_B-Euxlh1sAStnXxHUxj6RkYqQhfE8EGClcDZeUWP46LTpFLKO31nhHgeSs3wftFntHf7RjjkA9EmZBkEpOE9oZBSx_tt3bKOeS1UH6LBE4xrdUpA17XixxKfZNZQ",
+            "cache-control": "no-cache",
+            "postman-token": "c7e5e12e-a281-413d-bd11-4efd57bc9f99",
+            "x-forwarded-for": "177.106.76.122",
+            "x-forwarded-host": "hub.govarejo.com",
+            "x-forwarded-proto": "https",
+            "x-railway-edge": "railway/us-east4-eqdc4a",
+            "x-railway-request-id": "HLnJwBcTSje_BOpDCx5-qw",
+            "x-real-ip": "177.106.76.122",
+            "x-request-start": "1755387506932"
+          },
+          "params": {},
+          "query": {
+            "id": "brwqchn7hb6h5ynbvi5nl5hg"
+          },
+          "body": {},
+          "webhookUrl": "https://hub.govarejo.com/webhook/campaigns",
+          "executionMode": "production",
+          "jwtPayload": {
+            "sub": "sglofzqlsbrjhlp66ruhajau",
+            "actions": [
+              "sx8h0mydj3m7dafw2a17vn8w",
+              "mplol50q6ag4fhfjwr884qmn",
+              "qozqvkquo64goucf8d9yipqg",
+              "v8rq544r2rinmwwcshq06kxg",
+              "m9aj1zvwwghjtcdff2ad3o26",
+              "o11119ok52fjx3lmxew7oxo1",
+              "hmdn2j1yzg3m0lmzv46wapc5",
+              "p9zfgbj8jm18y67nz0levu89",
+              "oswihfikg4imber0lc7idll6",
+              "v6fvbfc9uruq977sid26xrij",
+              "hg7ms8axnr6n0reihq3c35oh",
+              "shjuy0gytzjaxsf8kg20053q",
+              "vytie9b83a85et55n9kqe3vr",
+              "ve9e4cx34oezhuctpbgs1xad",
+              "kk79hhpbv4cvz7o4gk18rl3w",
+              "ttyks59an2xt4e93jb9wku1i",
+              "lw623muckjvean6d9iuivoct",
+              "j27wu9rpxnq76l3kz3lhbppk",
+              "gc8i78vhndcc5v8ucfuxw19t",
+              "dhqjprkyvhsl78hftjxn5n3t",
+              "qvj0qxweuqcttqcm9mucpk79",
+              "fl6bse66of5aek9nw32lne3s",
+              "qivr82o37vqpn3zpzvcf4pgy",
+              "yfsi9l2cbp1il8lbwes5fiux",
+              "xsnu9f3by0qwawwero7p4jgl",
+              "jbdp3gjeeadymfiyr83r0zh3",
+              "a5b52jjnv8yyhyuf5tkmfv0k",
+              "eespuu322i10yc9d74zdy76y",
+              "g2b8mskpvh219n53rugqsbte",
+              "xsc1o98angzcjehxdkhznqm4",
+              "m4x3z410rmuempdorib9pseo",
+              "jxnadws78s0nbsgg0fgh5rru",
+              "broz7unv9w02pvfx71l7d3ex",
+              "f42a9uwy8hc0kn1mkjoho06n",
+              "nkkevb0paxl3sebwrge33osl",
+              "hovegfbrktfl4wtw3luqnvhu",
+              "dcm4ianx4e7vjmtd3xecpedp",
+              "q62l883owitxwj9b4i6j9eoh",
+              "ugnpk5gy51poepq20qv43hvp",
+              "n9so992cud607uneabjmipq5",
+              "qu2nb6m9h5p8udng5zmezmu3",
+              "ogo3xnpcnuic3z3cbvh65m26",
+              "k0z3v046oboh3i77rog836cs",
+              "tmhb6uridyuhz084625sdm7w",
+              "jvrge3vrlkgb6ls2c1t8gwh9",
+              "volsf1t9zcf6poxizsyu061d",
+              "zwnz3j0hrvpjyiyws026rneu",
+              "xu4y01asxaer8iiesvz1k5ec",
+              "fyjgznjxhj0geznzppsj0xsu",
+              "h95vlfp9j8beywqcmgm2y5of",
+              "pj1e97eyohpy8bh2ii4bsy73",
+              "owu4cs09riug6ko0330pezbm",
+              "s1dw0n28jjbbnyp0isaw9kx8",
+              "ydscpoqew5i6u5bwjmb9enur",
+              "dom2jba5se1rlgztrdey8v9n",
+              "vimqd8m3odl5jiyy0z2ufkpy",
+              "aeamkdttvc6w9rl8xsb9zv7a",
+              "vefwbc7oiobjqc8hmzo0kdtc",
+              "a6uk1qkqqiz4egt0c5o1vagi",
+              "gbgqyabzbiwo81qgvvq86yev",
+              "hogcnzlmc5mbo80r9awsm6uu",
+              "m4xzh1ebl2510ck60iza2xzb",
+              "yfe8cbxy3qf045ljkfguvdsy",
+              "i15qj1k7n86wm96h1af120e6",
+              "cbylc1ljyp8tny87cutz4yt7",
+              "saqdm5lrsze9vfqdlg2xluwu"
+            ],
+            "units": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+              "20",
+              "21",
+              "22",
+              "23",
+              "24",
+              "25",
+              "26",
+              "28",
+              "29",
+              "30",
+              "31",
+              "32",
+              "33",
+              "34",
+              "35",
+              "36",
+              "37",
+              "44",
+              "45",
+              "46",
+              "47",
+              "48",
+              "50",
+              "51",
+              "52",
+              "53",
+              "54",
+              "55",
+              "56",
+              "57",
+              "58",
+              "59",
+              "60",
+              "62",
+              "64",
+              "72",
+              "73",
+              "75",
+              "76",
+              "77",
+              "78",
+              "80",
+              "81",
+              "82",
+              "83",
+              "84",
+              "85",
+              "86",
+              "87",
+              "88",
+              "89",
+              "90",
+              "91",
+              "92",
+              "93",
+              "94",
+              "95",
+              "96",
+              "101",
+              "102",
+              "104",
+              "105",
+              "106",
+              "107",
+              "108",
+              "109",
+              "200",
+              "201",
+              "202",
+              "203",
+              "901"
+            ],
+            "iat": 1755373277,
+            "exp": 1755459677
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "34e73c9f-c24c-40ae-947c-519c2e95bfaa",
   "triggerCount": 3,
   "tags": []
 }
