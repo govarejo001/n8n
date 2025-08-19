@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-01T01:04:48.534Z",
-  "updatedAt": "2025-08-16T23:39:57.721Z",
+  "updatedAt": "2025-08-18T11:39:43.733Z",
   "id": "EkDniG5WuXutgZT4",
   "name": "My workflow 10",
   "active": true,
@@ -570,6 +570,79 @@
           "name": "S3 account"
         }
       }
+    },
+    {
+      "parameters": {
+        "path": "family",
+        "authentication": "jwtAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        1060
+      ],
+      "id": "cd1fda13-1d48-4e42-959b-9c0b0ea85139",
+      "name": "Webhook3",
+      "webhookId": "6dfc2248-0fda-423f-abe7-ce7622e42553",
+      "credentials": {
+        "jwtAuth": {
+          "id": "yCTEedeAq2juXzX5",
+          "name": "JWT Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1020,
+        1060
+      ],
+      "id": "67f2e020-876e-4ba6-9e62-ce80f53c025c",
+      "name": "Respond to Webhook4"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select f.id,f.name from families f\ninner join family_products fp on fp.family_id=f.id \nwhere product_id='{{ $json.query.id }}'  \ngroup by f.id,f.name",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        140,
+        1060
+      ],
+      "id": "bf6e76c8-0eea-4db7-9f44-d416802afcfc",
+      "name": "MySQL1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  data: $input.all().length>0 ? $input.all().map((item)=>item.json).filter((item)=>item.name) : [],\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        380,
+        1140
+      ],
+      "id": "684aa9a0-b5b7-4dfc-9b79-47538630d9aa",
+      "name": "Code10"
     }
   ],
   "connections": {
@@ -912,6 +985,39 @@
           }
         ]
       ]
+    },
+    "Webhook3": {
+      "main": [
+        [
+          {
+            "node": "MySQL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL1": {
+      "main": [
+        [
+          {
+            "node": "Code10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code10": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1113,7 +1219,7 @@
       }
     ]
   },
-  "versionId": "34e73c9f-c24c-40ae-947c-519c2e95bfaa",
-  "triggerCount": 3,
+  "versionId": "b472a9b9-15f4-41af-b3e9-cc0b2e7cee07",
+  "triggerCount": 4,
   "tags": []
 }
