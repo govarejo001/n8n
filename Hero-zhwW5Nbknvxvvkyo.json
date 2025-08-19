@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-04-06T13:09:46.459Z",
-  "updatedAt": "2025-07-10T12:21:59.845Z",
+  "updatedAt": "2025-08-18T13:27:40.671Z",
   "id": "zhwW5Nbknvxvvkyo",
   "name": "Hero",
   "active": true,
@@ -13,6 +13,10 @@
             {
               "field": "cronExpression",
               "expression": "0 7 * * *"
+            },
+            {
+              "field": "cronExpression",
+              "expression": "0 12 * * *"
             }
           ]
         }
@@ -751,7 +755,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "8451930a-c793-4148-95b3-0738653b8e7f",
+  "versionId": "43a1a2ea-effd-4763-8e13-38ab5ace1409",
   "triggerCount": 1,
   "tags": []
 }
