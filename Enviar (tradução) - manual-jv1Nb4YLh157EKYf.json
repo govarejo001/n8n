@@ -800,5 +800,14 @@
   "pinData": {},
   "versionId": "bc1331de-de79-4eae-b594-4ecc2cb2da91",
   "triggerCount": 2,
+  "shared": [
+    {
+      "createdAt": "2025-04-24T13:19:52.814Z",
+      "updatedAt": "2025-04-24T13:19:52.814Z",
+      "role": "workflow:owner",
+      "workflowId": "jv1Nb4YLh157EKYf",
+      "projectId": "LHTErTtaRYVEdo6Q"
+    }
+  ],
   "tags": []
 }
