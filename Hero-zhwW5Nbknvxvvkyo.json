@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-04-06T13:09:46.459Z",
-  "updatedAt": "2025-08-18T13:27:40.671Z",
+  "updatedAt": "2025-09-24T12:01:24.507Z",
   "id": "zhwW5Nbknvxvvkyo",
   "name": "Hero",
   "active": true,
@@ -25,7 +25,7 @@
       "typeVersion": 1.2,
       "position": [
         -2720,
-        440
+        448
       ],
       "id": "2815f703-bb70-4692-b1b1-bb7167075233",
       "name": "Schedule Trigger"
@@ -56,8 +56,8 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -2180,
-        680
+        -2176,
+        688
       ],
       "id": "a21288ce-9428-4121-9b5c-c9a86f0fc577",
       "name": "crm-category.csv",
@@ -75,8 +75,8 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -2180,
-        280
+        -2176,
+        288
       ],
       "id": "48bd717d-ce3f-4d87-9e87-7f421d68c76b",
       "name": "crm-subcategory.csv",
@@ -94,7 +94,7 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -2180,
+        -2176,
         480
       ],
       "id": "ac3c7182-3cf8-43c4-abdb-9d038ba535c9",
@@ -113,8 +113,8 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -2180,
-        -120
+        -2176,
+        -128
       ],
       "id": "a312067a-ac03-417f-b83c-8ee152cc70ae",
       "name": "movements.csv",
@@ -133,8 +133,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1960,
-        280
+        -1968,
+        288
       ],
       "id": "47c89f45-9ef6-41f6-aa43-641147a58d4d",
       "name": "HTTP Request1"
@@ -147,7 +147,7 @@
       "typeVersion": 1,
       "position": [
         -1520,
-        280
+        288
       ],
       "id": "8416dd7c-060b-4dcb-8a53-1a307940b7b0",
       "name": "SSH",
@@ -185,8 +185,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1740,
-        280
+        -1744,
+        288
       ],
       "id": "4d128f0a-8225-4458-94ce-096c832e1333",
       "name": "If"
@@ -198,7 +198,7 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -2180,
+        -2176,
         1280
       ],
       "id": "2d13c3a9-963f-4f83-b88e-166c993c0bda",
@@ -217,8 +217,8 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -2180,
-        1080
+        -2176,
+        1088
       ],
       "id": "86b2de6b-c108-4133-8aa6-3fb5be0b86bd",
       "name": "tickets.csv",
@@ -236,7 +236,7 @@
       "type": "n8n-nodes-base.ssh",
       "typeVersion": 1,
       "position": [
-        -2180,
+        -2176,
         880
       ],
       "id": "6b554ec2-6718-4638-a373-ed87ced311c6",
@@ -257,7 +257,7 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        -2180,
+        -2176,
         -320
       ],
       "id": "0688be46-c9a7-4c20-ae98-1d432d170992",
@@ -279,7 +279,7 @@
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        -1740,
+        -1744,
         -320
       ],
       "id": "9046080b-8e11-4106-80e6-d5914cdaf5d1",
@@ -300,7 +300,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -1960,
+        -1968,
         -320
       ],
       "id": "7ce4b0cb-44ea-4ee6-bcbd-745daae23e8e",
@@ -341,8 +341,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2180,
-        1480
+        -2176,
+        1488
       ],
       "id": "cfd91af8-b159-4fc2-8ac4-4c69c396b5e9",
       "name": "HTTP Request"
@@ -369,8 +369,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1960,
-        1480
+        -1968,
+        1488
       ],
       "id": "86daeaac-3e5f-4249-9154-92bf592f7548",
       "name": "PowerBi"
@@ -384,7 +384,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -2180,
+        -2176,
         80
       ],
       "id": "ed8d1418-9b74-464e-89f3-890673424110",
@@ -407,8 +407,8 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -1960,
-        680
+        -1968,
+        688
       ],
       "id": "ed925416-5b8e-4677-99e9-03238e832756",
       "name": "Convert to File1"
@@ -423,8 +423,8 @@
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        -1740,
-        680
+        -1744,
+        688
       ],
       "id": "f70cbc9d-cb69-4c8a-886f-0340ad7ba4bf",
       "name": "S31",
@@ -444,8 +444,8 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        -2180,
-        -520
+        -2176,
+        -528
       ],
       "id": "42f419e6-0396-4519-877b-f9fe064ae390",
       "name": "MySQL1",
@@ -466,8 +466,8 @@
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        -1740,
-        -520
+        -1744,
+        -528
       ],
       "id": "5085580f-91c3-455b-bb53-61ba1c8416cf",
       "name": "S32",
@@ -487,8 +487,8 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -1960,
-        -520
+        -1968,
+        -528
       ],
       "id": "878bc0ee-0fdd-4e52-b954-1c3de0f8b51f",
       "name": "Convert to File2"
@@ -755,7 +755,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "43a1a2ea-effd-4763-8e13-38ab5ace1409",
+  "versionId": "a3e8ad76-4d78-4ca6-ba07-ee3bc23b08fa",
   "triggerCount": 1,
   "shared": [
     {
