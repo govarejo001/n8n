@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-01T01:04:48.534Z",
-  "updatedAt": "2025-08-18T11:39:43.733Z",
+  "updatedAt": "2025-10-01T17:47:34.224Z",
   "id": "EkDniG5WuXutgZT4",
   "name": "My workflow 10",
   "active": true,
@@ -16,8 +16,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -140,
-        -40
+        -144,
+        -48
       ],
       "id": "2b17988f-ec7c-47b7-a139-37f685ea84af",
       "name": "Webhook",
@@ -38,7 +38,7 @@
       "typeVersion": 1,
       "position": [
         80,
-        -40
+        -48
       ],
       "id": "3a1de8b8-87dd-400f-9ebb-27cac2b3863a",
       "name": "S31",
@@ -58,8 +58,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        2500,
-        -40
+        2512,
+        -48
       ],
       "id": "c2df7032-0447-4252-ac2d-1dfef39683a3",
       "name": "Respond to Webhook"
@@ -73,8 +73,8 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        300,
-        -40
+        304,
+        -48
       ],
       "id": "d62ea23b-0aea-4afe-bea7-c78201bc5fcd",
       "name": "Extract from File",
@@ -87,8 +87,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        520,
-        -140
+        528,
+        -144
       ],
       "id": "2fb6544b-6b71-4e9f-b5e9-497bc79c864a",
       "name": "Code2"
@@ -103,7 +103,7 @@
       "typeVersion": 2.4,
       "position": [
         960,
-        -140
+        -144
       ],
       "id": "6d318932-a7d5-413c-8be6-36e61f156e56",
       "name": "MySQL",
@@ -131,8 +131,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        740,
-        -140
+        752,
+        -144
       ],
       "id": "285a8df4-f763-4923-b0b6-b65022f14bd0",
       "name": "Edit Fields"
@@ -147,8 +147,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        1180,
-        -40
+        1184,
+        -48
       ],
       "id": "e70f6447-3993-4c40-98a2-4df111d131eb",
       "name": "Merge"
@@ -161,7 +161,7 @@
       "typeVersion": 2,
       "position": [
         960,
-        60
+        64
       ],
       "id": "bac41859-455d-442c-ae0d-1df5efdc21b4",
       "name": "Code3"
@@ -176,7 +176,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -140,
+        -144,
         320
       ],
       "id": "77ecb819-d841-45ed-a05d-6b56a3be47e4",
@@ -193,7 +193,7 @@
       "typeVersion": 1.4,
       "position": [
         2320,
-        280
+        288
       ],
       "id": "3c4ca52f-de6c-4388-aeb7-1bb6625555d1",
       "name": "Respond to Webhook2"
@@ -208,8 +208,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -140,
-        580
+        -144,
+        592
       ],
       "id": "6b855e80-5b94-4e88-8e0a-9003b33af812",
       "name": "Webhook1",
@@ -230,7 +230,7 @@
       "typeVersion": 1,
       "position": [
         80,
-        580
+        592
       ],
       "id": "b915246f-db14-44d6-a60e-df8926b028e5",
       "name": "S35",
@@ -251,8 +251,8 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        300,
-        580
+        304,
+        592
       ],
       "id": "a74a15f1-4f5c-4c07-8d84-eb43206b0995",
       "name": "Extract from File2",
@@ -267,8 +267,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        740,
-        580
+        752,
+        592
       ],
       "id": "56341961-8b2b-4cb8-816a-881d60ba6bcc",
       "name": "Respond to Webhook3"
@@ -281,7 +281,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        740,
+        752,
         320
       ],
       "id": "9017cef8-4ca5-412a-a70a-1be97bb835ca",
@@ -293,8 +293,8 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -140,
-        840
+        -144,
+        848
       ],
       "id": "f7eb7c4c-04cd-47af-ae7e-5e5d7dfdd163",
       "name": "When clicking ‘Execute workflow’"
@@ -307,7 +307,7 @@
       "typeVersion": 2,
       "position": [
         80,
-        840
+        848
       ],
       "id": "0f272f4e-d907-40e3-9fab-e70d079091b7",
       "name": "Code5"
@@ -321,8 +321,8 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        300,
-        840
+        304,
+        848
       ],
       "id": "ed13da2b-1fad-4225-afe6-9936ddefa789",
       "name": "Convert to File2"
@@ -337,8 +337,8 @@
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        520,
-        840
+        528,
+        848
       ],
       "id": "17032796-e1a2-4fef-b5c8-44f15a24872b",
       "name": "S34",
@@ -369,8 +369,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        520,
-        580
+        528,
+        592
       ],
       "id": "b825acc2-78f3-4892-8af6-59e4ab9a6d36",
       "name": "Code7"
@@ -384,7 +384,7 @@
       "typeVersion": 1,
       "position": [
         1840,
-        -40
+        -48
       ],
       "id": "39d503da-741e-4ce1-b921-ff2d0ebe388f",
       "name": "S36",
@@ -404,8 +404,8 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        2060,
-        -40
+        2064,
+        -48
       ],
       "id": "7a61d85a-0881-4686-9ffc-e16beb74fbdc",
       "name": "Extract from File1"
@@ -417,8 +417,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2280,
-        -40
+        2288,
+        -48
       ],
       "id": "3c416fd8-68f2-478b-a420-cf53a90b45e6",
       "name": "Code8"
@@ -430,8 +430,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1620,
-        -40
+        1632,
+        -48
       ],
       "id": "0a4d710d-46be-4b26-b5a1-e91dddefbf5d",
       "name": "Code9"
@@ -446,7 +446,7 @@
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        1400,
+        1408,
         320
       ],
       "id": "277392a1-9075-4d4a-bc4b-a95494886eca",
@@ -467,7 +467,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1180,
+        1184,
         320
       ],
       "id": "7a5a92c3-1762-447f-b36d-15b7048b377a",
@@ -480,7 +480,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        520,
+        528,
         320
       ],
       "id": "ef5fc914-5cd6-4d50-84ba-2e9ad8dd23be",
@@ -496,7 +496,7 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        300,
+        304,
         320
       ],
       "id": "520356d7-12df-42a0-b7a2-535378ef55fc",
@@ -530,7 +530,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1620,
+        1632,
         320
       ],
       "id": "f500a9d5-d98b-410d-8685-952cf82e6b66",
@@ -544,7 +544,7 @@
       "typeVersion": 1.1,
       "position": [
         1840,
-        260
+        272
       ],
       "id": "b23b8434-ec26-4506-bdb0-002b2334235e",
       "name": "Convert to File"
@@ -559,8 +559,8 @@
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        2060,
-        260
+        2064,
+        272
       ],
       "id": "fd2d2f8a-16c1-4f9c-ac2e-d47c25db2b71",
       "name": "S3",
@@ -582,7 +582,7 @@
       "typeVersion": 2,
       "position": [
         -80,
-        1060
+        1072
       ],
       "id": "cd1fda13-1d48-4e42-959b-9c0b0ea85139",
       "name": "Webhook3",
@@ -603,33 +603,11 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        1020,
-        1060
+        1024,
+        1072
       ],
       "id": "67f2e020-876e-4ba6-9e62-ce80f53c025c",
       "name": "Respond to Webhook4"
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "select f.id,f.name from families f\ninner join family_products fp on fp.family_id=f.id \nwhere product_id='{{ $json.query.id }}'  \ngroup by f.id,f.name",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.mySql",
-      "typeVersion": 2.4,
-      "position": [
-        140,
-        1060
-      ],
-      "id": "bf6e76c8-0eea-4db7-9f44-d416802afcfc",
-      "name": "MySQL1",
-      "alwaysOutputData": true,
-      "credentials": {
-        "mySql": {
-          "id": "vJXa18SJcADLCV1n",
-          "name": "Conexus"
-        }
-      }
     },
     {
       "parameters": {
@@ -638,11 +616,33 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        380,
-        1140
+        384,
+        1152
       ],
       "id": "684aa9a0-b5b7-4dfc-9b79-47538630d9aa",
       "name": "Code10"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select f.id,f.name from families f\ninner join family_products fp on fp.family_id=f.id \nwhere product_id='{{ $json.query.id }}'  \ngroup by f.id,f.name",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        160,
+        1216
+      ],
+      "id": "28c771e4-4511-46c6-ac8f-9e8a7a8f9d61",
+      "name": "Execute a SQL query",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
     }
   ],
   "connections": {
@@ -990,18 +990,7 @@
       "main": [
         [
           {
-            "node": "MySQL1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "MySQL1": {
-      "main": [
-        [
-          {
-            "node": "Code10",
+            "node": "Execute a SQL query",
             "type": "main",
             "index": 0
           }
@@ -1013,6 +1002,17 @@
         [
           {
             "node": "Respond to Webhook4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Code10",
             "type": "main",
             "index": 0
           }
@@ -1219,7 +1219,7 @@
       }
     ]
   },
-  "versionId": "b472a9b9-15f4-41af-b3e9-cc0b2e7cee07",
+  "versionId": "7d1fa36d-976c-4fc3-ade4-5639a19b7f34",
   "triggerCount": 4,
   "shared": [
     {
