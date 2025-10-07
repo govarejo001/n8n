@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-02-10T17:32:34.966Z",
-  "updatedAt": "2025-08-14T14:11:29.795Z",
+  "updatedAt": "2025-10-06T19:24:19.078Z",
   "id": "rt8mJdoUjord4DPu",
   "name": "Enviar (tradução)",
   "active": true,
@@ -16,8 +16,8 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        120,
-        -840
+        128,
+        -848
       ],
       "id": "e848b944-7c36-40bd-9f5d-ba6ec16f59aa",
       "name": "Converter para CSV1",
@@ -32,8 +32,8 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        -100,
-        -840
+        -96,
+        -848
       ],
       "id": "4fe3bb93-332f-45f9-aa12-a35dcbf968b5",
       "name": "Buscar Produtos Vinculados",
@@ -47,13 +47,13 @@
     },
     {
       "parameters": {
-        "jsCode": "const data = [\n  { \"id\": 32, \"otherId\": 4945 },\n  { \"id\": 94, \"otherId\": 5290 },\n  { \"id\": 47, \"otherId\": 5273 },\n  { \"id\": 86, \"otherId\": 5265 },\n  { \"id\": 96, \"otherId\": 5289 },\n  { \"id\": 33, \"otherId\": 5270 },\n  { \"id\": 14, \"otherId\": 5264 },\n  { \"id\": 26, \"otherId\": 5288 },\n  { \"id\": 45, \"otherId\": 5287 },\n  { \"id\": 35, \"otherId\": 5267 },\n  { \"id\": 5, \"otherId\": 5281 },\n  { \"id\": 60, \"otherId\": 5269 },\n  { \"id\": 85, \"otherId\": 4946 },\n  { \"id\": 8, \"otherId\": 4948 },\n  { \"id\": 53, \"otherId\": 5272 },\n  { \"id\": 11, \"otherId\": 5263 },\n  { \"id\": 22, \"otherId\": 5279 },\n  { \"id\": 24, \"otherId\": 5286 },\n  { \"id\": 29, \"otherId\": 5285 },\n  { \"id\": 31, \"otherId\": 5268 },\n  { \"id\": 23, \"otherId\": 5280 },\n  { \"id\": 90, \"otherId\": 5276 },\n  { \"id\": 36, \"otherId\": 4944 },\n  { \"id\": 76, \"otherId\": 5271 },\n  { \"id\": 83, \"otherId\": 5296 },\n  { \"id\": 84, \"otherId\": 5275 },\n  { \"id\": 25, \"otherId\": 5274 },\n  { \"id\": 56, \"otherId\": 4947 },\n  { \"id\": 21, \"otherId\": 4950 },\n  { \"id\": 93, \"otherId\": 5278 },\n  { \"id\": 30, \"otherId\": 4949 },\n  { \"id\": 12, \"otherId\": 5266 },\n  { \"id\": 105, \"otherId\": 5657 },\n  { \"id\": 107, \"otherId\": 5771 },\n  { \"id\": 109, \"otherId\": 5671 },\n  { \"id\": 64, \"otherId\": 5778 }\n];\n\nreturn data"
+        "jsCode": "const data = [\n  { \"id\": 32, \"otherId\": 4945 },\n  { \"id\": 94, \"otherId\": 5290 },\n  { \"id\": 47, \"otherId\": 5273 },\n  { \"id\": 86, \"otherId\": 5265 },\n  { \"id\": 96, \"otherId\": 5289 },\n  { \"id\": 33, \"otherId\": 5270 },\n  { \"id\": 14, \"otherId\": 5264 },\n  { \"id\": 26, \"otherId\": 5288 },\n  { \"id\": 45, \"otherId\": 5287 },\n  { \"id\": 35, \"otherId\": 5267 },\n  { \"id\": 5, \"otherId\": 5281 },\n  { \"id\": 60, \"otherId\": 5269 },\n  { \"id\": 85, \"otherId\": 4946 },\n  { \"id\": 8, \"otherId\": 4948 },\n  { \"id\": 53, \"otherId\": 5272 },\n  { \"id\": 11, \"otherId\": 5263 },\n  { \"id\": 22, \"otherId\": 5279 },\n  { \"id\": 24, \"otherId\": 5286 },\n  { \"id\": 29, \"otherId\": 5285 },\n  { \"id\": 31, \"otherId\": 5268 },\n  { \"id\": 23, \"otherId\": 5280 },\n  { \"id\": 90, \"otherId\": 5276 },\n  { \"id\": 36, \"otherId\": 4944 },\n  { \"id\": 76, \"otherId\": 5271 },\n  { \"id\": 83, \"otherId\": 5296 },\n  { \"id\": 84, \"otherId\": 5275 },\n  { \"id\": 25, \"otherId\": 5274 },\n  { \"id\": 56, \"otherId\": 4947 },\n  { \"id\": 21, \"otherId\": 4950 },\n  { \"id\": 93, \"otherId\": 5278 },\n  { \"id\": 30, \"otherId\": 4949 },\n  { \"id\": 12, \"otherId\": 5266 },\n  { \"id\": 105, \"otherId\": 5657 },\n  { \"id\": 107, \"otherId\": 5771 },\n  { \"id\": 109, \"otherId\": 5671 },\n  { \"id\": 64, \"otherId\": 5778 },\n  { \"id\": 97, \"otherId\": 5802 }  \n];\n\nreturn data"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         -320,
-        -840
+        -848
       ],
       "id": "8e92cdf5-36ef-42fe-9384-95c51a107059",
       "name": "Code",
@@ -64,8 +64,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
       "position": [
-        120,
-        -330
+        128,
+        -336
       ],
       "id": "00f4d38b-2dac-49ed-8384-7edfaa443aef",
       "name": "Merge"
@@ -78,8 +78,8 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        -100,
-        -430
+        -96,
+        -432
       ],
       "id": "b0fccd2a-4307-42e4-8f11-1159f08faa10",
       "name": "Extract from File"
@@ -92,20 +92,20 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        -100,
-        -230
+        -96,
+        -224
       ],
       "id": "57d0311a-6b87-41ed-9423-0ba4583ffc39",
       "name": "Extract from File1"
     },
     {
       "parameters": {
-        "jsCode": "const yesterdayFile = $input.all()[0].json.data;\nconst todayFile = $input.all()[1].json.data;\n\nconst dataYesterday = new Map();\nconst differentItems = [];\nconst newItems = [];\n\nconst data = [\n  { \"id\": 32, \"otherId\": 4945 },\n  { \"id\": 94, \"otherId\": 5290 },\n  { \"id\": 47, \"otherId\": 5273 },\n  { \"id\": 86, \"otherId\": 5265 },\n  { \"id\": 96, \"otherId\": 5289 },\n  { \"id\": 33, \"otherId\": 5270 },\n  { \"id\": 14, \"otherId\": 5264 },\n  { \"id\": 26, \"otherId\": 5288 },\n  { \"id\": 45, \"otherId\": 5287 },\n  { \"id\": 35, \"otherId\": 5267 },\n  { \"id\": 5, \"otherId\": 5281 },\n  { \"id\": 60, \"otherId\": 5269 },\n  { \"id\": 85, \"otherId\": 4946 },\n  { \"id\": 8, \"otherId\": 4948 },\n  { \"id\": 53, \"otherId\": 5272 },\n  { \"id\": 11, \"otherId\": 5263 },\n  { \"id\": 22, \"otherId\": 5279 },\n  { \"id\": 24, \"otherId\": 5286 },\n  { \"id\": 29, \"otherId\": 5285 },\n  { \"id\": 31, \"otherId\": 5268 },\n  { \"id\": 23, \"otherId\": 5280 },\n  { \"id\": 90, \"otherId\": 5276 },\n  { \"id\": 36, \"otherId\": 4944 },\n  { \"id\": 76, \"otherId\": 5271 },\n  { \"id\": 83, \"otherId\": 5296 },\n  { \"id\": 84, \"otherId\": 5275 },\n  { \"id\": 25, \"otherId\": 5274 },\n  { \"id\": 56, \"otherId\": 4947 },\n  { \"id\": 21, \"otherId\": 4950 },\n  { \"id\": 93, \"otherId\": 5278 },\n  { \"id\": 30, \"otherId\": 4949 },\n  { \"id\": 12, \"otherId\": 5266 },\n  { \"id\": 105, \"otherId\": 5657 },\n  { \"id\": 107, \"otherId\": 5771 },\n  { \"id\": 109, \"otherId\": 5671 },\n  { \"id\": 64, \"otherId\": 5778 }\n];\n\n// Mapeia unit_id para otherId\nconst unitIdMap = new Map(data.map(item => [item.id.toString(), item.otherId]));\n\n// Armazena os produtos do arquivo de ontem usando EAN + unit_id como chave\nyesterdayFile.split('\\n').slice(1).forEach((line) => {\n    const product = line.split(';');\n    const key = `${product[0]}_${product[1]}`; \n    dataYesterday.set(key, line);\n});\n\n// Percorre os produtos do arquivo de hoje\ntodayFile.split('\\n').slice(1).forEach((line) => {\n    const product = line.split(';');\n    const key = `${product[0]}_${product[1]}`;\n    const existing = dataYesterday.get(key);\n    \n    const unitId = product[1];\n    const otherId = unitIdMap.get(unitId) || null;  // Obtém o otherId correspondente\n\n    if (existing && existing !== line) {\n        differentItems.push({\n            \"store_code\": product[0],\n            \"store_id\": otherId,\n            \"master_code\": product[2]\n        });\n    }\n    if (!existing) {\n        newItems.push({\n            \"store_code\": product[0],\n            \"store_id\": otherId,\n            \"master_code\": product[2]\n        });\n    }\n});\n\nreturn [{ json: { differentItems, newItems } }];\n"
+        "jsCode": "const yesterdayFile = $input.all()[0].json.data;\nconst todayFile = $input.all()[1].json.data;\n\nconst dataYesterday = new Map();\nconst differentItems = [];\nconst newItems = [];\n\nconst data = [\n  { \"id\": 32, \"otherId\": 4945 },\n  { \"id\": 94, \"otherId\": 5290 },\n  { \"id\": 47, \"otherId\": 5273 },\n  { \"id\": 86, \"otherId\": 5265 },\n  { \"id\": 96, \"otherId\": 5289 },\n  { \"id\": 33, \"otherId\": 5270 },\n  { \"id\": 14, \"otherId\": 5264 },\n  { \"id\": 26, \"otherId\": 5288 },\n  { \"id\": 45, \"otherId\": 5287 },\n  { \"id\": 35, \"otherId\": 5267 },\n  { \"id\": 5, \"otherId\": 5281 },\n  { \"id\": 60, \"otherId\": 5269 },\n  { \"id\": 85, \"otherId\": 4946 },\n  { \"id\": 8, \"otherId\": 4948 },\n  { \"id\": 53, \"otherId\": 5272 },\n  { \"id\": 11, \"otherId\": 5263 },\n  { \"id\": 22, \"otherId\": 5279 },\n  { \"id\": 24, \"otherId\": 5286 },\n  { \"id\": 29, \"otherId\": 5285 },\n  { \"id\": 31, \"otherId\": 5268 },\n  { \"id\": 23, \"otherId\": 5280 },\n  { \"id\": 90, \"otherId\": 5276 },\n  { \"id\": 36, \"otherId\": 4944 },\n  { \"id\": 76, \"otherId\": 5271 },\n  { \"id\": 83, \"otherId\": 5296 },\n  { \"id\": 84, \"otherId\": 5275 },\n  { \"id\": 25, \"otherId\": 5274 },\n  { \"id\": 56, \"otherId\": 4947 },\n  { \"id\": 21, \"otherId\": 4950 },\n  { \"id\": 93, \"otherId\": 5278 },\n  { \"id\": 30, \"otherId\": 4949 },\n  { \"id\": 12, \"otherId\": 5266 },\n  { \"id\": 105, \"otherId\": 5657 },\n  { \"id\": 107, \"otherId\": 5771 },\n  { \"id\": 109, \"otherId\": 5671 },\n  { \"id\": 64, \"otherId\": 5778 },\n  { \"id\": 97, \"otherId\": 5802 }\n];\n\n// Mapeia unit_id para otherId\nconst unitIdMap = new Map(data.map(item => [item.id.toString(), item.otherId]));\n\n// Armazena os produtos do arquivo de ontem usando EAN + unit_id como chave\nyesterdayFile.split('\\n').slice(1).forEach((line) => {\n    const product = line.split(';');\n    const key = `${product[0]}_${product[1]}`; \n    dataYesterday.set(key, line);\n});\n\n// Percorre os produtos do arquivo de hoje\ntodayFile.split('\\n').slice(1).forEach((line) => {\n    const product = line.split(';');\n    const key = `${product[0]}_${product[1]}`;\n    const existing = dataYesterday.get(key);\n    \n    const unitId = product[1];\n    const otherId = unitIdMap.get(unitId) || null;  // Obtém o otherId correspondente\n\n    if (existing && existing !== line) {\n        differentItems.push({\n            \"store_code\": product[0],\n            \"store_id\": otherId,\n            \"master_code\": product[2]\n        });\n    }\n    if (!existing) {\n        newItems.push({\n            \"store_code\": product[0],\n            \"store_id\": otherId,\n            \"master_code\": product[2]\n        });\n    }\n});\n\nreturn [{ json: { differentItems, newItems } }];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        340,
+        352,
         -320
       ],
       "id": "1c16b2a3-9eba-44d0-ba5c-021f78d99705",
@@ -120,7 +120,7 @@
       "typeVersion": 1,
       "position": [
         560,
-        -505
+        -512
       ],
       "id": "11326498-cef9-4052-af69-4693bab8f7fe",
       "name": "Split Out",
@@ -134,8 +134,8 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        780,
-        -505
+        784,
+        -512
       ],
       "id": "d7ea6a3a-b3a7-4492-a3aa-c12277610e8c",
       "name": "Loop Over Items",
@@ -150,7 +150,7 @@
       "typeVersion": 2,
       "position": [
         1440,
-        -505
+        -512
       ],
       "id": "ef1e0711-ae36-4021-a4be-9a4aacd99743",
       "name": "Code2"
@@ -168,8 +168,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.1,
       "position": [
-        1660,
-        -505
+        1664,
+        -512
       ],
       "id": "ac27f2b2-5f5a-47ee-8774-b8d21ca5f31a",
       "name": "Enviar E-mail1"
@@ -202,8 +202,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1220,
-        -505
+        1232,
+        -512
       ],
       "id": "60c535db-0f26-4f57-9a27-4fe98456391f",
       "name": "If"
@@ -217,7 +217,7 @@
       "typeVersion": 1,
       "position": [
         560,
-        -105
+        -112
       ],
       "id": "4b1c3ae2-3630-43e3-99be-cc31a2796eae",
       "name": "Split Out1",
@@ -254,8 +254,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1000,
-        -255
+        1008,
+        -256
       ],
       "id": "96a0e264-f27a-4001-b7d4-7d7121f8fe89",
       "name": "HTTP Request1",
@@ -271,8 +271,8 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        780,
-        -105
+        784,
+        -112
       ],
       "id": "6d40beb4-70d2-4930-89b4-106b2dce13f7",
       "name": "Loop Over Items1",
@@ -286,7 +286,7 @@
       "typeVersion": 2,
       "position": [
         1440,
-        -255
+        -256
       ],
       "id": "c4a90805-4556-4ca9-a4fe-e5405dbb34aa",
       "name": "Code3"
@@ -304,8 +304,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.1,
       "position": [
-        1660,
-        -180
+        1664,
+        -176
       ],
       "id": "7bab3d45-a430-4647-86e9-9da18d61d884",
       "name": "Enviar E-mail"
@@ -338,8 +338,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1220,
-        -255
+        1232,
+        -256
       ],
       "id": "6ded5ded-9f0d-4ed9-960e-dea6b7213fcd",
       "name": "If1"
@@ -375,8 +375,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1000,
-        -580
+        1008,
+        -576
       ],
       "id": "8705b620-7417-4ff8-b246-eb955a3c1ac4",
       "name": "HTTP Request",
@@ -394,8 +394,8 @@
       "type": "n8n-nodes-base.s3",
       "typeVersion": 1,
       "position": [
-        340,
-        -840
+        352,
+        -848
       ],
       "id": "4b70abca-f70d-4340-a56e-541770b4d66f",
       "name": "S3",
@@ -420,8 +420,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -540,
-        -330
+        -544,
+        -336
       ],
       "id": "81a707f5-bf73-467b-8c82-a1a073bac1f3",
       "name": "Schedule Trigger"
@@ -435,7 +435,7 @@
       "typeVersion": 1,
       "position": [
         -320,
-        -430
+        -432
       ],
       "id": "742527ad-41d5-4867-816e-9aa2f533f886",
       "name": "S31",
@@ -455,7 +455,7 @@
       "typeVersion": 1,
       "position": [
         -320,
-        -230
+        -224
       ],
       "id": "0448c879-ae60-4bbb-8e8c-c5743b33de55",
       "name": "S32",
@@ -480,8 +480,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -540,
-        -840
+        -544,
+        -848
       ],
       "id": "db9ccd18-cf64-42e3-8643-479b81991ce8",
       "name": "Schedule Trigger1"
@@ -779,7 +779,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "1dc94613-1ce5-42d4-84dd-21b67945094f",
+  "versionId": "b72a2c36-7784-4b8d-bf4c-f2668ac23093",
   "triggerCount": 2,
   "shared": [
     {
