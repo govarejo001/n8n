@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-04-06T13:09:46.459Z",
-  "updatedAt": "2025-09-24T12:01:24.507Z",
+  "updatedAt": "2025-10-08T13:27:41.161Z",
   "id": "zhwW5Nbknvxvvkyo",
   "name": "Hero",
   "active": true,
@@ -754,8 +754,26 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "a3e8ad76-4d78-4ca6-ba07-ee3bc23b08fa",
+  "pinData": {
+    "Schedule Trigger": [
+      {
+        "json": {
+          "timestamp": "2025-10-08T09:32:33.087-03:00",
+          "Readable date": "October 8th 2025, 9:32:33 am",
+          "Readable time": "9:32:33 am",
+          "Day of week": "Wednesday",
+          "Year": "2025",
+          "Month": "October",
+          "Day of month": "08",
+          "Hour": "09",
+          "Minute": "32",
+          "Second": "33",
+          "Timezone": "America/Sao_Paulo (UTC-03:00)"
+        }
+      }
+    ]
+  },
+  "versionId": "c9498de5-ace9-4ee7-ab12-4c7abad013f7",
   "triggerCount": 1,
   "shared": [
     {
