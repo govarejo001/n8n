@@ -1,6 +1,6 @@
 {
-  "createdAt": "2025-03-25T11:53:33.962Z",
   "updatedAt": "2025-04-05T01:13:10.639Z",
+  "createdAt": "2025-03-25T11:53:33.962Z",
   "id": "ScdXWbOf2nP9e5CM",
   "name": "Imap",
   "active": false,
@@ -161,8 +161,8 @@
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-03-25T11:53:33.962Z",
       "updatedAt": "2025-03-25T11:53:33.962Z",
+      "createdAt": "2025-03-25T11:53:33.962Z",
       "role": "workflow:owner",
       "workflowId": "ScdXWbOf2nP9e5CM",
       "projectId": "LHTErTtaRYVEdo6Q"
