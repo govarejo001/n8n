@@ -1,6 +1,6 @@
 {
-  "createdAt": "2025-05-16T00:06:05.629Z",
   "updatedAt": "2025-05-16T11:13:35.871Z",
+  "createdAt": "2025-05-16T00:06:05.629Z",
   "id": "HCTn9rZGRpr7JUtb",
   "name": "Backup n8n",
   "active": true,
@@ -591,8 +591,8 @@
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-05-16T00:06:05.629Z",
       "updatedAt": "2025-05-16T00:06:05.629Z",
+      "createdAt": "2025-05-16T00:06:05.629Z",
       "role": "workflow:owner",
       "workflowId": "HCTn9rZGRpr7JUtb",
       "projectId": "LHTErTtaRYVEdo6Q"
