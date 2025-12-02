@@ -1,6 +1,6 @@
 {
-  "createdAt": "2025-06-18T11:33:56.560Z",
   "updatedAt": "2025-06-24T16:36:26.903Z",
+  "createdAt": "2025-06-18T11:33:56.560Z",
   "id": "COvNG4SChdQn0ayf",
   "name": "Atualização Portal V2",
   "active": true,
@@ -2099,8 +2099,8 @@
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-06-18T11:33:56.560Z",
       "updatedAt": "2025-06-18T11:33:56.560Z",
+      "createdAt": "2025-06-18T11:33:56.560Z",
       "role": "workflow:owner",
       "workflowId": "COvNG4SChdQn0ayf",
       "projectId": "LHTErTtaRYVEdo6Q"
