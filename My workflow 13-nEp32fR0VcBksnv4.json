@@ -1,0 +1,144 @@
+{
+  "updatedAt": "2025-12-01T16:39:24.498Z",
+  "createdAt": "2025-12-01T16:29:30.580Z",
+  "id": "nEp32fR0VcBksnv4",
+  "name": "My workflow 13",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "209298ea-edad-4a04-9f9c-6565667e5320",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select id,prod_brand_id as brand_id,ean,ean_valid,description as name,prod_subcat_id as subcategory_id from products",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        208,
+        0
+      ],
+      "id": "5c209dc1-c387-4c82-89a7-a549e43f88ed",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "id",
+              "field2": "id"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        576,
+        16
+      ],
+      "id": "397b2d40-17c7-4b63-8607-710cc613db06",
+      "name": "Compare Datasets"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select ean,ean_valid,name,id,brand_id,subcategory_id from products",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        240,
+        192
+      ],
+      "id": "d4d3c099-343c-4600-a4c1-8c32beefc316",
+      "name": "Execute a SQL query1",
+      "credentials": {
+        "postgres": {
+          "id": "eARHRHF4ftnXGHMi",
+          "name": "np1"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Execute a SQL query1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query1": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "81ff9293-3aaf-45ce-b5b7-51aa67fd2c71",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-12-01T16:29:30.580Z",
+      "createdAt": "2025-12-01T16:29:30.580Z",
+      "role": "workflow:owner",
+      "workflowId": "nEp32fR0VcBksnv4",
+      "projectId": "LHTErTtaRYVEdo6Q"
+    }
+  ],
+  "tags": []
+}
