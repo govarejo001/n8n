@@ -1,0 +1,152 @@
+{
+  "updatedAt": "2025-12-01T18:02:08.307Z",
+  "createdAt": "2025-12-01T17:05:32.114Z",
+  "id": "kCyZqjGpk3j6ecoc",
+  "name": "My workflow 14",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.query }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        144,
+        -112
+      ],
+      "id": "bdaaefa7-be41-46d0-8154-2244882b977e",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const params = {}\nconst mapping = {\n  \"brandId\":\"b.id\",\n  \"subcategoryId\":\"sc.id\",\n  \"categoryId\":\"c.id\",\n  \"sectionId\":\"s.id\"\n}\n\nconst data = $input.first().json.query\nlet page = 1\nlet q = \"\"\nlet offset = 0\n\nif(data.q) q = data.q\nif(data.subcategoryId) params.subcategoryId = data.subcategoryId\nif(data.sectionId) params.sectionId = data.sectionId\nif(data.categoryId) params.categoryId = data.categoryId\nif(data.brandId) params.brandId = data.brandId\nif(data.page) page = data.page\noffset = ((page-1) * 10)\n\nlet query = `select \np.id,\np.ean,\np.description as name,\np.prod_brand_id as brandId,\nb.description as brand,\nc.id as categoryId,\nc.description as category,\ns.id as sectionId,\ns.description as section,\nsc.id as subcategoryId,\nsc.description as subcategory,\ncase when p.ean_valid=1 then true else false end as eanValid\nfrom products p\ninner join brands b on p.prod_brand_id=b.id\ninner join subcategories sc on p.prod_subcat_id=sc.id \ninner join categories c on sc.subcat_cat_id=c.id \ninner join sections s on c.cat_sec_id=s.id where substituir order by id asc limit 10 offset ${offset};`\nconst where = []\n\nif(q!==\"\") { \n  where.push(`p.id like ('%${q.trim()}%') or p.ean like ('%${q.trim()}%') or p.description like ('%${q.trim()}%')`)\n}\n\nif (Object.keys(params).length > 0) {\n  for (const [key, value] of Object.entries(params)) {\n    where.push(`and ${mapping[key]} = ${value}`)\n  }\n}\n\nif(q===\"\" & where.length===0){\n query =  query.replace('where', '')\n}\n\n\nquery = query.replace('substituir', where.join(' '))\n\nquery = query.replace('where and','where')\n\nreturn {\n  query\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        -176
+      ],
+      "id": "d56c4072-9ee7-4575-9617-4571999f8b49",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "path": "cd95f7ee-8945-4364-87bc-a5bf93b4f43d",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -480,
+        -176
+      ],
+      "id": "b42af57d-7b69-429b-9edb-b6d62bdaff38",
+      "name": "Webhook",
+      "webhookId": "cd95f7ee-8945-4364-87bc-a5bf93b4f43d"
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  data:$input.all().map((item)=>item.json)\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        352,
+        -112
+      ],
+      "id": "c5da5b8c-09c2-4eb5-a09f-08af4ca9d140",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        560,
+        -112
+      ],
+      "id": "504d1b3e-49dc-49ce-b75f-ef8e001204d8",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "2be1fc04-8685-4cc4-92f3-7f6e06189f1e",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-12-01T17:05:32.114Z",
+      "createdAt": "2025-12-01T17:05:32.114Z",
+      "role": "workflow:owner",
+      "workflowId": "kCyZqjGpk3j6ecoc",
+      "projectId": "LHTErTtaRYVEdo6Q"
+    }
+  ],
+  "tags": []
+}
