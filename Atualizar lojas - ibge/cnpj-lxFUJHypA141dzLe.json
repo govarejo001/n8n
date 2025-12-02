@@ -1,6 +1,6 @@
 {
-  "createdAt": "2025-06-24T14:23:54.910Z",
   "updatedAt": "2025-06-24T16:38:41.490Z",
+  "createdAt": "2025-06-24T14:23:54.910Z",
   "id": "lxFUJHypA141dzLe",
   "name": "Atualizar lojas - ibge/cnpj",
   "active": true,
@@ -396,8 +396,8 @@
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-06-24T14:23:54.910Z",
       "updatedAt": "2025-06-24T14:23:54.910Z",
+      "createdAt": "2025-06-24T14:23:54.910Z",
       "role": "workflow:owner",
       "workflowId": "lxFUJHypA141dzLe",
       "projectId": "LHTErTtaRYVEdo6Q"
