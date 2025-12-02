@@ -1,6 +1,6 @@
 {
-  "createdAt": "2025-04-10T19:48:44.399Z",
   "updatedAt": "2025-06-22T11:52:31.229Z",
+  "createdAt": "2025-04-10T19:48:44.399Z",
   "id": "gmzfRFMuvaLrb7PN",
   "name": "Atualização - portal v1",
   "active": false,
@@ -1634,8 +1634,8 @@
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-04-10T19:48:44.399Z",
       "updatedAt": "2025-04-10T19:48:44.399Z",
+      "createdAt": "2025-04-10T19:48:44.399Z",
       "role": "workflow:owner",
       "workflowId": "gmzfRFMuvaLrb7PN",
       "projectId": "LHTErTtaRYVEdo6Q"
