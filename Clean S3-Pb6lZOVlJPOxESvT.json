@@ -1,6 +1,6 @@
 {
-  "createdAt": "2025-04-07T20:10:32.840Z",
   "updatedAt": "2025-04-22T11:34:22.123Z",
+  "createdAt": "2025-04-07T20:10:32.840Z",
   "id": "Pb6lZOVlJPOxESvT",
   "name": "Clean S3",
   "active": true,
@@ -157,8 +157,8 @@
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-04-07T20:10:32.840Z",
       "updatedAt": "2025-04-07T20:10:32.840Z",
+      "createdAt": "2025-04-07T20:10:32.840Z",
       "role": "workflow:owner",
       "workflowId": "Pb6lZOVlJPOxESvT",
       "projectId": "LHTErTtaRYVEdo6Q"
