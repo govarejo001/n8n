@@ -1,6 +1,6 @@
 {
-  "createdAt": "2025-05-19T17:20:35.200Z",
   "updatedAt": "2025-06-25T16:26:02.699Z",
+  "createdAt": "2025-05-19T17:20:35.200Z",
   "id": "z0BngH9fLHu8tHVl",
   "name": "Atualizar Clube Valor",
   "active": true,
@@ -596,8 +596,8 @@
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-05-19T17:20:35.200Z",
       "updatedAt": "2025-05-19T17:20:35.200Z",
+      "createdAt": "2025-05-19T17:20:35.200Z",
       "role": "workflow:owner",
       "workflowId": "z0BngH9fLHu8tHVl",
       "projectId": "LHTErTtaRYVEdo6Q"
