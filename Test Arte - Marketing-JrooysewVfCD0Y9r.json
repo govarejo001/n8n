@@ -1,6 +1,6 @@
 {
-  "createdAt": "2025-01-16T14:10:05.426Z",
   "updatedAt": "2025-04-05T01:12:57.606Z",
+  "createdAt": "2025-01-16T14:10:05.426Z",
   "id": "JrooysewVfCD0Y9r",
   "name": "Test Arte - Marketing",
   "active": false,
@@ -227,8 +227,8 @@
   "triggerCount": 0,
   "shared": [
     {
-      "createdAt": "2025-01-16T14:10:05.426Z",
       "updatedAt": "2025-01-16T14:10:05.426Z",
+      "createdAt": "2025-01-16T14:10:05.426Z",
       "role": "workflow:owner",
       "workflowId": "JrooysewVfCD0Y9r",
       "projectId": "LHTErTtaRYVEdo6Q"
