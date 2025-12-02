@@ -1,6 +1,6 @@
 {
-  "createdAt": "2025-02-10T17:32:34.966Z",
   "updatedAt": "2025-10-10T18:25:13.043Z",
+  "createdAt": "2025-02-10T17:32:34.966Z",
   "id": "rt8mJdoUjord4DPu",
   "name": "Enviar (tradução)",
   "active": true,
@@ -783,8 +783,8 @@
   "triggerCount": 2,
   "shared": [
     {
-      "createdAt": "2025-02-10T17:32:34.966Z",
       "updatedAt": "2025-02-10T17:32:34.966Z",
+      "createdAt": "2025-02-10T17:32:34.966Z",
       "role": "workflow:owner",
       "workflowId": "rt8mJdoUjord4DPu",
       "projectId": "LHTErTtaRYVEdo6Q"
