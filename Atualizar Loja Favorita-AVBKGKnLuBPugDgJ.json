@@ -1,6 +1,6 @@
 {
-  "createdAt": "2025-05-19T15:50:34.902Z",
   "updatedAt": "2025-09-17T11:34:48.450Z",
+  "createdAt": "2025-05-19T15:50:34.902Z",
   "id": "AVBKGKnLuBPugDgJ",
   "name": "Atualizar Loja Favorita",
   "active": true,
@@ -450,8 +450,8 @@
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-05-19T15:50:34.902Z",
       "updatedAt": "2025-05-19T15:50:34.902Z",
+      "createdAt": "2025-05-19T15:50:34.902Z",
       "role": "workflow:owner",
       "workflowId": "AVBKGKnLuBPugDgJ",
       "projectId": "LHTErTtaRYVEdo6Q"
