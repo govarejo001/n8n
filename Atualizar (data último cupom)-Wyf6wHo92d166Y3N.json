@@ -1,6 +1,6 @@
 {
-  "createdAt": "2025-04-03T14:48:25.491Z",
   "updatedAt": "2025-04-25T12:57:13.276Z",
+  "createdAt": "2025-04-03T14:48:25.491Z",
   "id": "Wyf6wHo92d166Y3N",
   "name": "Atualizar (data último cupom)",
   "active": true,
@@ -245,8 +245,8 @@
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-04-03T14:48:25.491Z",
       "updatedAt": "2025-04-03T14:48:25.491Z",
+      "createdAt": "2025-04-03T14:48:25.491Z",
       "role": "workflow:owner",
       "workflowId": "Wyf6wHo92d166Y3N",
       "projectId": "LHTErTtaRYVEdo6Q"
