@@ -1,6 +1,6 @@
 {
-  "createdAt": "2025-01-07T23:24:29.323Z",
   "updatedAt": "2025-01-12T14:32:00.198Z",
+  "createdAt": "2025-01-07T23:24:29.323Z",
   "id": "2pIiDb7zFUsy52Mi",
   "name": "Enviar via E-mail",
   "active": false,
@@ -69,8 +69,8 @@
   "triggerCount": 0,
   "shared": [
     {
-      "createdAt": "2025-01-07T23:24:29.323Z",
       "updatedAt": "2025-01-07T23:24:29.323Z",
+      "createdAt": "2025-01-07T23:24:29.323Z",
       "role": "workflow:owner",
       "workflowId": "2pIiDb7zFUsy52Mi",
       "projectId": "LHTErTtaRYVEdo6Q"
