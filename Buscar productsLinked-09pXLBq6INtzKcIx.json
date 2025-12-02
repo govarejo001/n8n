@@ -1,6 +1,6 @@
 {
-  "createdAt": "2025-04-10T12:34:42.111Z",
   "updatedAt": "2025-06-22T11:53:29.050Z",
+  "createdAt": "2025-04-10T12:34:42.111Z",
   "id": "09pXLBq6INtzKcIx",
   "name": "Buscar productsLinked",
   "active": false,
@@ -164,8 +164,8 @@
   "triggerCount": 0,
   "shared": [
     {
-      "createdAt": "2025-04-10T12:34:42.111Z",
       "updatedAt": "2025-04-10T12:34:42.111Z",
+      "createdAt": "2025-04-10T12:34:42.111Z",
       "role": "workflow:owner",
       "workflowId": "09pXLBq6INtzKcIx",
       "projectId": "LHTErTtaRYVEdo6Q"
