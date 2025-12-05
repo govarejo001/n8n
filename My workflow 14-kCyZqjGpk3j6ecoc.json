@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-01T18:02:08.307Z",
+  "updatedAt": "2025-12-05T02:07:42.668Z",
   "createdAt": "2025-12-01T17:05:32.114Z",
   "id": "kCyZqjGpk3j6ecoc",
   "name": "My workflow 14",
@@ -20,6 +20,7 @@
       ],
       "id": "bdaaefa7-be41-46d0-8154-2244882b977e",
       "name": "Execute a SQL query",
+      "alwaysOutputData": true,
       "credentials": {
         "mySql": {
           "id": "vJXa18SJcADLCV1n",
@@ -29,7 +30,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const params = {}\nconst mapping = {\n  \"brandId\":\"b.id\",\n  \"subcategoryId\":\"sc.id\",\n  \"categoryId\":\"c.id\",\n  \"sectionId\":\"s.id\"\n}\n\nconst data = $input.first().json.query\nlet page = 1\nlet q = \"\"\nlet offset = 0\n\nif(data.q) q = data.q\nif(data.subcategoryId) params.subcategoryId = data.subcategoryId\nif(data.sectionId) params.sectionId = data.sectionId\nif(data.categoryId) params.categoryId = data.categoryId\nif(data.brandId) params.brandId = data.brandId\nif(data.page) page = data.page\noffset = ((page-1) * 10)\n\nlet query = `select \np.id,\np.ean,\np.description as name,\np.prod_brand_id as brandId,\nb.description as brand,\nc.id as categoryId,\nc.description as category,\ns.id as sectionId,\ns.description as section,\nsc.id as subcategoryId,\nsc.description as subcategory,\ncase when p.ean_valid=1 then true else false end as eanValid\nfrom products p\ninner join brands b on p.prod_brand_id=b.id\ninner join subcategories sc on p.prod_subcat_id=sc.id \ninner join categories c on sc.subcat_cat_id=c.id \ninner join sections s on c.cat_sec_id=s.id where substituir order by id asc limit 10 offset ${offset};`\nconst where = []\n\nif(q!==\"\") { \n  where.push(`p.id like ('%${q.trim()}%') or p.ean like ('%${q.trim()}%') or p.description like ('%${q.trim()}%')`)\n}\n\nif (Object.keys(params).length > 0) {\n  for (const [key, value] of Object.entries(params)) {\n    where.push(`and ${mapping[key]} = ${value}`)\n  }\n}\n\nif(q===\"\" & where.length===0){\n query =  query.replace('where', '')\n}\n\n\nquery = query.replace('substituir', where.join(' '))\n\nquery = query.replace('where and','where')\n\nreturn {\n  query\n}"
+        "jsCode": "const params = {}\nconst mapping = {\n  \"brandId\":\"b.id\",\n  \"subcategoryId\":\"sc.id\",\n  \"categoryId\":\"c.id\",\n  \"sectionId\":\"s.id\"\n}\n\nconst data = $input.first().json.query\nlet page = 1\nlet q = \"\"\nlet offset = 0\n\nif(data.q) q = data.q\nif(data.subcategoryId) params.subcategoryId = data.subcategoryId\nif(data.sectionId) params.sectionId = data.sectionId\nif(data.categoryId) params.categoryId = data.categoryId\nif(data.brandId) params.brandId = data.brandId\nif(data.page) page = data.page\noffset = ((page-1) * 10)\n\nlet query = `select \np.id,\np.ean,\np.description as name,\np.prod_brand_id as brandId,\nb.description as brand,\nc.id as categoryId,\nc.description as category,\ns.id as sectionId,\ns.description as section,\nsc.id as subcategoryId,\nsc.description as subcategory,\ncase when p.ean_valid=1 then true else false end as eanValid\nfrom products p\ninner join brands b on p.prod_brand_id=b.id\ninner join subcategories sc on p.prod_subcat_id=sc.id \ninner join categories c on sc.subcat_cat_id=c.id \ninner join sections s on c.cat_sec_id=s.id where substituir order by id asc limit 10 offset ${offset};`\nconst where = []\n\nif(q!==\"\") { \n  where.push(`(p.id like ('%${q.trim()}%') or p.ean like ('%${q.trim()}%') or p.description like ('%${q.trim()}%'))`)\n}\n\nif (Object.keys(params).length > 0) {\n  for (const [key, value] of Object.entries(params)) {\n    where.push(`and ${mapping[key]} = ${value}`)\n  }\n}\n\nif(q===\"\" & where.length===0){\n query =  query.replace('where', '')\n}\n\n\nquery = query.replace('substituir', where.join(' '))\n\nquery = query.replace('where and','where')\n\nreturn {\n  query\n}"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -58,7 +59,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return {\n  data:$input.all().map((item)=>item.json)\n}"
+        "jsCode": "return {\n  data:$input.all().map((item)=>item.json).filter((item)=>item.id)\n}"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -76,11 +77,99 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        560,
-        -112
+        912,
+        -160
       ],
       "id": "504d1b3e-49dc-49ce-b75f-ef8e001204d8",
       "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const params = {}\nconst mapping = {\n  \"brandId\":\"b.id\",\n  \"subcategoryId\":\"sc.id\",\n  \"categoryId\":\"c.id\",\n  \"sectionId\":\"s.id\"\n}\n\nconst data = $input.first().json.query\nlet page = 1\nlet q = \"\"\n\nif(data.q) q = data.q\nif(data.subcategoryId) params.subcategoryId = data.subcategoryId\nif(data.sectionId) params.sectionId = data.sectionId\nif(data.categoryId) params.categoryId = data.categoryId\nif(data.brandId) params.brandId = data.brandId\nif(data.page) page = data.page\noffset = ((page-1) * 10)\n\nlet query = `select \ncount(p.id) as qt\nfrom products p\ninner join brands b on p.prod_brand_id=b.id\ninner join subcategories sc on p.prod_subcat_id=sc.id \ninner join categories c on sc.subcat_cat_id=c.id \ninner join sections s on c.cat_sec_id=s.id where substituir`\nconst where = []\n\nif(q!==\"\") { \n  where.push(`(p.id like ('%${q.trim()}%') or p.ean like ('%${q.trim()}%') or p.description like ('%${q.trim()}%'))`)\n}\n\nif (Object.keys(params).length > 0) {\n  for (const [key, value] of Object.entries(params)) {\n    where.push(`and ${mapping[key]} = ${value}`)\n  }\n}\n\nif(q===\"\" & where.length===0){\n query =  query.replace('where', '')\n}\n\n\nquery = query.replace('substituir', where.join(' '))\n\nquery = query.replace('where and','where')\n\nreturn {\n  query\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -32,
+        -336
+      ],
+      "id": "6302d5b8-cb92-4e78-8ba3-8361cdbc08df",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.query }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        160,
+        -336
+      ],
+      "id": "6541e019-764b-43d3-967a-8afc8a64d6d5",
+      "name": "Execute a SQL query1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        624,
+        -352
+      ],
+      "id": "b3e49b65-8af1-46dc-ac00-7cd6bd6114b7",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "80c06f2a-f0a1-4918-a905-4f3d6c945600",
+              "name": "rows",
+              "value": "={{ $json.qt }}",
+              "type": "number"
+            },
+            {
+              "id": "2c8be566-7ba3-44ad-ba41-ac1bbf434a5d",
+              "name": "data",
+              "value": "={{ $json.data }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        832,
+        -352
+      ],
+      "id": "3fc59540-1905-42e4-8138-4fb51f7e1e5b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = {\n  rows: $input.first().json.rows,\n  data: $input.all()[1].json.data, \n    page: Number($('Webhook').first().json.query.page) ?? 1\n}\n\nreturn data"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        -352
+      ],
+      "id": "e9371872-53b6-4b0e-82b9-817debfde40a",
+      "name": "Code in JavaScript3"
     }
   ],
   "connections": {
@@ -89,6 +178,11 @@
         [
           {
             "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript2",
             "type": "main",
             "index": 0
           }
@@ -121,6 +215,61 @@
       "main": [
         [
           {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
             "node": "Respond to Webhook",
             "type": "main",
             "index": 0
@@ -136,8 +285,49 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "2be1fc04-8685-4cc4-92f3-7f6e06189f1e",
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "hub.govarejo.com",
+            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+            "accept": "application/json, text/plain, */*",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+            "authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmcmRjM3YybWNmbXpqbnR0ejJsMzJtdzQiLCJhY3Rpb25zIjpbInY1b2xzM3V0NzZkNmhuYXFmNHlic2ZrbyIsImJ3b2ltdjNxYXZsbWR2MnQzdGVjb3VqayIsInNqOGQybTFpenhyZzZmd3EzdXlhcHFieCIsIm56bzJjMXE5MWxtbnIwODd3bHBra2h1OSJdLCJ1bml0cyI6WyI1IiwiOCIsIjExIiwiMTIiLCIxNCIsIjIxIiwiMjIiLCIyMyIsIjI0IiwiMjUiLCIyNiIsIjMwIiwiMzEiLCIzMiIsIjM1IiwiMzYiLCI0NSIsIjQ3IiwiNTMiLCI1NiIsIjYwIiwiNjQiLCI3NiIsIjgzIiwiODQiLCI4NSIsIjg2IiwiOTAiLCI5MyIsIjk2IiwiOTciLCI5OCIsIjk5IiwiMTAwIiwiMTA1IiwiMTA2IiwiMTA3IiwiMTA4IiwiMTA5Il0sImlhdCI6MTc2NDg5Nzg5MSwiZXhwIjoxNzY0OTg0MjkxfQ.bCwAR7fNc16qecIj5U-r4Qa9SzrmQxE7IjXQB5WnmF6-qAEbsJknq0WdNFp4cfi43b2E8F6D4pYeJdwA0nabJd6fkLgXQNUgfbLLqr0wL-9gd-MalOaPu8OozBFu_SClg9HsN_74QLgUo4glLXM_cshtp3XjLYAY5_ZFRvobu18hNv-xX7LT9pPLP39rFJY_K7Wc7fR7jfHeFsiQaKkWdZ9BBv3bl67X1rcZPoFdF0L17MAgyIuZKtPo_XJmsuMX6krDUg4hyPK9IBxs-KMvMcrf6BpJGIOYmsGZcY4BYeP5aCSiOfZg3Fs3J5lY7A2kJ5l9nJ9GbkvthNGllnrATw",
+            "if-none-match": "W/\"9a7-hSIZABWBXmxi/83ZOoLaqxy5+oU\"",
+            "origin": "http://localhost:3000",
+            "priority": "u=1, i",
+            "referer": "http://localhost:3000/",
+            "sec-ch-ua": "\"Google Chrome\";v=\"143\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"macOS\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "191.55.58.103",
+            "x-forwarded-host": "hub.govarejo.com",
+            "x-forwarded-proto": "https",
+            "x-railway-edge": "railway/us-east4-eqdc4a",
+            "x-railway-request-id": "5rsQrKw3TnuSNY3iPvyhXg",
+            "x-real-ip": "191.55.58.103",
+            "x-request-start": "1764900123287"
+          },
+          "params": {},
+          "query": {
+            "brandId": "7778",
+            "sectionId": "5",
+            "page": "1"
+          },
+          "body": {},
+          "webhookUrl": "https://hub.govarejo.com/webhook/cd95f7ee-8945-4364-87bc-a5bf93b4f43d",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "versionId": "7a31b775-d786-46e1-a517-d10508c038e6",
   "triggerCount": 1,
   "shared": [
     {
