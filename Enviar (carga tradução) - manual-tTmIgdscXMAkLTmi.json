@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-05-15T11:21:19.502Z",
+  "updatedAt": "2025-12-15T13:59:49.772Z",
   "createdAt": "2025-04-04T16:34:29.544Z",
   "id": "tTmIgdscXMAkLTmi",
   "name": "Enviar (carga tradução) - manual",
@@ -37,7 +37,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        180,
+        192,
         -400
       ],
       "id": "b705b317-b106-4815-a551-d68aeaf8928b",
@@ -76,7 +76,7 @@
       "type": "n8n-nodes-base.formTrigger",
       "typeVersion": 2.2,
       "position": [
-        -100,
+        -96,
         -400
       ],
       "id": "8dadd809-7db3-44e7-bef0-1515e79b2ee7",
@@ -119,8 +119,8 @@
       "type": "n8n-nodes-base.formTrigger",
       "typeVersion": 2.2,
       "position": [
-        -100,
-        -600
+        -96,
+        -608
       ],
       "id": "643154ad-a995-4ee6-8b02-cfaa59d8565d",
       "name": "On form submission1",
@@ -129,6 +129,49 @@
         "httpBasicAuth": {
           "id": "Om3mFSSiK845WPlX",
           "name": "Andrea"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "basicAuth",
+        "formTitle": "Carga - Cresce Vendas",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Código Loja",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Ean Loja",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Código Pai",
+              "fieldType": "number",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -64,
+        -720
+      ],
+      "id": "dbf4ed3c-c388-4bff-aebc-e4ce58d9b8f2",
+      "name": "On form submission2",
+      "webhookId": "9aba2ee7-7890-4a3a-a16e-bc5c847aee0a",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "TDt04eATAakT51o0",
+          "name": "Unnamed credential 2"
         }
       }
     }
@@ -160,6 +203,17 @@
           }
         ]
       ]
+    },
+    "On form submission2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -170,8 +224,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "16eec1e0-3015-41cb-8c66-5af552666ca5",
-  "triggerCount": 2,
+  "versionId": "6cd4e985-1b58-4002-ba74-bf270b3746a8",
+  "triggerCount": 3,
   "shared": [
     {
       "updatedAt": "2025-04-04T16:34:29.544Z",
