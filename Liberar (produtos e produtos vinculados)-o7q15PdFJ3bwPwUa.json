@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-04-05T01:10:43.650Z",
+  "updatedAt": "2025-12-18T13:16:55.561Z",
   "createdAt": "2025-01-07T20:04:34.326Z",
   "id": "o7q15PdFJ3bwPwUa",
   "name": "Liberar (produtos e produtos vinculados)",
@@ -20,8 +20,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -140,
-        -40
+        -144,
+        -48
       ],
       "id": "13354918-18be-48f9-aa82-8b4bcdb63c76",
       "name": "Cron 07:00"
@@ -52,7 +52,7 @@
       "typeVersion": 2.4,
       "position": [
         320,
-        60
+        64
       ],
       "id": "102a7d1a-25a5-4711-a6f6-99895f0db50b",
       "name": "Liberar Produtos p/ Vinculação",
@@ -94,8 +94,8 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        100,
-        60
+        112,
+        64
       ],
       "id": "95cd99cc-eb54-4756-b3a1-5c4ec85804dc",
       "name": "Buscar Produtos p/ Vinculação",
@@ -137,8 +137,8 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.4,
       "position": [
-        100,
-        -140
+        112,
+        -144
       ],
       "id": "7fabb807-00d3-4d41-b432-14ea43f0569c",
       "name": "Buscar Produtos p/ Cadastro",
@@ -175,7 +175,7 @@
       "typeVersion": 2.4,
       "position": [
         320,
-        -140
+        -144
       ],
       "id": "d386c454-0673-4fef-876b-b11ade6281de",
       "name": "Atualizar Produtos p/ Cadastro",
@@ -185,6 +185,21 @@
           "name": "Conexus"
         }
       }
+    },
+    {
+      "parameters": {
+        "path": "e86ebd49-b225-4acb-9f15-6992dd36beae",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -64,
+        -224
+      ],
+      "id": "fcba3dc7-c0c6-473d-b529-84a99cc4819d",
+      "name": "Webhook",
+      "webhookId": "e86ebd49-b225-4acb-9f15-6992dd36beae"
     }
   ],
   "connections": {
@@ -225,6 +240,22 @@
           }
         ]
       ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Buscar Produtos p/ Cadastro",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar Produtos p/ Vinculação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -239,8 +270,8 @@
   },
   "meta": null,
   "pinData": {},
-  "versionId": "9fb3226e-3519-4b47-a590-4654a1b75a08",
-  "triggerCount": 1,
+  "versionId": "db669777-98fd-4326-a251-a17086e772a1",
+  "triggerCount": 2,
   "shared": [
     {
       "updatedAt": "2025-01-07T20:04:34.326Z",
