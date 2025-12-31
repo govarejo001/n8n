@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-05T02:07:42.668Z",
+  "updatedAt": "2025-12-30T13:31:21.595Z",
   "createdAt": "2025-12-01T17:05:32.114Z",
   "id": "kCyZqjGpk3j6ecoc",
   "name": "My workflow 14",
@@ -15,8 +15,8 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.5,
       "position": [
-        144,
-        -112
+        -32,
+        0
       ],
       "id": "bdaaefa7-be41-46d0-8154-2244882b977e",
       "name": "Execute a SQL query",
@@ -35,8 +35,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -176,
-        -176
+        -256,
+        0
       ],
       "id": "d56c4072-9ee7-4575-9617-4571999f8b49",
       "name": "Code in JavaScript"
@@ -51,7 +51,7 @@
       "typeVersion": 2.1,
       "position": [
         -480,
-        -176
+        -96
       ],
       "id": "b42af57d-7b69-429b-9edb-b6d62bdaff38",
       "name": "Webhook",
@@ -59,13 +59,13 @@
     },
     {
       "parameters": {
-        "jsCode": "return {\n  data:$input.all().map((item)=>item.json).filter((item)=>item.id)\n}"
+        "jsCode": "return $input.all().map((item)=>item.json).filter((item)=>item.id)"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        352,
-        -112
+        192,
+        80
       ],
       "id": "c5da5b8c-09c2-4eb5-a09f-08af4ca9d140",
       "name": "Code in JavaScript1"
@@ -77,8 +77,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        912,
-        -160
+        -256,
+        -464
       ],
       "id": "504d1b3e-49dc-49ce-b75f-ef8e001204d8",
       "name": "Respond to Webhook"
@@ -90,8 +90,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -32,
-        -336
+        864,
+        -240
       ],
       "id": "6302d5b8-cb92-4e78-8ba3-8361cdbc08df",
       "name": "Code in JavaScript2"
@@ -105,8 +105,8 @@
       "type": "n8n-nodes-base.mySql",
       "typeVersion": 2.5,
       "position": [
-        160,
-        -336
+        1088,
+        -240
       ],
       "id": "6541e019-764b-43d3-967a-8afc8a64d6d5",
       "name": "Execute a SQL query1",
@@ -123,8 +123,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        624,
-        -352
+        1456,
+        -192
       ],
       "id": "b3e49b65-8af1-46dc-ac00-7cd6bd6114b7",
       "name": "Merge"
@@ -152,8 +152,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        832,
-        -352
+        1888,
+        -208
       ],
       "id": "3fc59540-1905-42e4-8138-4fb51f7e1e5b",
       "name": "Edit Fields"
@@ -165,11 +165,108 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1040,
-        -352
+        1792,
+        -656
       ],
       "id": "e9371872-53b6-4b0e-82b9-817debfde40a",
       "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "jsCode": "return {products:$input.all().map((item)=>item.json.id)}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        80
+      ],
+      "id": "55603c7c-40f4-4d64-8077-dbe49b910535",
+      "name": "Code in JavaScript4"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select id,offer_name from products where id in ('{{ $json.products.join(\"','\") }}')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        640,
+        80
+      ],
+      "id": "7b1b2cf0-5d60-4a68-95d2-c8243d998095",
+      "name": "Execute a SQL query2",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "id",
+        "joinMode": "enrichInput2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1088,
+        0
+      ],
+      "id": "b1818f8e-90b3-457f-a3a5-9e1222eb470e",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return {\n    id:Number($input.item.json.id),\n    offer_name:$input.item.json.offer_name\n  }"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        864,
+        80
+      ],
+      "id": "6e448157-8bfd-44fd-b88e-abf6291060c9",
+      "name": "Code in JavaScript5"
+    },
+    {
+      "parameters": {
+        "jsCode": "return {data:$input.all().map((item)=>item.json)}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1584,
+        0
+      ],
+      "id": "5c7d658e-e98a-43d8-b9f5-ac33ca05b9f9",
+      "name": "Code in JavaScript7"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "id"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        0
+      ],
+      "id": "bb93e97c-71e1-4192-a07d-8f2ca1a35851",
+      "name": "Sort"
     }
   ],
   "connections": {
@@ -207,6 +304,11 @@
             "node": "Code in JavaScript1",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
           }
         ]
       ]
@@ -215,9 +317,9 @@
       "main": [
         [
           {
-            "node": "Merge",
+            "node": "Code in JavaScript4",
             "type": "main",
-            "index": 1
+            "index": 0
           }
         ]
       ]
@@ -276,6 +378,72 @@
           }
         ]
       ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript5": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript7": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -285,49 +453,8 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {
-    "Webhook": [
-      {
-        "json": {
-          "headers": {
-            "host": "hub.govarejo.com",
-            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
-            "accept": "application/json, text/plain, */*",
-            "accept-encoding": "gzip, deflate, br, zstd",
-            "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
-            "authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmcmRjM3YybWNmbXpqbnR0ejJsMzJtdzQiLCJhY3Rpb25zIjpbInY1b2xzM3V0NzZkNmhuYXFmNHlic2ZrbyIsImJ3b2ltdjNxYXZsbWR2MnQzdGVjb3VqayIsInNqOGQybTFpenhyZzZmd3EzdXlhcHFieCIsIm56bzJjMXE5MWxtbnIwODd3bHBra2h1OSJdLCJ1bml0cyI6WyI1IiwiOCIsIjExIiwiMTIiLCIxNCIsIjIxIiwiMjIiLCIyMyIsIjI0IiwiMjUiLCIyNiIsIjMwIiwiMzEiLCIzMiIsIjM1IiwiMzYiLCI0NSIsIjQ3IiwiNTMiLCI1NiIsIjYwIiwiNjQiLCI3NiIsIjgzIiwiODQiLCI4NSIsIjg2IiwiOTAiLCI5MyIsIjk2IiwiOTciLCI5OCIsIjk5IiwiMTAwIiwiMTA1IiwiMTA2IiwiMTA3IiwiMTA4IiwiMTA5Il0sImlhdCI6MTc2NDg5Nzg5MSwiZXhwIjoxNzY0OTg0MjkxfQ.bCwAR7fNc16qecIj5U-r4Qa9SzrmQxE7IjXQB5WnmF6-qAEbsJknq0WdNFp4cfi43b2E8F6D4pYeJdwA0nabJd6fkLgXQNUgfbLLqr0wL-9gd-MalOaPu8OozBFu_SClg9HsN_74QLgUo4glLXM_cshtp3XjLYAY5_ZFRvobu18hNv-xX7LT9pPLP39rFJY_K7Wc7fR7jfHeFsiQaKkWdZ9BBv3bl67X1rcZPoFdF0L17MAgyIuZKtPo_XJmsuMX6krDUg4hyPK9IBxs-KMvMcrf6BpJGIOYmsGZcY4BYeP5aCSiOfZg3Fs3J5lY7A2kJ5l9nJ9GbkvthNGllnrATw",
-            "if-none-match": "W/\"9a7-hSIZABWBXmxi/83ZOoLaqxy5+oU\"",
-            "origin": "http://localhost:3000",
-            "priority": "u=1, i",
-            "referer": "http://localhost:3000/",
-            "sec-ch-ua": "\"Google Chrome\";v=\"143\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"macOS\"",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "cross-site",
-            "x-forwarded-for": "191.55.58.103",
-            "x-forwarded-host": "hub.govarejo.com",
-            "x-forwarded-proto": "https",
-            "x-railway-edge": "railway/us-east4-eqdc4a",
-            "x-railway-request-id": "5rsQrKw3TnuSNY3iPvyhXg",
-            "x-real-ip": "191.55.58.103",
-            "x-request-start": "1764900123287"
-          },
-          "params": {},
-          "query": {
-            "brandId": "7778",
-            "sectionId": "5",
-            "page": "1"
-          },
-          "body": {},
-          "webhookUrl": "https://hub.govarejo.com/webhook/cd95f7ee-8945-4364-87bc-a5bf93b4f43d",
-          "executionMode": "production"
-        }
-      }
-    ]
-  },
-  "versionId": "7a31b775-d786-46e1-a517-d10508c038e6",
+  "pinData": {},
+  "versionId": "029321e5-f4f5-4bae-88c6-a469ffd3d134",
   "triggerCount": 1,
   "shared": [
     {
