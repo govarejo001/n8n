@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-01-12T14:32:00.198Z",
+  "updatedAt": "2026-01-06T20:22:23.898Z",
   "createdAt": "2025-01-07T23:24:29.323Z",
   "id": "2pIiDb7zFUsy52Mi",
   "name": "Enviar via E-mail",
@@ -14,14 +14,14 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ $json }}",
+        "jsonBody": "={{ {\n\"to\":$json.to.split(','),\n\"from\":$json.from,\n\"attachments\":$json.attachments,\n\"subject\":$json.subject,\n\"html\":$json.html\n} }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -220,
-        -220
+        16,
+        -272
       ],
       "id": "03868e79-7ee6-4961-97a5-241e69668618",
       "name": "Enviar E-mail",
@@ -40,10 +40,123 @@
       "typeVersion": 1,
       "position": [
         -400,
-        -220
+        -224
       ],
       "id": "d3842fc9-b6fc-412c-ae2b-7f97860c448a",
       "name": "Executar"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "emails",
+          "mode": "list",
+          "cachedResultName": "emails"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "to": "={{ $json.to.split(',') }}",
+            "title": "={{ $json.subject }}",
+            "description": "={{ $json.html }}",
+            "base64": "={{ $json.attachments[0].content }}",
+            "created_at": "={{ new Date() }}",
+            "updated_at": "={{ new Date() }}",
+            "id": "={{ new Date().getTime() }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "to",
+              "displayName": "to",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "array",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "base64",
+              "displayName": "base64",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -208,
+        -384
+      ],
+      "id": "57fea902-2630-4a34-8f8e-b26777426b3e",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
     }
   ],
   "connections": {
@@ -51,11 +164,21 @@
       "main": [
         [
           {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          },
+          {
             "node": "Enviar E-mail",
             "type": "main",
             "index": 0
           }
         ]
+      ]
+    },
+    "Insert rows in a table": {
+      "main": [
+        []
       ]
     }
   },
@@ -63,9 +186,11 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "5150ce95-7811-4472-ad47-468546f08136",
+  "versionId": "57e1480b-a43d-4a5d-b998-734861252317",
   "triggerCount": 0,
   "shared": [
     {
