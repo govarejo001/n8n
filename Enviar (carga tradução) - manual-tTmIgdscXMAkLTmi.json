@@ -225,6 +225,7 @@
   },
   "pinData": {},
   "versionId": "6cd4e985-1b58-4002-ba74-bf270b3746a8",
+  "activeVersionId": "6cd4e985-1b58-4002-ba74-bf270b3746a8",
   "triggerCount": 3,
   "shared": [
     {
@@ -235,5 +236,226 @@
       "projectId": "LHTErTtaRYVEdo6Q"
     }
   ],
+  "activeVersion": {
+    "updatedAt": "2025-12-15T13:59:49.791Z",
+    "createdAt": "2025-12-15T13:59:49.791Z",
+    "versionId": "6cd4e985-1b58-4002-ba74-bf270b3746a8",
+    "workflowId": "tTmIgdscXMAkLTmi",
+    "nodes": [
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://www.crescevendas.com/admin/integrations/shop_product_translations/batch_upsert",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "X-AdminUser-Token",
+                "value": "Rmi6UU8W3fL5wKhJG-xK"
+              },
+              {
+                "name": "X-AdminUser-Email",
+                "value": "rodrigo@zify.com.br"
+              }
+            ]
+          },
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "data",
+                "value": "={{ [{\n    store_code: $json['Ean Loja'] ,\n    store_id: $json['Código Loja'],\n    master_code: $json['Código Pai']\n},\n]\n}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          192,
+          -400
+        ],
+        "id": "b705b317-b106-4815-a551-d68aeaf8928b",
+        "name": "HTTP Request",
+        "retryOnFail": false,
+        "executeOnce": true,
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "authentication": "basicAuth",
+          "formTitle": "Carga - Cresce Vendas",
+          "formFields": {
+            "values": [
+              {
+                "fieldLabel": "Código Loja",
+                "fieldType": "number",
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "Ean Loja",
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "Código Pai",
+                "fieldType": "number",
+                "requiredField": true
+              }
+            ]
+          },
+          "responseMode": "lastNode",
+          "options": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.formTrigger",
+        "typeVersion": 2.2,
+        "position": [
+          -96,
+          -400
+        ],
+        "id": "8dadd809-7db3-44e7-bef0-1515e79b2ee7",
+        "name": "On form submission",
+        "webhookId": "139d92fa-2bd0-4062-a1fa-1032bb2da61c",
+        "credentials": {
+          "httpBasicAuth": {
+            "id": "dIloHdhJSXNR1WDc",
+            "name": "Cris"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "authentication": "basicAuth",
+          "formTitle": "Carga - Cresce Vendas",
+          "formFields": {
+            "values": [
+              {
+                "fieldLabel": "Código Loja",
+                "fieldType": "number",
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "Ean Loja",
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "Código Pai",
+                "fieldType": "number",
+                "requiredField": true
+              }
+            ]
+          },
+          "responseMode": "lastNode",
+          "options": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.formTrigger",
+        "typeVersion": 2.2,
+        "position": [
+          -96,
+          -608
+        ],
+        "id": "643154ad-a995-4ee6-8b02-cfaa59d8565d",
+        "name": "On form submission1",
+        "webhookId": "03dbc397-3dc6-4fe4-9c91-6db6c43c7fe1",
+        "credentials": {
+          "httpBasicAuth": {
+            "id": "Om3mFSSiK845WPlX",
+            "name": "Andrea"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "authentication": "basicAuth",
+          "formTitle": "Carga - Cresce Vendas",
+          "formFields": {
+            "values": [
+              {
+                "fieldLabel": "Código Loja",
+                "fieldType": "number",
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "Ean Loja",
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "Código Pai",
+                "fieldType": "number",
+                "requiredField": true
+              }
+            ]
+          },
+          "responseMode": "lastNode",
+          "options": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.formTrigger",
+        "typeVersion": 2.2,
+        "position": [
+          -64,
+          -720
+        ],
+        "id": "dbf4ed3c-c388-4bff-aebc-e4ce58d9b8f2",
+        "name": "On form submission2",
+        "webhookId": "9aba2ee7-7890-4a3a-a16e-bc5c847aee0a",
+        "credentials": {
+          "httpBasicAuth": {
+            "id": "TDt04eATAakT51o0",
+            "name": "Unnamed credential 2"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "HTTP Request": {
+        "main": [
+          []
+        ]
+      },
+      "On form submission": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "On form submission1": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "On form submission2": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Rodrigo Novais",
+    "name": null,
+    "description": null,
+    "autosaved": false
+  },
   "tags": []
 }
