@@ -242,6 +242,7 @@
   },
   "pinData": {},
   "versionId": "3259ce0a-8766-4490-b763-0a7f37eadaac",
+  "activeVersionId": "3259ce0a-8766-4490-b763-0a7f37eadaac",
   "triggerCount": 1,
   "shared": [
     {
@@ -252,5 +253,239 @@
       "projectId": "LHTErTtaRYVEdo6Q"
     }
   ],
+  "activeVersion": {
+    "updatedAt": "2025-12-01T16:46:18.210Z",
+    "createdAt": "2025-12-01T16:46:18.210Z",
+    "versionId": "3259ce0a-8766-4490-b763-0a7f37eadaac",
+    "workflowId": "Wyf6wHo92d166Y3N",
+    "nodes": [
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "SELECT max(date),\"unitId\" FROM COUPONS\ngroup by \"unitId\"",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.5,
+        "position": [
+          -160,
+          -20
+        ],
+        "id": "f9ea51e1-2cea-4e30-8013-37e318589459",
+        "name": "Postgres",
+        "credentials": {
+          "postgres": {
+            "id": "C8DsN3myOq1XZZ8n",
+            "name": "CRM"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "units",
+            "mode": "list",
+            "cachedResultName": "units"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "unit_coupon_at": "={{ $json.max }}",
+              "unit_id": "={{ $json.unitId }}"
+            },
+            "matchingColumns": [
+              "unit_id"
+            ],
+            "schema": [
+              {
+                "id": "unit_id",
+                "displayName": "unit_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "unit_name",
+                "displayName": "unit_name",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "unit_corporate_name",
+                "displayName": "unit_corporate_name",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "unit_cnpj",
+                "displayName": "unit_cnpj",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "unit_code",
+                "displayName": "unit_code",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "unit_block",
+                "displayName": "unit_block",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "boolean",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "unit_gunit_id",
+                "displayName": "unit_gunit_id",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "unit_coupon_at",
+                "displayName": "unit_coupon_at",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "unit_coupons",
+                "displayName": "unit_coupons",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.5,
+        "position": [
+          340,
+          -160
+        ],
+        "id": "89b2a81d-18f3-4925-a839-48c40015491d",
+        "name": "Postgres1",
+        "credentials": {
+          "postgres": {
+            "id": "r6ETUCB3B88HozZb",
+            "name": "Main"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "minutes"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -400,
+          -220
+        ],
+        "id": "8b37e461-a3af-427d-9aaa-eaa2ae394b31",
+        "name": "Schedule Trigger"
+      },
+      {
+        "parameters": {
+          "jsCode": "const input = $input.all();\nreturn input.map((item)=>{\n  const date = item.json.max\n  const unitId = item.json.unitId\n  return { max: new Date(new Date(date).getTime() + 60 * 3 * 60 * 1000),unitId };\n})\n\n\n\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          60,
+          -200
+        ],
+        "id": "9fd4654d-3fee-490b-a56d-ad22f6cf7af2",
+        "name": "Code"
+      }
+    ],
+    "connections": {
+      "Postgres": {
+        "main": [
+          [
+            {
+              "node": "Code",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "node": "Postgres",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code": {
+        "main": [
+          [
+            {
+              "node": "Postgres1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null,
+    "autosaved": false
+  },
   "tags": []
 }
