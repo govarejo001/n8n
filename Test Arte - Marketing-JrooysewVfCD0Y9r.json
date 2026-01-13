@@ -224,6 +224,7 @@
   "meta": null,
   "pinData": {},
   "versionId": "17b85f3e-3db8-4b0f-ac09-ec00c2318662",
+  "activeVersionId": null,
   "triggerCount": 0,
   "shared": [
     {
@@ -234,5 +235,6 @@
       "projectId": "LHTErTtaRYVEdo6Q"
     }
   ],
+  "activeVersion": null,
   "tags": []
 }
