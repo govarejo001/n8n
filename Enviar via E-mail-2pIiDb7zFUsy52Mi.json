@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-01-06T20:22:23.898Z",
+  "updatedAt": "2026-01-12T16:31:57.022Z",
   "createdAt": "2025-01-07T23:24:29.323Z",
   "id": "2pIiDb7zFUsy52Mi",
   "name": "Enviar via E-mail",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -29,8 +29,8 @@
       "waitBetweenTries": 5000,
       "credentials": {
         "httpHeaderAuth": {
-          "id": "Z5N7pF06Ll5QHk1Q",
-          "name": "Resend"
+          "id": "R77isNDziiOCt9RD",
+          "name": "Header Auth account"
         }
       }
     },
@@ -146,8 +146,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -208,
-        -384
+        -96,
+        -512
       ],
       "id": "57fea902-2630-4a34-8f8e-b26777426b3e",
       "name": "Insert rows in a table",
@@ -157,6 +157,39 @@
           "name": "Portal v2"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0c02c4dd-e84f-4e00-ba49-5ba0a29a870f",
+              "leftValue": "={{ $json.subject }}",
+              "rightValue": "Relatório de Vendas",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -288,
+        -432
+      ],
+      "id": "448b2333-4db3-49d8-927c-d81ede39d8ba",
+      "name": "If"
     }
   ],
   "connections": {
@@ -164,12 +197,12 @@
       "main": [
         [
           {
-            "node": "Insert rows in a table",
+            "node": "Enviar E-mail",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Enviar E-mail",
+            "node": "If",
             "type": "main",
             "index": 0
           }
@@ -179,6 +212,17 @@
     "Insert rows in a table": {
       "main": [
         []
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -190,7 +234,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "57e1480b-a43d-4a5d-b998-734861252317",
+  "versionId": "f9d2660b-0b77-4813-8726-b71e40416b38",
+  "activeVersionId": "f9d2660b-0b77-4813-8726-b71e40416b38",
   "triggerCount": 0,
   "shared": [
     {
@@ -201,5 +246,236 @@
       "projectId": "LHTErTtaRYVEdo6Q"
     }
   ],
+  "activeVersion": {
+    "updatedAt": "2026-01-12T16:31:57.035Z",
+    "createdAt": "2026-01-12T16:31:57.035Z",
+    "versionId": "f9d2660b-0b77-4813-8726-b71e40416b38",
+    "workflowId": "2pIiDb7zFUsy52Mi",
+    "nodes": [
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.resend.com/emails",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ {\n\"to\":$json.to.split(','),\n\"from\":$json.from,\n\"attachments\":$json.attachments,\n\"subject\":$json.subject,\n\"html\":$json.html\n} }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          16,
+          -272
+        ],
+        "id": "03868e79-7ee6-4961-97a5-241e69668618",
+        "name": "Enviar E-mail",
+        "retryOnFail": true,
+        "waitBetweenTries": 5000,
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "R77isNDziiOCt9RD",
+            "name": "Header Auth account"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1,
+        "position": [
+          -400,
+          -224
+        ],
+        "id": "d3842fc9-b6fc-412c-ae2b-7f97860c448a",
+        "name": "Executar"
+      },
+      {
+        "parameters": {
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "emails",
+            "mode": "list",
+            "cachedResultName": "emails"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "to": "={{ $json.to.split(',') }}",
+              "title": "={{ $json.subject }}",
+              "description": "={{ $json.html }}",
+              "base64": "={{ $json.attachments[0].content }}",
+              "created_at": "={{ new Date() }}",
+              "updated_at": "={{ new Date() }}",
+              "id": "={{ new Date().getTime() }}"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": true,
+                "defaultMatch": true,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "to",
+                "displayName": "to",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "array",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "title",
+                "displayName": "title",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "description",
+                "displayName": "description",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "base64",
+                "displayName": "base64",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "created_at",
+                "displayName": "created_at",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "updated_at",
+                "displayName": "updated_at",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          -96,
+          -512
+        ],
+        "id": "57fea902-2630-4a34-8f8e-b26777426b3e",
+        "name": "Insert rows in a table",
+        "credentials": {
+          "postgres": {
+            "id": "bJB2Az0HP4yTZASS",
+            "name": "Portal v2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "0c02c4dd-e84f-4e00-ba49-5ba0a29a870f",
+                "leftValue": "={{ $json.subject }}",
+                "rightValue": "Relatório de Vendas",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEquals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -288,
+          -432
+        ],
+        "id": "448b2333-4db3-49d8-927c-d81ede39d8ba",
+        "name": "If"
+      }
+    ],
+    "connections": {
+      "Executar": {
+        "main": [
+          [
+            {
+              "node": "Enviar E-mail",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Insert rows in a table": {
+        "main": [
+          []
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Insert rows in a table",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Rodrigo Novais",
+    "name": null,
+    "description": null,
+    "autosaved": false
+  },
   "tags": []
 }
