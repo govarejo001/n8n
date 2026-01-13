@@ -780,6 +780,7 @@
   },
   "pinData": {},
   "versionId": "d6798d02-30d3-4c96-909b-ef7a1daa0e39",
+  "activeVersionId": "d6798d02-30d3-4c96-909b-ef7a1daa0e39",
   "triggerCount": 2,
   "shared": [
     {
@@ -790,5 +791,772 @@
       "projectId": "LHTErTtaRYVEdo6Q"
     }
   ],
+  "activeVersion": {
+    "updatedAt": "2025-12-02T20:05:38.460Z",
+    "createdAt": "2025-12-02T20:05:38.460Z",
+    "versionId": "d6798d02-30d3-4c96-909b-ef7a1daa0e39",
+    "workflowId": "rt8mJdoUjord4DPu",
+    "nodes": [
+      {
+        "parameters": {
+          "options": {
+            "delimiter": ";",
+            "fileName": "products_linked.csv"
+          }
+        },
+        "type": "n8n-nodes-base.convertToFile",
+        "typeVersion": 1.1,
+        "position": [
+          128,
+          -848
+        ],
+        "id": "e848b944-7c36-40bd-9f5d-ba6ec16f59aa",
+        "name": "Converter para CSV1",
+        "alwaysOutputData": false
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "SELECT \npl.ean as ean,\npl.prodl_unit_id as unit_id,\npl.prodl_prod_id as product_id\nFROM productslinked pl\nwhere pl.ean is not null\nand pl.ean<> \"\" and pl.prodl_unit_id in ({{ $input.all().map(item => item.json.id).join(',') }})\ngroup by ean,unit_id,product_id",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4,
+        "position": [
+          -96,
+          -848
+        ],
+        "id": "4fe3bb93-332f-45f9-aa12-a35dcbf968b5",
+        "name": "Buscar Produtos Vinculados",
+        "executeOnce": true,
+        "credentials": {
+          "mySql": {
+            "id": "vJXa18SJcADLCV1n",
+            "name": "Conexus"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "const data = [\n  { \"id\": 32, \"otherId\": 4945 },\n  { \"id\": 94, \"otherId\": 5290 },\n  { \"id\": 47, \"otherId\": 5273 },\n  { \"id\": 86, \"otherId\": 5265 },\n  { \"id\": 96, \"otherId\": 5289 },\n  { \"id\": 33, \"otherId\": 5270 },\n  { \"id\": 14, \"otherId\": 5264 },\n  { \"id\": 26, \"otherId\": 5288 },\n  { \"id\": 45, \"otherId\": 5287 },\n  { \"id\": 35, \"otherId\": 5267 },\n  { \"id\": 5, \"otherId\": 5281 },\n  { \"id\": 60, \"otherId\": 5269 },\n  { \"id\": 85, \"otherId\": 4946 },\n  { \"id\": 8, \"otherId\": 4948 },\n  { \"id\": 53, \"otherId\": 5272 },\n  { \"id\": 11, \"otherId\": 5263 },\n  { \"id\": 22, \"otherId\": 5279 },\n  { \"id\": 24, \"otherId\": 5286 },\n  { \"id\": 29, \"otherId\": 5285 },\n  { \"id\": 31, \"otherId\": 5268 },\n  { \"id\": 23, \"otherId\": 5280 },\n  { \"id\": 90, \"otherId\": 5276 },\n  { \"id\": 36, \"otherId\": 4944 },\n  { \"id\": 76, \"otherId\": 5271 },\n  { \"id\": 83, \"otherId\": 5296 },\n  { \"id\": 84, \"otherId\": 5275 },\n  { \"id\": 25, \"otherId\": 5274 },\n  { \"id\": 56, \"otherId\": 4947 },\n  { \"id\": 21, \"otherId\": 4950 },\n  { \"id\": 93, \"otherId\": 5278 },\n  { \"id\": 30, \"otherId\": 4949 },\n  { \"id\": 12, \"otherId\": 5266 },\n  { \"id\": 105, \"otherId\": 5657 },\n  { \"id\": 107, \"otherId\": 5771 },\n  { \"id\": 109, \"otherId\": 5671 },\n  { \"id\": 64, \"otherId\": 5778 },\n  { \"id\": 97, \"otherId\": 5802 },\n    { \"id\": 98, \"otherId\": 5803 },\n  { \"id\": 99, \"otherId\": 5804 },\n  { \"id\": 100, \"otherId\": 5805 },\n  { \"id\": 108, \"otherId\":5773}\n];\n\nreturn data"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -320,
+          -848
+        ],
+        "id": "8e92cdf5-36ef-42fe-9384-95c51a107059",
+        "name": "Code",
+        "executeOnce": true
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3,
+        "position": [
+          128,
+          -336
+        ],
+        "id": "00f4d38b-2dac-49ed-8384-7edfaa443aef",
+        "name": "Merge"
+      },
+      {
+        "parameters": {
+          "operation": "text",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1,
+        "position": [
+          -96,
+          -432
+        ],
+        "id": "b0fccd2a-4307-42e4-8f11-1159f08faa10",
+        "name": "Extract from File"
+      },
+      {
+        "parameters": {
+          "operation": "text",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1,
+        "position": [
+          -96,
+          -224
+        ],
+        "id": "57d0311a-6b87-41ed-9423-0ba4583ffc39",
+        "name": "Extract from File1"
+      },
+      {
+        "parameters": {
+          "jsCode": "const yesterdayFile = $input.all()[0].json.data;\nconst todayFile = $input.all()[1].json.data;\n\nconst dataYesterday = new Map();\nconst differentItems = [];\nconst newItems = [];\n\nconst data = [\n  { \"id\": 32, \"otherId\": 4945 },\n  { \"id\": 94, \"otherId\": 5290 },\n  { \"id\": 47, \"otherId\": 5273 },\n  { \"id\": 86, \"otherId\": 5265 },\n  { \"id\": 96, \"otherId\": 5289 },\n  { \"id\": 33, \"otherId\": 5270 },\n  { \"id\": 14, \"otherId\": 5264 },\n  { \"id\": 26, \"otherId\": 5288 },\n  { \"id\": 45, \"otherId\": 5287 },\n  { \"id\": 35, \"otherId\": 5267 },\n  { \"id\": 5, \"otherId\": 5281 },\n  { \"id\": 60, \"otherId\": 5269 },\n  { \"id\": 85, \"otherId\": 4946 },\n  { \"id\": 8, \"otherId\": 4948 },\n  { \"id\": 53, \"otherId\": 5272 },\n  { \"id\": 11, \"otherId\": 5263 },\n  { \"id\": 22, \"otherId\": 5279 },\n  { \"id\": 24, \"otherId\": 5286 },\n  { \"id\": 29, \"otherId\": 5285 },\n  { \"id\": 31, \"otherId\": 5268 },\n  { \"id\": 23, \"otherId\": 5280 },\n  { \"id\": 90, \"otherId\": 5276 },\n  { \"id\": 36, \"otherId\": 4944 },\n  { \"id\": 76, \"otherId\": 5271 },\n  { \"id\": 83, \"otherId\": 5296 },\n  { \"id\": 84, \"otherId\": 5275 },\n  { \"id\": 25, \"otherId\": 5274 },\n  { \"id\": 56, \"otherId\": 4947 },\n  { \"id\": 21, \"otherId\": 4950 },\n  { \"id\": 93, \"otherId\": 5278 },\n  { \"id\": 30, \"otherId\": 4949 },\n  { \"id\": 12, \"otherId\": 5266 },\n  { \"id\": 105, \"otherId\": 5657 },\n  { \"id\": 107, \"otherId\": 5771 },\n  { \"id\": 109, \"otherId\": 5671 },\n  { \"id\": 64, \"otherId\": 5778 },\n  { \"id\": 97, \"otherId\": 5802 },\n    { \"id\": 98, \"otherId\": 5803 },\n  { \"id\": 99, \"otherId\": 5804 },\n  { \"id\": 100, \"otherId\": 5805 },\n  { \"id\": 108, \"otherId\":5773}\n];\n\n// Mapeia unit_id para otherId\nconst unitIdMap = new Map(data.map(item => [item.id.toString(), item.otherId]));\n\n// Armazena os produtos do arquivo de ontem usando EAN + unit_id como chave\nyesterdayFile.split('\\n').slice(1).forEach((line) => {\n    const product = line.split(';');\n    const key = `${product[0]}_${product[1]}`; \n    dataYesterday.set(key, line);\n});\n\n// Percorre os produtos do arquivo de hoje\ntodayFile.split('\\n').slice(1).forEach((line) => {\n    const product = line.split(';');\n    const key = `${product[0]}_${product[1]}`;\n    const existing = dataYesterday.get(key);\n    \n    const unitId = product[1];\n    const otherId = unitIdMap.get(unitId) || null;  // Obtém o otherId correspondente\n\n    if (existing && existing !== line) {\n        differentItems.push({\n            \"store_code\": product[0],\n            \"store_id\": otherId,\n            \"master_code\": product[2]\n        });\n    }\n    if (!existing) {\n        newItems.push({\n            \"store_code\": product[0],\n            \"store_id\": otherId,\n            \"master_code\": product[2]\n        });\n    }\n});\n\nreturn [{ json: { differentItems, newItems } }];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          352,
+          -320
+        ],
+        "id": "1c16b2a3-9eba-44d0-ba5c-021f78d99705",
+        "name": "Code1"
+      },
+      {
+        "parameters": {
+          "fieldToSplitOut": "differentItems",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitOut",
+        "typeVersion": 1,
+        "position": [
+          560,
+          -512
+        ],
+        "id": "11326498-cef9-4052-af69-4693bab8f7fe",
+        "name": "Split Out",
+        "executeOnce": true
+      },
+      {
+        "parameters": {
+          "batchSize": 1000,
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3,
+        "position": [
+          784,
+          -512
+        ],
+        "id": "d7ea6a3a-b3a7-4492-a3aa-c12277610e8c",
+        "name": "Loop Over Items",
+        "executeOnce": false,
+        "alwaysOutputData": false
+      },
+      {
+        "parameters": {
+          "jsCode": "const from = \"Rodrigo Novais<rodrigo@zify.com.br>\";\nconst to = [\"rodrigo@zify.com.br\"];\nconst subject = \"Produtos Vinculados (Cresce Vendas)\";\nconst errorMessage = JSON.stringify($input.first().json.error?.message || \"Erro desconhecido\");\n\nconst html = `<p>Erro ao enviar produtos vinculados: ${errorMessage}</p>`;\n\nreturn {\n  from,\n  to,\n  subject,\n  html,\n};"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1440,
+          -512
+        ],
+        "id": "ef1e0711-ae36-4021-a4be-9a4aacd99743",
+        "name": "Code2"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "2pIiDb7zFUsy52Mi",
+            "mode": "list",
+            "cachedResultName": "Enviar e-mail"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.1,
+        "position": [
+          1664,
+          -512
+        ],
+        "id": "ac27f2b2-5f5a-47ee-8774-b8d21ca5f31a",
+        "name": "Enviar E-mail1"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "3cb05228-7863-42a5-b9b2-3b7c9b84931d",
+                "leftValue": "={{ $json.error }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "object",
+                  "operation": "exists",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          1232,
+          -512
+        ],
+        "id": "60c535db-0f26-4f57-9a27-4fe98456391f",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "fieldToSplitOut": "newItems",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitOut",
+        "typeVersion": 1,
+        "position": [
+          560,
+          -112
+        ],
+        "id": "4b1c3ae2-3630-43e3-99be-cc31a2796eae",
+        "name": "Split Out1",
+        "executeOnce": true
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://www.crescevendas.com/admin/integrations/shop_product_translations/batch_upsert",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "X-AdminUser-Token",
+                "value": "Rmi6UU8W3fL5wKhJG-xK"
+              },
+              {
+                "name": "X-AdminUser-Email",
+                "value": "rodrigo@zify.com.br"
+              }
+            ]
+          },
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "data",
+                "value": "={{ $input.all().map((item)=>({\n...item.json\n})) }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          1008,
+          -256
+        ],
+        "id": "96a0e264-f27a-4001-b7d4-7d7121f8fe89",
+        "name": "HTTP Request1",
+        "retryOnFail": false,
+        "executeOnce": true,
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "batchSize": 1000,
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3,
+        "position": [
+          784,
+          -112
+        ],
+        "id": "6d40beb4-70d2-4930-89b4-106b2dce13f7",
+        "name": "Loop Over Items1",
+        "executeOnce": false
+      },
+      {
+        "parameters": {
+          "jsCode": "const from = \"Rodrigo Novais<rodrigo@zify.com.br>\";\nconst to = [\"rodrigo@zify.com.br\"];\nconst subject = \"Produtos Vinculados (Cresce Vendas)\";\nconst errorMessage = JSON.stringify($input.first().json.error?.message || \"Erro desconhecido\");\n\nconst html = `<p>Erro ao enviar produtos vinculados: ${errorMessage}</p>`;\n\nreturn {\n  from,\n  to,\n  subject,\n  html,\n};"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1440,
+          -256
+        ],
+        "id": "c4a90805-4556-4ca9-a4fe-e5405dbb34aa",
+        "name": "Code3"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "2pIiDb7zFUsy52Mi",
+            "mode": "list",
+            "cachedResultName": "Enviar e-mail"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.1,
+        "position": [
+          1664,
+          -176
+        ],
+        "id": "7bab3d45-a430-4647-86e9-9da18d61d884",
+        "name": "Enviar E-mail"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "3cb05228-7863-42a5-b9b2-3b7c9b84931d",
+                "leftValue": "={{ $json.error }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "object",
+                  "operation": "exists",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          1232,
+          -256
+        ],
+        "id": "6ded5ded-9f0d-4ed9-960e-dea6b7213fcd",
+        "name": "If1"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://www.crescevendas.com/admin/integrations/shop_product_translations/batch_upsert",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "X-AdminUser-Token",
+                "value": "Rmi6UU8W3fL5wKhJG-xK"
+              },
+              {
+                "name": "X-AdminUser-Email",
+                "value": "rodrigo@zify.com.br"
+              }
+            ]
+          },
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "data",
+                "value": "={{ $input.all().map((item)=>({\n...item.json\n})) }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          1008,
+          -576
+        ],
+        "id": "8705b620-7417-4ff8-b246-eb955a3c1ac4",
+        "name": "HTTP Request",
+        "retryOnFail": false,
+        "executeOnce": true,
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "operation": "upload",
+          "bucketName": "upload",
+          "fileName": "=n8n/products_linked/{{ $now.format('yyyy-LL-dd') }}.csv",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.s3",
+        "typeVersion": 1,
+        "position": [
+          352,
+          -848
+        ],
+        "id": "4b70abca-f70d-4340-a56e-541770b4d66f",
+        "name": "S3",
+        "credentials": {
+          "s3": {
+            "id": "cCGXGEbqFM5KuTWj",
+            "name": "S3 account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "cronExpression",
+                "expression": "40 4 * * *"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -544,
+          -336
+        ],
+        "id": "81a707f5-bf73-467b-8c82-a1a073bac1f3",
+        "name": "Schedule Trigger"
+      },
+      {
+        "parameters": {
+          "bucketName": "upload",
+          "fileKey": "=n8n/products_linked/{{ $now.minus(1,'days').format('yyyy-LL-dd') }}.csv"
+        },
+        "type": "n8n-nodes-base.s3",
+        "typeVersion": 1,
+        "position": [
+          -320,
+          -432
+        ],
+        "id": "742527ad-41d5-4867-816e-9aa2f533f886",
+        "name": "S31",
+        "credentials": {
+          "s3": {
+            "id": "cCGXGEbqFM5KuTWj",
+            "name": "S3 account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "bucketName": "upload",
+          "fileKey": "=n8n/products_linked/{{ $now.format('yyyy-LL-dd') }}.csv"
+        },
+        "type": "n8n-nodes-base.s3",
+        "typeVersion": 1,
+        "position": [
+          -320,
+          -224
+        ],
+        "id": "0448c879-ae60-4bbb-8e8c-c5743b33de55",
+        "name": "S32",
+        "credentials": {
+          "s3": {
+            "id": "cCGXGEbqFM5KuTWj",
+            "name": "S3 account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "cronExpression",
+                "expression": "10 4 * * *"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -544,
+          -848
+        ],
+        "id": "db9ccd18-cf64-42e3-8643-479b81991ce8",
+        "name": "Schedule Trigger1"
+      }
+    ],
+    "connections": {
+      "Converter para CSV1": {
+        "main": [
+          [
+            {
+              "node": "S3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Buscar Produtos Vinculados": {
+        "main": [
+          [
+            {
+              "node": "Converter para CSV1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code": {
+        "main": [
+          [
+            {
+              "node": "Buscar Produtos Vinculados",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "node": "Code1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract from File": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract from File1": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Code1": {
+        "main": [
+          [
+            {
+              "node": "Split Out1",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Split Out",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Split Out": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [],
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code2": {
+        "main": [
+          [
+            {
+              "node": "Enviar E-mail1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Code2",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Split Out1": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Enviar E-mail1": {
+        "main": [
+          []
+        ]
+      },
+      "HTTP Request1": {
+        "main": [
+          [
+            {
+              "node": "If1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Loop Over Items1": {
+        "main": [
+          [],
+          [
+            {
+              "node": "HTTP Request1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code3": {
+        "main": [
+          [
+            {
+              "node": "Enviar E-mail",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Enviar E-mail": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If1": {
+        "main": [
+          [
+            {
+              "node": "Code3",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Loop Over Items1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "node": "S31",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "S32",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "S31": {
+        "main": [
+          [
+            {
+              "node": "Extract from File",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "S32": {
+        "main": [
+          [
+            {
+              "node": "Extract from File1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger1": {
+        "main": [
+          [
+            {
+              "node": "Code",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Rodrigo Novais",
+    "name": null,
+    "description": null,
+    "autosaved": false
+  },
   "tags": []
 }
