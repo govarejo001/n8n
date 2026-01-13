@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-07-01T14:35:21.037Z",
+  "updatedAt": "2026-01-12T16:28:21.812Z",
   "createdAt": "2025-01-17T10:34:28.398Z",
   "id": "n9MuXpPW0qlgnE7i",
   "name": "Relatório de vendas",
@@ -15,8 +15,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -420,
-        20
+        -416,
+        32
       ],
       "id": "f45a4c27-75b0-4e95-957c-f4623acedeaa",
       "name": "Postgres2",
@@ -34,7 +34,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        20,
+        32,
         -80
       ],
       "id": "2fa49fa3-84f5-4403-8115-a3df46899f19",
@@ -63,8 +63,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -420,
-        -180
+        -416,
+        -176
       ],
       "id": "cf5c4b4f-bef7-4ca8-9313-3e9e0bf3f6a7",
       "name": "Postgres3",
@@ -84,7 +84,7 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
       "position": [
-        -200,
+        -208,
         -80
       ],
       "id": "4fafe356-f7c4-4bbe-93c2-7f9454eebdef",
@@ -117,7 +117,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        460,
+        464,
         -80
       ],
       "id": "327f3fe9-d2f1-4bc2-8314-a6b0be814d0b",
@@ -158,7 +158,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        680,
+        688,
         -80
       ],
       "id": "2378b06c-c8bd-4845-bcee-09d53ca3c5e4",
@@ -185,12 +185,12 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst from = \"Rodrigo Novais<rodrigo@zify.com.br>\"\nconst to = ['luisfl@redevalor.com.br']\nconst subject = \"Relatório de Vendas\"\nconst html = '<p>Bom dia,</p><p>Segue anexado.</p>'\nconst attachments = [\n    {\n      content: $input.first().json.data,\n      filename: $input.first().json.fileName,\n    },\n  ]\nreturn {\n  from,\n  to,\n  attachments,\n  subject,\n  html,\n}"
+        "jsCode": "\nconst from = \"Agente<oi@govarejo.com>\"\nconst to = ['luisfl@redevalor.com.br']\nconst subject = \"Relatório de Vendas\"\nconst html = '<p>Bom dia,</p><p>Segue anexado.</p>'\nconst attachments = [\n    {\n      content: $input.first().json.data,\n      filename: $input.first().json.fileName,\n    },\n  ]\nreturn {\n  from,\n  to,\n  attachments,\n  subject,\n  html,\n}"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        900,
+        912,
         -80
       ],
       "id": "302e65b5-9b4f-4731-a9ee-31a381212ee4",
@@ -205,7 +205,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -420,
+        -416,
         480
       ],
       "id": "dfbabbc6-cc4a-4466-be49-e08a00f41dee",
@@ -224,8 +224,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        20,
-        380
+        32,
+        384
       ],
       "id": "dfcc37b5-d93d-40c3-8c8f-7d6f4c22e802",
       "name": "Code2"
@@ -239,8 +239,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -420,
-        280
+        -416,
+        288
       ],
       "id": "110437b4-136f-4bab-84b4-f2ebdf973c7c",
       "name": "Postgres4",
@@ -260,8 +260,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
       "position": [
-        -200,
-        380
+        -208,
+        384
       ],
       "id": "2b3828ac-9307-4e32-bc81-e353b453ef46",
       "name": "Merge1"
@@ -277,7 +277,7 @@
       "typeVersion": 2,
       "position": [
         -640,
-        380
+        384
       ],
       "id": "11263ca8-1054-417d-bd1a-ab0c554ef15a",
       "name": "Webhook",
@@ -307,8 +307,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        460,
-        380
+        464,
+        384
       ],
       "id": "9f195d2d-5303-48bc-8274-1a4ffb0dc800",
       "name": "Respond to Webhook"
@@ -321,7 +321,7 @@
       "typeVersion": 2,
       "position": [
         240,
-        380
+        384
       ],
       "id": "5c3781bb-59e5-463a-a4a9-d3d34370c9b4",
       "name": "Code3"
@@ -335,8 +335,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -420,
-        940
+        -416,
+        944
       ],
       "id": "11c1647a-7a44-4286-9345-3b29ef30bf21",
       "name": "Postgres1",
@@ -354,8 +354,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        20,
-        840
+        32,
+        848
       ],
       "id": "5904d627-0676-44ab-a222-629ab9bd099a",
       "name": "Code4"
@@ -369,8 +369,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -420,
-        740
+        -416,
+        752
       ],
       "id": "c45a096d-5522-4067-8075-2cd4a6ff5424",
       "name": "Postgres5",
@@ -390,8 +390,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
       "position": [
-        -200,
-        840
+        -208,
+        848
       ],
       "id": "23277a1a-bb47-414d-9bd6-ef0ce5dae010",
       "name": "Merge2"
@@ -414,8 +414,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        460,
-        840
+        464,
+        848
       ],
       "id": "dedb1202-7028-4f47-89b1-2ef09435c6a1",
       "name": "Respond to Webhook1"
@@ -428,7 +428,7 @@
       "typeVersion": 2,
       "position": [
         240,
-        840
+        848
       ],
       "id": "98eedb8d-0234-42b1-8fbd-28d86db71a51",
       "name": "Code5"
@@ -444,7 +444,7 @@
       "typeVersion": 2,
       "position": [
         -640,
-        840
+        848
       ],
       "id": "304f3ba8-83a3-4e7f-84d7-95dec8ad8338",
       "name": "Webhook1",
@@ -719,7 +719,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "cd8ac8ea-b677-4045-a26a-a0fa459ed421",
+  "versionId": "6db02456-c9c1-4384-a1f8-f30c94b65057",
+  "activeVersionId": "6db02456-c9c1-4384-a1f8-f30c94b65057",
   "triggerCount": 3,
   "shared": [
     {
@@ -730,6 +731,716 @@
       "projectId": "LHTErTtaRYVEdo6Q"
     }
   ],
+  "activeVersion": {
+    "updatedAt": "2026-01-12T16:28:21.838Z",
+    "createdAt": "2026-01-12T16:28:21.838Z",
+    "versionId": "6db02456-c9c1-4384-a1f8-f30c94b65057",
+    "workflowId": "n9MuXpPW0qlgnE7i",
+    "nodes": [
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "WITH todas_datas AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date,\n        CURRENT_DATE-1,\n        '1 day'\n    ) AS dia\n),\nlojas_relevantes AS (\n    SELECT DISTINCT unit_id\n    FROM sales\n    WHERE date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date\n      AND date < DATE_TRUNC('month', CURRENT_DATE)::date\n),\ncomb_lojas_datas AS (\n    SELECT l.unit_id, d.dia\n    FROM lojas_relevantes l\n    CROSS JOIN todas_datas d\n),\nvendas_aggregadas AS (\n    SELECT unit_id, date, SUM(value) AS total_venda\n    FROM sales\n    WHERE date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date\n      AND date <= CURRENT_DATE\n    GROUP BY unit_id, date\n)\nSELECT \n    cd.unit_id,\n    cd.dia,\n    COALESCE(va.total_venda, 0) AS venda_do_dia\nFROM \n    comb_lojas_datas cd\nLEFT JOIN \n    vendas_aggregadas va\n    ON cd.unit_id = va.unit_id AND cd.dia = va.date\nORDER BY \n    cd.unit_id, cd.dia;\n",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.5,
+        "position": [
+          -416,
+          32
+        ],
+        "id": "f45a4c27-75b0-4e95-957c-f4623acedeaa",
+        "name": "Postgres2",
+        "credentials": {
+          "postgres": {
+            "id": "o5qqKlZfmjuOVpBT",
+            "name": "7000"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Obter todos os dados da entrada\nconst items = $input.all();\n\n// Verificar se há dados\nif (items.length === 0) {\n  return [];\n}\n\n// Extrair todas as datas únicas e formatá-las como 'DD/MM/YYYY'\nconst datas = [...new Set(items.map(item => {\n  const date = new Date(item.json.dia);\n  const day = String(date.getDate()).padStart(2, '0');\n  const month = String(date.getMonth() + 1).padStart(2, '0');\n  const year = date.getFullYear();\n  return `${day}/${month}/${year}`;\n}))].sort((a, b) => {\n  // Converter de volta para data para ordenação correta\n  const [dayA, monthA, yearA] = a.split('/').map(Number);\n  const [dayB, monthB, yearB] = b.split('/').map(Number);\n  return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);\n});\n\n// Extrair todas as lojas únicas com unit_id e unit_name\nconst lojasSet = new Set();\nitems.forEach(item => {\n  lojasSet.add(JSON.stringify({ unit_id: item.json.unit_id, unit_name: item.json.unit_name }));\n});\nconst lojas = Array.from(lojasSet).map(str => JSON.parse(str)).sort((a, b) => {\n  // Ordenar por unit_name em ordem ascendente\n  return a.unit_name.localeCompare(b.unit_name, 'pt-BR', { sensitivity: 'base' });\n});\n\n// Criar um objeto para armazenar os dados pivotados\nconst pivotData = lojas.map(store => {\n  const row = { unit_id: store.unit_id, unit_name: store.unit_name };\n  datas.forEach(dia => {\n    row[dia] = 0; // Inicializa com 0\n  });\n  return row;\n});\n\n// Preencher as vendas\nitems.forEach(item => {\n  const store = item.json.unit_id;\n  const storeName = item.json.unit_name;\n  const date = new Date(item.json.dia);\n  const day = String(date.getDate()).padStart(2, '0');\n  const month = String(date.getMonth() + 1).padStart(2, '0');\n  const year = date.getFullYear();\n  const formattedDate = `${day}/${month}/${year}`;\n  const venda = item.json.venda_do_dia;\n\n  const row = pivotData.find(r => r.unit_id === store && r.unit_name === storeName);\n  if (row) {\n    // Formatar o número para substituir '.' por ',' e fixar duas casas decimais\n    const vendaFormatada = Number(venda).toFixed(2).replace('.', ',');\n    row[formattedDate] = vendaFormatada;\n  }\n});\n\n// Preparar os cabeçalhos com 'unit_id', 'unit_name' e datas\nconst headers = ['unit_id', 'unit_name', ...datas];\n\n// Preparar os dados para o Excel como uma matriz de objetos\nconst excelData = pivotData.map(row => {\n  const newRow = {};\n  headers.forEach(header => {\n    newRow[header] = row[header];\n  });\n  return { json: newRow };\n});\n\n// Retornar os dados pivotados como uma matriz de objetos\nreturn excelData;\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          32,
+          -80
+        ],
+        "id": "2fa49fa3-84f5-4403-8115-a3df46899f19",
+        "name": "Code"
+      },
+      {
+        "parameters": {
+          "operation": "xlsx",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.convertToFile",
+        "typeVersion": 1.1,
+        "position": [
+          240,
+          -80
+        ],
+        "id": "955b95dc-12a0-41a9-8788-e681f37a2b71",
+        "name": "Convert to File"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "select * from units where unit_block=false and unit_id<900",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.5,
+        "position": [
+          -416,
+          -176
+        ],
+        "id": "cf5c4b4f-bef7-4ca8-9313-3e9e0bf3f6a7",
+        "name": "Postgres3",
+        "credentials": {
+          "postgres": {
+            "id": "r6ETUCB3B88HozZb",
+            "name": "Main"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "combine",
+          "fieldsToMatchString": "unit_id",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3,
+        "position": [
+          -208,
+          -80
+        ],
+        "id": "4fafe356-f7c4-4bbe-93c2-7f9454eebdef",
+        "name": "Merge"
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "cronExpression",
+                "expression": "0 8 * * 1-5"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -640,
+          -80
+        ],
+        "id": "765058f6-7ddc-4396-831b-255cf9ab7305",
+        "name": "Schedule Trigger"
+      },
+      {
+        "parameters": {
+          "jsCode": "const files = $input.all()\nconst attachments = files.map((file)=>{\n  return {\n  files,\n    \"filename\": file.binary.data.fileName,\n    \"type\": file.binary.data.mimeType,\n    \"content\": file.binary.data.data,\n    \"fileType\": file.binary.data.fileType\n  }\n})\n\nreturn attachments"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          464,
+          -80
+        ],
+        "id": "327f3fe9-d2f1-4bc2-8314-a6b0be814d0b",
+        "name": "Code1"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "e6efafc6-c4d1-4dc0-946a-377a1afb19bd",
+                "name": "fileName",
+                "value": "={{ $json.filename }}",
+                "type": "string"
+              },
+              {
+                "id": "450732f9-5eaa-4ba1-83e0-02d09678cb08",
+                "name": "mimeType",
+                "value": "={{ $json.type }}",
+                "type": "string"
+              },
+              {
+                "id": "e0fa7986-21ad-47a8-b575-af89c22000c0",
+                "name": "data",
+                "value": "={{ $json.content }}",
+                "type": "string"
+              },
+              {
+                "id": "f47659d4-70ab-4633-9f52-37ba3cdadfda",
+                "name": "fileType",
+                "value": "=text/csv",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          688,
+          -80
+        ],
+        "id": "2378b06c-c8bd-4845-bcee-09d53ca3c5e4",
+        "name": "Mapear conteúdo"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "2pIiDb7zFUsy52Mi",
+            "mode": "list",
+            "cachedResultName": "Enviar via E-mail"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.1,
+        "position": [
+          1120,
+          -80
+        ],
+        "id": "d85df9c6-8f56-4bcb-b54a-7acc0547e2cc",
+        "name": "Execute Workflow"
+      },
+      {
+        "parameters": {
+          "jsCode": "\nconst from = \"Agente<oi@govarejo.com>\"\nconst to = ['luisfl@redevalor.com.br']\nconst subject = \"Relatório de Vendas\"\nconst html = '<p>Bom dia,</p><p>Segue anexado.</p>'\nconst attachments = [\n    {\n      content: $input.first().json.data,\n      filename: $input.first().json.fileName,\n    },\n  ]\nreturn {\n  from,\n  to,\n  attachments,\n  subject,\n  html,\n}"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          912,
+          -80
+        ],
+        "id": "302e65b5-9b4f-4731-a9ee-31a381212ee4",
+        "name": "Configuração E-mail2"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "WITH todas_datas AS (\n    SELECT generate_series(\n        CASE \n            WHEN EXTRACT(DAY FROM CURRENT_DATE) <= 5 THEN\n                DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date  -- Mês passado completo\n            ELSE\n                DATE_TRUNC('month', CURRENT_DATE)::date  -- Só o mês atual\n        END,\n        CURRENT_DATE - 1,\n        '1 day'\n    ) AS dia\n),\nlojas_relevantes AS (\n    SELECT DISTINCT unit_id\n    FROM sales\n    WHERE date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date\n),\ncomb_lojas_datas AS (\n    SELECT l.unit_id, d.dia\n    FROM lojas_relevantes l\n    CROSS JOIN todas_datas d\n),\nvendas_aggregadas AS (\n    SELECT unit_id, date, SUM(value) AS total_venda\n    FROM sales\n    WHERE date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date\n      AND date <= CURRENT_DATE\n    GROUP BY unit_id, date\n)\nSELECT \n    cd.unit_id,\n    cd.dia,\n    COALESCE(va.total_venda, 0) AS venda_do_dia\nFROM \n    comb_lojas_datas cd\nLEFT JOIN \n    vendas_aggregadas va\n    ON cd.unit_id = va.unit_id AND cd.dia = va.date\nORDER BY \n    cd.unit_id, cd.dia;\n",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.5,
+        "position": [
+          -416,
+          480
+        ],
+        "id": "dfbabbc6-cc4a-4466-be49-e08a00f41dee",
+        "name": "Postgres",
+        "credentials": {
+          "postgres": {
+            "id": "o5qqKlZfmjuOVpBT",
+            "name": "7000"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Obter todos os dados da entrada\nconst items = $input.all();\n\n// Verificar se há dados\nif (items.length === 0) {\n  return [];\n}\n\n// Extrair todas as datas únicas e formatá-las como 'DD/MM/YYYY'\nconst datas = [\n  ...new Set(\n    items.map((item) => {\n      const date = new Date(item.json.dia);\n      const day = String(date.getDate()).padStart(2, \"0\");\n      const month = String(date.getMonth() + 1).padStart(2, \"0\");\n      const year = date.getFullYear();\n      return `${day}/${month}/${year}`;\n    }),\n  ),\n].sort((a, b) => {\n  // Converter de volta para data para ordenação correta\n  const [dayA, monthA, yearA] = a.split(\"/\").map(Number);\n  const [dayB, monthB, yearB] = b.split(\"/\").map(Number);\n  return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);\n});\n\n// Extrair todas as lojas únicas com unit_id e unit_name\nconst lojasSet = new Set();\nitems.forEach((item) => {\n  lojasSet.add(\n    JSON.stringify({\n      unit_id: item.json.unit_id,\n      unit_name: item.json.unit_name,\n    }),\n  );\n});\nconst lojas = Array.from(lojasSet)\n  .map((str) => JSON.parse(str))\n  .sort((a, b) => {\n    // Ordenar por unit_name em ordem ascendente\n    return a.unit_name.localeCompare(b.unit_name, \"pt-BR\", {\n      sensitivity: \"base\",\n    });\n  });\n\n// Criar um objeto para armazenar os dados pivotados\nconst pivotData = lojas.map((store) => {\n  const row = { unit_id: store.unit_id, unit_name: store.unit_name };\n  datas.forEach((dia) => {\n    row[dia] = 0; // Inicializa com 0\n  });\n  return row;\n});\n\n// Preencher as vendas\nitems.forEach((item) => {\n  const store = item.json.unit_id;\n  const storeName = item.json.unit_name;\n  const date = new Date(item.json.dia);\n  const day = String(date.getDate()).padStart(2, \"0\");\n  const month = String(date.getMonth() + 1).padStart(2, \"0\");\n  const year = date.getFullYear();\n  const formattedDate = `${day}/${month}/${year}`;\n  const venda = item.json.venda_do_dia;\n\n  const row = pivotData.find(\n    (r) => r.unit_id === store && r.unit_name === storeName,\n  );\n  if (row) {\n    // Formatar o número para substituir '.' por ',' e fixar duas casas decimais\n    const vendaFormatada = Number(venda).toFixed(2).replace('.', ',');\n    row[formattedDate] = vendaFormatada;\n    // const vendaFormatada = Number(venda).toFixed(2).replace(\".\", \",\");\n    // row[formattedDate] = 'ok;\n  }\n});\n\n// Preparar os cabeçalhos com 'unit_id', 'unit_name' e datas\nconst headers = [\"unit_id\", \"unit_name\", ...datas];\n\n// Preparar os dados para o Excel como uma matriz de objetos\nconst excelData = pivotData.map((row) => {\n  const newRow = {};\n  headers.forEach((header) => {\n    newRow[header] = row[header];\n  });\n  return { json: newRow };\n});\n\n// Retornar os dados pivotados como uma matriz de objetos\nreturn excelData;\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          32,
+          384
+        ],
+        "id": "dfcc37b5-d93d-40c3-8c8f-7d6f4c22e802",
+        "name": "Code2"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "select * from units where unit_block=false and unit_id<900",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.5,
+        "position": [
+          -416,
+          288
+        ],
+        "id": "110437b4-136f-4bab-84b4-f2ebdf973c7c",
+        "name": "Postgres4",
+        "credentials": {
+          "postgres": {
+            "id": "r6ETUCB3B88HozZb",
+            "name": "Main"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "combine",
+          "fieldsToMatchString": "unit_id",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3,
+        "position": [
+          -208,
+          384
+        ],
+        "id": "2b3828ac-9307-4e32-bc81-e353b453ef46",
+        "name": "Merge1"
+      },
+      {
+        "parameters": {
+          "path": "/manager/sale",
+          "authentication": "basicAuth",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          -640,
+          384
+        ],
+        "id": "11263ca8-1054-417d-bd1a-ab0c554ef15a",
+        "name": "Webhook",
+        "webhookId": "75e194b3-9bae-4493-9d43-487854c117b2",
+        "credentials": {
+          "httpBasicAuth": {
+            "id": "LBXVVD5eF7KWwowg",
+            "name": "Unnamed credential"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "respondWith": "text",
+          "responseBody": "={{ $json['html'] }}",
+          "options": {
+            "responseHeaders": {
+              "entries": [
+                {
+                  "name": "Content-Type",
+                  "value": "text/html"
+                }
+              ]
+            }
+          }
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.1,
+        "position": [
+          464,
+          384
+        ],
+        "id": "9f195d2d-5303-48bc-8274-1a4ffb0dc800",
+        "name": "Respond to Webhook"
+      },
+      {
+        "parameters": {
+          "jsCode": "const data = items.map(item => item.json);\n\nconst datas = Object.keys(data[0]).filter(key => !['unit_id', 'unit_name'].includes(key));\n\nlet html = `\n<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>Relatório de Vendas</title>\n  <style>\n    body { font-family: Arial, sans-serif; padding: 2rem; }\n    table { border-collapse: collapse; width: 100%; }\n    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }\n    th { background-color: #f2f2f2; }\n    .negativo { background-color: red; font-weight: bold; color: white; }\n    .positivo { background-color: green; font-weight: bold; color: white; }\n  </style>\n</head>\n<body>\n  <h2>Relatório de Vendas</h2>\n  <table>\n    <thead>\n      <tr>\n        <th>Loja</th>\n        ${datas.map(data => `<th>${data}</th>`).join('')}\n      </tr>\n    </thead>\n    <tbody>\n`;\n\nfor (const unidade of data) {\n  html += `<tr><td>${unidade.unit_name}</td>`;\n  for (const dataKey of datas) {\n    const raw = unidade[dataKey];\n    const valor = Number(raw.replace(',','.'));\n    let classe = '';\n\n    if (!isNaN(valor)) {\n      if (valor <= 0) classe = 'negativo';\n      else classe = 'positivo';\n    }\n\n    html += `<td class=\"${classe}\">${raw}</td>`;\n  }\n  html += `</tr>`;\n}\n\nhtml += `\n    </tbody>\n  </table>\n</body>\n</html>\n`;\n\nreturn [\n  {\n    json: {\n      html\n    }\n  }\n];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          240,
+          384
+        ],
+        "id": "5c3781bb-59e5-463a-a4a9-d3d34370c9b4",
+        "name": "Code3"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "WITH todas_datas AS (\n    SELECT generate_series(\n        DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date, -- Início do mês passado\n        CURRENT_DATE, -- Até a data atual\n        '1 day'\n    ) AS dia\n),\nlojas_relevantes AS (\n    SELECT DISTINCT \"unitId\" as unit_id\n    FROM coupons\n    WHERE date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date\n      AND date <= CURRENT_DATE + 1 -- Ajuste para pegar até o final do dia\n),\ncomb_lojas_datas AS (\n    SELECT l.unit_id, d.dia\n    FROM lojas_relevantes l\n    CROSS JOIN todas_datas d\n),\nvendas_aggregadas AS (\n    SELECT\n        c.\"unitId\" as unit_id,\n        c.date::date AS dia,\n        SUM(cf.value) AS total_venda\n    FROM coupons c\n    INNER JOIN coupons_finishers cf ON cf.\"couponId\" = c.id\n    WHERE c.date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')::date\n      AND c.date <= CURRENT_DATE + 1\n    GROUP BY c.\"unitId\", dia\n)\nSELECT\n    cd.unit_id,\n    cd.dia,\n    COALESCE(va.total_venda, 0) AS venda_do_dia\nFROM\n    comb_lojas_datas cd\nLEFT JOIN\n    vendas_aggregadas va\n    ON cd.unit_id = va.unit_id AND cd.dia = va.dia\nORDER BY\n    cd.unit_id, cd.dia;",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.5,
+        "position": [
+          -416,
+          944
+        ],
+        "id": "11c1647a-7a44-4286-9345-3b29ef30bf21",
+        "name": "Postgres1",
+        "credentials": {
+          "postgres": {
+            "id": "C8DsN3myOq1XZZ8n",
+            "name": "CRM"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Obter todos os dados da entrada\nconst items = $input.all();\n\n// Verificar se há dados\nif (items.length === 0) {\n  return [];\n}\n\n// Extrair todas as datas únicas e formatá-las como 'DD/MM/YYYY'\nconst datas = [\n  ...new Set(\n    items.map((item) => {\n      const date = new Date(item.json.dia);\n      const day = String(date.getDate()).padStart(2, \"0\");\n      const month = String(date.getMonth() + 1).padStart(2, \"0\");\n      const year = date.getFullYear();\n      return `${day}/${month}/${year}`;\n    }),\n  ),\n].sort((a, b) => {\n  // Converter de volta para data para ordenação correta\n  const [dayA, monthA, yearA] = a.split(\"/\").map(Number);\n  const [dayB, monthB, yearB] = b.split(\"/\").map(Number);\n  return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);\n});\n\n// Extrair todas as lojas únicas com unit_id e unit_name\nconst lojasSet = new Set();\nitems.forEach((item) => {\n  lojasSet.add(\n    JSON.stringify({\n      unit_id: item.json.unit_id,\n      unit_name: item.json.unit_name,\n    }),\n  );\n});\nconst lojas = Array.from(lojasSet)\n  .map((str) => JSON.parse(str))\n  .sort((a, b) => {\n    // Ordenar por unit_name em ordem ascendente\n    return a.unit_name.localeCompare(b.unit_name, \"pt-BR\", {\n      sensitivity: \"base\",\n    });\n  });\n\n// Criar um objeto para armazenar os dados pivotados\nconst pivotData = lojas.map((store) => {\n  const row = { unit_id: store.unit_id, unit_name: store.unit_name };\n  datas.forEach((dia) => {\n    row[dia] = 0; // Inicializa com 0\n  });\n  return row;\n});\n\n// Preencher as vendas\nitems.forEach((item) => {\n  const store = item.json.unit_id;\n  const storeName = item.json.unit_name;\n  const date = new Date(item.json.dia);\n  const day = String(date.getDate()).padStart(2, \"0\");\n  const month = String(date.getMonth() + 1).padStart(2, \"0\");\n  const year = date.getFullYear();\n  const formattedDate = `${day}/${month}/${year}`;\n  const venda = item.json.venda_do_dia;\n\n  const row = pivotData.find(\n    (r) => r.unit_id === store && r.unit_name === storeName,\n  );\n  if (row) {\n    // Formatar o número para substituir '.' por ',' e fixar duas casas decimais\n    const vendaFormatada = Number(venda).toFixed(2).replace('.', ',');\n    row[formattedDate] = vendaFormatada;\n    // const vendaFormatada = Number(venda).toFixed(2).replace(\".\", \",\");\n    // row[formattedDate] = 'ok;\n  }\n});\n\n// Preparar os cabeçalhos com 'unit_id', 'unit_name' e datas\nconst headers = [\"unit_id\", \"unit_name\", ...datas];\n\n// Preparar os dados para o Excel como uma matriz de objetos\nconst excelData = pivotData.map((row) => {\n  const newRow = {};\n  headers.forEach((header) => {\n    newRow[header] = row[header];\n  });\n  return { json: newRow };\n});\n\n// Retornar os dados pivotados como uma matriz de objetos\nreturn excelData;\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          32,
+          848
+        ],
+        "id": "5904d627-0676-44ab-a222-629ab9bd099a",
+        "name": "Code4"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "select * from units where unit_block=false and unit_id<900",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.5,
+        "position": [
+          -416,
+          752
+        ],
+        "id": "c45a096d-5522-4067-8075-2cd4a6ff5424",
+        "name": "Postgres5",
+        "credentials": {
+          "postgres": {
+            "id": "r6ETUCB3B88HozZb",
+            "name": "Main"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "combine",
+          "fieldsToMatchString": "unit_id",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3,
+        "position": [
+          -208,
+          848
+        ],
+        "id": "23277a1a-bb47-414d-9bd6-ef0ce5dae010",
+        "name": "Merge2"
+      },
+      {
+        "parameters": {
+          "respondWith": "text",
+          "responseBody": "={{ $json['html'] }}",
+          "options": {
+            "responseHeaders": {
+              "entries": [
+                {
+                  "name": "Content-Type",
+                  "value": "text/html"
+                }
+              ]
+            }
+          }
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.1,
+        "position": [
+          464,
+          848
+        ],
+        "id": "dedb1202-7028-4f47-89b1-2ef09435c6a1",
+        "name": "Respond to Webhook1"
+      },
+      {
+        "parameters": {
+          "jsCode": "const data = items.map(item => item.json);\n\nconst datas = Object.keys(data[0]).filter(key => !['unit_id', 'unit_name'].includes(key));\n\nlet html = `\n<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>Relatório de Vendas</title>\n  <style>\n    body { font-family: Arial, sans-serif; padding: 2rem; }\n    table { border-collapse: collapse; width: 100%; }\n    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }\n    th { background-color: #f2f2f2; }\n    .negativo { background-color: red; font-weight: bold; color: white; }\n    .positivo { background-color: green; font-weight: bold; color: white; }\n  </style>\n</head>\n<body>\n  <h2>Relatório de Vendas</h2>\n  <table>\n    <thead>\n      <tr>\n        <th>Loja</th>\n        ${datas.map(data => `<th>${data}</th>`).join('')}\n      </tr>\n    </thead>\n    <tbody>\n`;\n\nfor (const unidade of data) {\n  html += `<tr><td>${unidade.unit_name}</td>`;\n  for (const dataKey of datas) {\n    const raw = unidade[dataKey];\n    const valor = Number(raw.replace(',','.'));\n    let classe = '';\n\n    if (!isNaN(valor)) {\n      if (valor <= 0) classe = 'negativo';\n      else classe = 'positivo';\n    }\n\n    html += `<td class=\"${classe}\">${raw}</td>`;\n  }\n  html += `</tr>`;\n}\n\nhtml += `\n    </tbody>\n  </table>\n</body>\n</html>\n`;\n\nreturn [\n  {\n    json: {\n      html\n    }\n  }\n];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          240,
+          848
+        ],
+        "id": "98eedb8d-0234-42b1-8fbd-28d86db71a51",
+        "name": "Code5"
+      },
+      {
+        "parameters": {
+          "path": "/manager/crm",
+          "authentication": "basicAuth",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          -640,
+          848
+        ],
+        "id": "304f3ba8-83a3-4e7f-84d7-95dec8ad8338",
+        "name": "Webhook1",
+        "webhookId": "75e194b3-9bae-4493-9d43-487854c117b2",
+        "credentials": {
+          "httpBasicAuth": {
+            "id": "LBXVVD5eF7KWwowg",
+            "name": "Unnamed credential"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Postgres2": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code": {
+        "main": [
+          [
+            {
+              "node": "Convert to File",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Convert to File": {
+        "main": [
+          [
+            {
+              "node": "Code1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres3": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "node": "Code",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "node": "Postgres3",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Postgres2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code1": {
+        "main": [
+          [
+            {
+              "node": "Mapear conteúdo",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Mapear conteúdo": {
+        "main": [
+          [
+            {
+              "node": "Configuração E-mail2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Configuração E-mail2": {
+        "main": [
+          [
+            {
+              "node": "Execute Workflow",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres": {
+        "main": [
+          [
+            {
+              "node": "Merge1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code2": {
+        "main": [
+          [
+            {
+              "node": "Code3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres4": {
+        "main": [
+          [
+            {
+              "node": "Merge1",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Merge1": {
+        "main": [
+          [
+            {
+              "node": "Code2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Postgres4",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Postgres",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code3": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres1": {
+        "main": [
+          [
+            {
+              "node": "Merge2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code4": {
+        "main": [
+          [
+            {
+              "node": "Code5",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres5": {
+        "main": [
+          [
+            {
+              "node": "Merge2",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Merge2": {
+        "main": [
+          [
+            {
+              "node": "Code4",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code5": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Webhook1": {
+        "main": [
+          [
+            {
+              "node": "Postgres5",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Postgres1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Rodrigo Novais",
+    "name": null,
+    "description": null,
+    "autosaved": false
+  },
   "tags": [
     {
       "updatedAt": "2025-04-04T21:03:52.171Z",
