@@ -1,0 +1,1692 @@
+{
+  "updatedAt": "2026-01-21T11:42:19.152Z",
+  "createdAt": "2026-01-19T12:46:40.938Z",
+  "id": "X7aPL8tKo8kPEbmrmryzZ",
+  "name": "My workflow 17",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "delimiter": ";",
+          "fileName": "products_linked-to-validate.csv"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        -192
+      ],
+      "id": "b9f018ca-cafa-4055-8704-44d5c8a6ab76",
+      "name": "Converter para CSV1",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \npl.id,\npl.description,\npl.prodl_prod_id\nFROM productslinked pl\nwhere validated=1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        96,
+        -192
+      ],
+      "id": "b86d3967-aa69-4bc4-b121-f0780923ac14",
+      "name": "Buscar Produtos Vinculados",
+      "executeOnce": true,
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "bucketName": "upload",
+        "fileName": "=n8n/products-to-validate/{{ $now.format('yyyy-LL-dd') }}.csv",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        544,
+        -192
+      ],
+      "id": "e927bd1e-ac5a-43cf-9390-c895e0a3eac7",
+      "name": "S3",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "10 5 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -128,
+        -192
+      ],
+      "id": "5b30f88b-e0d7-4188-8e2e-616e893990a9",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "40 5 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -128,
+        128
+      ],
+      "id": "7ea7af29-9daf-4ad0-86c7-46c7ee8ccf3e",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "bucketName": "upload",
+        "fileKey": "=n8n/products-to-validate/{{ $now.minus(1,'days').format('yyyy-LL-dd') }}.csv"
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        96,
+        32
+      ],
+      "id": "96640397-bf13-4528-b04f-df214c6f6716",
+      "name": "S31",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "bucketName": "upload",
+        "fileKey": "=n8n/products-to-validate/{{ $now.format('yyyy-LL-dd') }}.csv"
+      },
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [
+        96,
+        224
+      ],
+      "id": "4394e5dd-2b39-429f-ae64-f337b9ea2aa9",
+      "name": "S32",
+      "credentials": {
+        "s3": {
+          "id": "cCGXGEbqFM5KuTWj",
+          "name": "S3 account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        544,
+        128
+      ],
+      "id": "a70fefe7-0913-4a31-bb01-5c006bab3eda",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        320,
+        32
+      ],
+      "id": "3ecb0967-f93d-4a31-93ef-3362f73744fe",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        320,
+        224
+      ],
+      "id": "0b10f3bc-8caf-4eb5-aa8f-15912a7c5c37",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const yesterdayFile = $input.all()[0].json.data;\nconst todayFile = $input.all()[1].json.data;\n\nconst dataYesterday = new Map();\nconst differentItems = [];\n\n// Indexa pelo ID (key)\nyesterdayFile.split('\\n').slice(1).forEach((line) => {\n  const product = line.split(';').map(v => v.trim());\n  const key = product[0]; // ID\n  dataYesterday.set(key, product);\n});\n\n// Percorre os produtos do arquivo de hoje\ntodayFile.split('\\n').slice(1).forEach((line) => {\n  const product = line.split(';').map(v => v.trim());\n  const key = product[0]; // ID\n\n  const existing = dataYesterday.get(key);\n\n  if (!existing) return;\n\n  const yesterdayDescription = existing[1];\n  const yesterdayMasterCode  = existing[2];\n\n  const todayDescription = product[1];\n  const todayMasterCode  = product[2];\n\n  // 🔥 compara SOMENTE description e master_code\n  if (\n    yesterdayDescription !== todayDescription ||\n    yesterdayMasterCode !== todayMasterCode\n  ) {\n    differentItems.push({\n      id: key,\n      description: todayDescription,\n      master_code: todayMasterCode\n    });\n  }\n});\n\nreturn [{ json: { differentItems } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        768,
+        128
+      ],
+      "id": "66912be5-6186-4d3c-a6b6-4d962078be67",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update productslinked set validated=0 where id in ({{ $json.differentItems.map((item)=>item.id).join(',') }})",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        1312,
+        80
+      ],
+      "id": "1e51b3fe-b294-477e-9934-6340f059a6c4",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "85a771aa-ba2d-4efe-9ee4-e48011e0906f",
+              "leftValue": "={{ $json.differentItems }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "array",
+                "operation": "lengthGt",
+                "rightType": "number"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        992,
+        128
+      ],
+      "id": "af4b95e1-a129-4153-9bcf-f9b5f3620c84",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT C.ID,C.UNITS,CP.PRODUCT_ID,CP.FAMILY_ID FROM CAMPAIGNS C\nINNER JOIN CAMPAIGN_PRODUCTS CP ON CP.CAMPAIGN_ID=C.ID   \nWHERE STATUS='REVIEWD' and c.created_at>='2026-01-20'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        96,
+        640
+      ],
+      "id": "7ac28fb2-6cc3-42ca-abdc-294fcb30f353",
+      "name": "Execute a SQL query1",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const unique = new Set();\nconst uniqueCampaigns = new Set();\nconst items = []\n\n$input.all().forEach((item)=>{\nif(!unique.has(String(item.json.id))){\n      unique.add(String(item.json.product_id))\n}\n  if(!uniqueCampaigns.has(String(item.json.id))){\n      uniqueCampaigns.add(String(item.json.id))\n}\n  item.json.units.forEach((item1)=>items.push({\n    \"campaignId\": item.json.id,\n    \"unitId\": Number(item1),\n    \"productId\": Number(item.json.product_id),\n    \"familyId\": item.json.family_id!== null ? String(item.json.family_id): null\n  }))\n})\n\nreturn {\n  \"products\":items,\n  \"uniques\":Array.from(unique.keys()),\n  \"uniqueCampaigns\":Array.from(uniqueCampaigns.keys())\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        544
+      ],
+      "id": "fdd61c23-93f5-4c74-8253-1e47d26e1042",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select id,prodl_prod_id,validated,prodl_unit_id from productslinked where prodl_prod_id in ({{ $json.uniques }}) and validated=0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        544,
+        448
+      ],
+      "id": "2897b9eb-acff-4c36-9404-e72ce2eb4bfc",
+      "name": "Execute a SQL query2",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "prodl_prod_id",
+              "field2": "=productId"
+            },
+            {
+              "field1": "prodl_unit_id",
+              "field2": "unitId"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        768,
+        544
+      ],
+      "id": "32d76301-21f4-4d14-95bd-974b32c85966",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $json.products"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        544,
+        640
+      ],
+      "id": "c7b9c4b5-b572-4a79-a7a9-6ea3f794b96c",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const campaignsMap = new Set()\n\n$input.all().forEach((item)=>{\n  if(!campaignsMap.has(item.json.campaignId)){\n    campaignsMap.add(item.json.campaignId)\n  }\n})\n\nreturn  Array.from(campaignsMap.values()).map((item)=>{\n  return {\n    \"id\":item\n  }\n})"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        992,
+        544
+      ],
+      "id": "3b34319d-bd0b-41bf-bd82-5953dd56d615",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const campaignsMap = new Set()\n\n$input.all().forEach((item)=>{\n  if(!campaignsMap.has(item.json.id)){\n    campaignsMap.add(item.json.id)\n  }\n})\n\nreturn  Array.from(campaignsMap.values()).map((item)=>{\n  return {\n    \"id\":item\n  }\n})"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        912
+      ],
+      "id": "82005e53-3196-440c-ab12-a3e867a37154",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "id",
+        "joinMode": "keepNonMatches",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1440,
+        640
+      ],
+      "id": "8ca5e95e-698f-4002-ba62-161186cd3282",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "campaigns",
+          "mode": "list",
+          "cachedResultName": "campaigns"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.id }}",
+            "updated_at": "={{ new Date() }}",
+            "status": "COMPLETED"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "blocks",
+              "displayName": "blocks",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "end_at",
+              "displayName": "end_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "start_at",
+              "displayName": "start_at",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "units",
+              "displayName": "units",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "options",
+              "canBeUsedToMatch": true,
+              "options": [
+                {
+                  "name": "REVIEWD",
+                  "value": "REVIEWD"
+                },
+                {
+                  "name": "COMPLETED",
+                  "value": "COMPLETED"
+                },
+                {
+                  "name": "IN_PROGRESS",
+                  "value": "IN_PROGRESS"
+                },
+                {
+                  "name": "CREATED",
+                  "value": "CREATED"
+                }
+              ]
+            },
+            {
+              "id": "root_id",
+              "displayName": "root_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "is_root",
+              "displayName": "is_root",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1648,
+        640
+      ],
+      "id": "d249d8fe-4787-4e04-8f82-4553f4d766dd",
+      "name": "Update rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "bJB2Az0HP4yTZASS",
+          "name": "Portal v2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -144,
+        640
+      ],
+      "id": "07c1d274-8f99-4c3a-a170-ea0ac96a45e0",
+      "name": "Schedule Trigger2"
+    }
+  ],
+  "connections": {
+    "Converter para CSV1": {
+      "main": [
+        [
+          {
+            "node": "S3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Produtos Vinculados": {
+      "main": [
+        [
+          {
+            "node": "Converter para CSV1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Buscar Produtos Vinculados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "S31",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "S32",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "S31": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "S32": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query2": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Update rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger2": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "a351a4b0-9cf7-4f67-bc46-f7c4ab88b2cc",
+  "activeVersionId": "a351a4b0-9cf7-4f67-bc46-f7c4ab88b2cc",
+  "triggerCount": 3,
+  "shared": [
+    {
+      "updatedAt": "2026-01-19T12:46:40.938Z",
+      "createdAt": "2026-01-19T12:46:40.938Z",
+      "role": "workflow:owner",
+      "workflowId": "X7aPL8tKo8kPEbmrmryzZ",
+      "projectId": "LHTErTtaRYVEdo6Q"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2026-01-21T11:42:13.491Z",
+    "createdAt": "2026-01-21T11:42:09.355Z",
+    "versionId": "a351a4b0-9cf7-4f67-bc46-f7c4ab88b2cc",
+    "workflowId": "X7aPL8tKo8kPEbmrmryzZ",
+    "nodes": [
+      {
+        "parameters": {
+          "options": {
+            "delimiter": ";",
+            "fileName": "products_linked-to-validate.csv"
+          }
+        },
+        "type": "n8n-nodes-base.convertToFile",
+        "typeVersion": 1.1,
+        "position": [
+          320,
+          -192
+        ],
+        "id": "b9f018ca-cafa-4055-8704-44d5c8a6ab76",
+        "name": "Converter para CSV1",
+        "alwaysOutputData": false
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "SELECT \npl.id,\npl.description,\npl.prodl_prod_id\nFROM productslinked pl\nwhere validated=1",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4,
+        "position": [
+          96,
+          -192
+        ],
+        "id": "b86d3967-aa69-4bc4-b121-f0780923ac14",
+        "name": "Buscar Produtos Vinculados",
+        "executeOnce": true,
+        "credentials": {
+          "mySql": {
+            "id": "vJXa18SJcADLCV1n",
+            "name": "Conexus"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "upload",
+          "bucketName": "upload",
+          "fileName": "=n8n/products-to-validate/{{ $now.format('yyyy-LL-dd') }}.csv",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.s3",
+        "typeVersion": 1,
+        "position": [
+          544,
+          -192
+        ],
+        "id": "e927bd1e-ac5a-43cf-9390-c895e0a3eac7",
+        "name": "S3",
+        "credentials": {
+          "s3": {
+            "id": "cCGXGEbqFM5KuTWj",
+            "name": "S3 account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "cronExpression",
+                "expression": "10 5 * * *"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -128,
+          -192
+        ],
+        "id": "5b30f88b-e0d7-4188-8e2e-616e893990a9",
+        "name": "Schedule Trigger1"
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "cronExpression",
+                "expression": "40 5 * * *"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -128,
+          128
+        ],
+        "id": "7ea7af29-9daf-4ad0-86c7-46c7ee8ccf3e",
+        "name": "Schedule Trigger"
+      },
+      {
+        "parameters": {
+          "bucketName": "upload",
+          "fileKey": "=n8n/products-to-validate/{{ $now.minus(1,'days').format('yyyy-LL-dd') }}.csv"
+        },
+        "type": "n8n-nodes-base.s3",
+        "typeVersion": 1,
+        "position": [
+          96,
+          32
+        ],
+        "id": "96640397-bf13-4528-b04f-df214c6f6716",
+        "name": "S31",
+        "credentials": {
+          "s3": {
+            "id": "cCGXGEbqFM5KuTWj",
+            "name": "S3 account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "bucketName": "upload",
+          "fileKey": "=n8n/products-to-validate/{{ $now.format('yyyy-LL-dd') }}.csv"
+        },
+        "type": "n8n-nodes-base.s3",
+        "typeVersion": 1,
+        "position": [
+          96,
+          224
+        ],
+        "id": "4394e5dd-2b39-429f-ae64-f337b9ea2aa9",
+        "name": "S32",
+        "credentials": {
+          "s3": {
+            "id": "cCGXGEbqFM5KuTWj",
+            "name": "S3 account"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3,
+        "position": [
+          544,
+          128
+        ],
+        "id": "a70fefe7-0913-4a31-bb01-5c006bab3eda",
+        "name": "Merge"
+      },
+      {
+        "parameters": {
+          "operation": "text",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1,
+        "position": [
+          320,
+          32
+        ],
+        "id": "3ecb0967-f93d-4a31-93ef-3362f73744fe",
+        "name": "Extract from File"
+      },
+      {
+        "parameters": {
+          "operation": "text",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1,
+        "position": [
+          320,
+          224
+        ],
+        "id": "0b10f3bc-8caf-4eb5-aa8f-15912a7c5c37",
+        "name": "Extract from File1"
+      },
+      {
+        "parameters": {
+          "jsCode": "const yesterdayFile = $input.all()[0].json.data;\nconst todayFile = $input.all()[1].json.data;\n\nconst dataYesterday = new Map();\nconst differentItems = [];\n\n// Indexa pelo ID (key)\nyesterdayFile.split('\\n').slice(1).forEach((line) => {\n  const product = line.split(';').map(v => v.trim());\n  const key = product[0]; // ID\n  dataYesterday.set(key, product);\n});\n\n// Percorre os produtos do arquivo de hoje\ntodayFile.split('\\n').slice(1).forEach((line) => {\n  const product = line.split(';').map(v => v.trim());\n  const key = product[0]; // ID\n\n  const existing = dataYesterday.get(key);\n\n  if (!existing) return;\n\n  const yesterdayDescription = existing[1];\n  const yesterdayMasterCode  = existing[2];\n\n  const todayDescription = product[1];\n  const todayMasterCode  = product[2];\n\n  // 🔥 compara SOMENTE description e master_code\n  if (\n    yesterdayDescription !== todayDescription ||\n    yesterdayMasterCode !== todayMasterCode\n  ) {\n    differentItems.push({\n      id: key,\n      description: todayDescription,\n      master_code: todayMasterCode\n    });\n  }\n});\n\nreturn [{ json: { differentItems } }];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          768,
+          128
+        ],
+        "id": "66912be5-6186-4d3c-a6b6-4d962078be67",
+        "name": "Code1"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "update productslinked set validated=0 where id in ({{ $json.differentItems.map((item)=>item.id).join(',') }})",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5,
+        "position": [
+          1312,
+          80
+        ],
+        "id": "1e51b3fe-b294-477e-9934-6340f059a6c4",
+        "name": "Execute a SQL query",
+        "credentials": {
+          "mySql": {
+            "id": "vJXa18SJcADLCV1n",
+            "name": "Conexus"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "85a771aa-ba2d-4efe-9ee4-e48011e0906f",
+                "leftValue": "={{ $json.differentItems }}",
+                "rightValue": 0,
+                "operator": {
+                  "type": "array",
+                  "operation": "lengthGt",
+                  "rightType": "number"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          992,
+          128
+        ],
+        "id": "af4b95e1-a129-4153-9bcf-f9b5f3620c84",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "SELECT C.ID,C.UNITS,CP.PRODUCT_ID,CP.FAMILY_ID FROM CAMPAIGNS C\nINNER JOIN CAMPAIGN_PRODUCTS CP ON CP.CAMPAIGN_ID=C.ID   \nWHERE STATUS='REVIEWD' and c.created_at>='2026-01-20'",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          96,
+          640
+        ],
+        "id": "7ac28fb2-6cc3-42ca-abdc-294fcb30f353",
+        "name": "Execute a SQL query1",
+        "credentials": {
+          "postgres": {
+            "id": "bJB2Az0HP4yTZASS",
+            "name": "Portal v2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "const unique = new Set();\nconst uniqueCampaigns = new Set();\nconst items = []\n\n$input.all().forEach((item)=>{\nif(!unique.has(String(item.json.id))){\n      unique.add(String(item.json.product_id))\n}\n  if(!uniqueCampaigns.has(String(item.json.id))){\n      uniqueCampaigns.add(String(item.json.id))\n}\n  item.json.units.forEach((item1)=>items.push({\n    \"campaignId\": item.json.id,\n    \"unitId\": Number(item1),\n    \"productId\": Number(item.json.product_id),\n    \"familyId\": item.json.family_id!== null ? String(item.json.family_id): null\n  }))\n})\n\nreturn {\n  \"products\":items,\n  \"uniques\":Array.from(unique.keys()),\n  \"uniqueCampaigns\":Array.from(uniqueCampaigns.keys())\n}"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          320,
+          544
+        ],
+        "id": "fdd61c23-93f5-4c74-8253-1e47d26e1042",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "select id,prodl_prod_id,validated,prodl_unit_id from productslinked where prodl_prod_id in ({{ $json.uniques }}) and validated=0",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5,
+        "position": [
+          544,
+          448
+        ],
+        "id": "2897b9eb-acff-4c36-9404-e72ce2eb4bfc",
+        "name": "Execute a SQL query2",
+        "credentials": {
+          "mySql": {
+            "id": "vJXa18SJcADLCV1n",
+            "name": "Conexus"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "combine",
+          "advanced": true,
+          "mergeByFields": {
+            "values": [
+              {
+                "field1": "prodl_prod_id",
+                "field2": "=productId"
+              },
+              {
+                "field1": "prodl_unit_id",
+                "field2": "unitId"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          768,
+          544
+        ],
+        "id": "32d76301-21f4-4d14-95bd-974b32c85966",
+        "name": "Merge1"
+      },
+      {
+        "parameters": {
+          "jsCode": "return $json.products"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          544,
+          640
+        ],
+        "id": "c7b9c4b5-b572-4a79-a7a9-6ea3f794b96c",
+        "name": "Code in JavaScript1"
+      },
+      {
+        "parameters": {
+          "jsCode": "const campaignsMap = new Set()\n\n$input.all().forEach((item)=>{\n  if(!campaignsMap.has(item.json.campaignId)){\n    campaignsMap.add(item.json.campaignId)\n  }\n})\n\nreturn  Array.from(campaignsMap.values()).map((item)=>{\n  return {\n    \"id\":item\n  }\n})"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          992,
+          544
+        ],
+        "id": "3b34319d-bd0b-41bf-bd82-5953dd56d615",
+        "name": "Code in JavaScript2"
+      },
+      {
+        "parameters": {
+          "jsCode": "const campaignsMap = new Set()\n\n$input.all().forEach((item)=>{\n  if(!campaignsMap.has(item.json.id)){\n    campaignsMap.add(item.json.id)\n  }\n})\n\nreturn  Array.from(campaignsMap.values()).map((item)=>{\n  return {\n    \"id\":item\n  }\n})"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          432,
+          912
+        ],
+        "id": "82005e53-3196-440c-ab12-a3e867a37154",
+        "name": "Code in JavaScript3"
+      },
+      {
+        "parameters": {
+          "mode": "combine",
+          "fieldsToMatchString": "id",
+          "joinMode": "keepNonMatches",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          1440,
+          640
+        ],
+        "id": "8ca5e95e-698f-4002-ba62-161186cd3282",
+        "name": "Merge2"
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "campaigns",
+            "mode": "list",
+            "cachedResultName": "campaigns"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "id": "={{ $json.id }}",
+              "updated_at": "={{ new Date() }}",
+              "status": "COMPLETED"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": true,
+                "defaultMatch": true,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "name",
+                "displayName": "name",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "type",
+                "displayName": "type",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "created_at",
+                "displayName": "created_at",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "updated_at",
+                "displayName": "updated_at",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "blocks",
+                "displayName": "blocks",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "object",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "end_at",
+                "displayName": "end_at",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "start_at",
+                "displayName": "start_at",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "units",
+                "displayName": "units",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "object",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "status",
+                "displayName": "status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "options",
+                "canBeUsedToMatch": true,
+                "options": [
+                  {
+                    "name": "REVIEWD",
+                    "value": "REVIEWD"
+                  },
+                  {
+                    "name": "COMPLETED",
+                    "value": "COMPLETED"
+                  },
+                  {
+                    "name": "IN_PROGRESS",
+                    "value": "IN_PROGRESS"
+                  },
+                  {
+                    "name": "CREATED",
+                    "value": "CREATED"
+                  }
+                ]
+              },
+              {
+                "id": "root_id",
+                "displayName": "root_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "is_root",
+                "displayName": "is_root",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "boolean",
+                "canBeUsedToMatch": true,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          1648,
+          640
+        ],
+        "id": "d249d8fe-4787-4e04-8f82-4553f4d766dd",
+        "name": "Update rows in a table",
+        "credentials": {
+          "postgres": {
+            "id": "bJB2Az0HP4yTZASS",
+            "name": "Portal v2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "minutes",
+                "minutesInterval": 10
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -144,
+          640
+        ],
+        "id": "07c1d274-8f99-4c3a-a170-ea0ac96a45e0",
+        "name": "Schedule Trigger2"
+      }
+    ],
+    "connections": {
+      "Converter para CSV1": {
+        "main": [
+          [
+            {
+              "node": "S3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Buscar Produtos Vinculados": {
+        "main": [
+          [
+            {
+              "node": "Converter para CSV1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger1": {
+        "main": [
+          [
+            {
+              "node": "Buscar Produtos Vinculados",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "node": "S31",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "S32",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract from File": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract from File1": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "S31": {
+        "main": [
+          [
+            {
+              "node": "Extract from File",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "S32": {
+        "main": [
+          [
+            {
+              "node": "Extract from File1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "node": "Code1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code1": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Execute a SQL query",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute a SQL query1": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Code in JavaScript3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "Execute a SQL query2",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Code in JavaScript1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute a SQL query2": {
+        "main": [
+          [
+            {
+              "node": "Merge1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge1": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript1": {
+        "main": [
+          [
+            {
+              "node": "Merge1",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript2": {
+        "main": [
+          [
+            {
+              "node": "Merge2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript3": {
+        "main": [
+          [
+            {
+              "node": "Merge2",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Merge2": {
+        "main": [
+          [
+            {
+              "node": "Update rows in a table",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger2": {
+        "main": [
+          [
+            {
+              "node": "Execute a SQL query1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Rodrigo Novais",
+    "name": "Version a351a4b0",
+    "description": "",
+    "autosaved": false
+  },
+  "tags": []
+}
