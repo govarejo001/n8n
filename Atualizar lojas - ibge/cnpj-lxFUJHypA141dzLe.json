@@ -393,6 +393,7 @@
   },
   "pinData": {},
   "versionId": "ae9ef91e-e27f-4d50-9731-63f7621a6945",
+  "activeVersionId": "ae9ef91e-e27f-4d50-9731-63f7621a6945",
   "triggerCount": 1,
   "shared": [
     {
@@ -403,5 +404,390 @@
       "projectId": "LHTErTtaRYVEdo6Q"
     }
   ],
+  "activeVersion": {
+    "updatedAt": "2025-12-01T16:46:18.210Z",
+    "createdAt": "2025-12-01T16:46:18.210Z",
+    "versionId": "ae9ef91e-e27f-4d50-9731-63f7621a6945",
+    "workflowId": "lxFUJHypA141dzLe",
+    "nodes": [
+      {
+        "parameters": {
+          "operation": "select",
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "units",
+            "mode": "list",
+            "cachedResultName": "units"
+          },
+          "returnAll": true,
+          "where": {
+            "values": [
+              {
+                "column": "municipality_id",
+                "condition": "IS NULL"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          -120,
+          -420
+        ],
+        "id": "d7db568b-4192-454e-8050-9a36c9508a3d",
+        "name": "Postgres",
+        "credentials": {
+          "postgres": {
+            "id": "bJB2Az0HP4yTZASS",
+            "name": "Portal v2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "url": "=https://brasilapi.com.br/api/cnpj/v1/{{ $json.cnpj.replaceAll('.','').replaceAll('-','').replaceAll('/','') }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          100,
+          -420
+        ],
+        "id": "b7a5a334-84da-4ee1-b7a8-c691066291aa",
+        "name": "HTTP Request",
+        "onError": "continueErrorOutput"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "ae797a73-93ea-41cb-8cbe-3fe2a307b549",
+                "name": "zipCode",
+                "value": "={{ $json.cep }}",
+                "type": "string"
+              },
+              {
+                "id": "e804d374-ccea-451d-96c0-98ba16debc18",
+                "name": "neighborhood",
+                "value": "={{ $json.bairro }}",
+                "type": "string"
+              },
+              {
+                "id": "9757f066-dbf5-4cc3-b4ae-b24ae9e76c01",
+                "name": "number",
+                "value": "={{ $json.numero }}",
+                "type": "string"
+              },
+              {
+                "id": "d1a95b3f-697b-4486-b0b8-51f3d4428872",
+                "name": "address",
+                "value": "={{ $json.descricao_tipo_de_logradouro }} {{ $json.logradouro }}",
+                "type": "string"
+              },
+              {
+                "id": "fcdbb4b5-385b-4c2f-8e72-c454e0e037b0",
+                "name": "corporateName",
+                "value": "={{ $json.razao_social }}",
+                "type": "string"
+              },
+              {
+                "id": "5f5209f8-3442-4d11-80d3-ff4c7565871b",
+                "name": "municipalityId",
+                "value": "={{ $json.codigo_municipio_ibge }}",
+                "type": "number"
+              },
+              {
+                "id": "9da1090c-9c13-4f9f-9bb7-8aae06a66558",
+                "name": "complement",
+                "value": "={{ $json.complemento===\"\"? null :$json.complemento  }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          320,
+          -420
+        ],
+        "id": "1492bfec-6235-47d9-8424-f3fc23853539",
+        "name": "Map"
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "units",
+            "mode": "list",
+            "cachedResultName": "units"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "updated_at": "={{ new Date() }}",
+              "address": "={{ $json.address }}",
+              "corporate_name": "={{ $json.corporateName }}",
+              "neighborhood": "={{ $json.neighborhood }}",
+              "number": "={{ $json.number }}",
+              "zip_code": "={{ $json.zipCode }}",
+              "municipality_id": "={{ $json.municipalityId }}",
+              "id": "={{ $('Postgres').item.json.id }}",
+              "complement": "={{ $json.complement }}"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": true,
+                "defaultMatch": true,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "name",
+                "displayName": "name",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "cnpj",
+                "displayName": "cnpj",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "created_at",
+                "displayName": "created_at",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "updated_at",
+                "displayName": "updated_at",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "is_active",
+                "displayName": "is_active",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "boolean",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "in_validation",
+                "displayName": "in_validation",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "boolean",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "group_of_unit_id",
+                "displayName": "group_of_unit_id",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "address",
+                "displayName": "address",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "complement",
+                "displayName": "complement",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "corporate_name",
+                "displayName": "corporate_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "neighborhood",
+                "displayName": "neighborhood",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "number",
+                "displayName": "number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "zip_code",
+                "displayName": "zip_code",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "municipality_id",
+                "displayName": "municipality_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          540,
+          -420
+        ],
+        "id": "59b5a8c1-a5e0-4866-a18b-2ddaef064bbf",
+        "name": "Postgres1",
+        "credentials": {
+          "postgres": {
+            "id": "bJB2Az0HP4yTZASS",
+            "name": "Portal v2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "hours"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -340,
+          -420
+        ],
+        "id": "017e4215-c377-4035-a742-ecafdf4f0b1d",
+        "name": "Schedule Trigger"
+      }
+    ],
+    "connections": {
+      "Postgres": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "Map",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Map": {
+        "main": [
+          [
+            {
+              "node": "Postgres1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "node": "Postgres",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null,
+    "autosaved": false
+  },
   "tags": []
 }
