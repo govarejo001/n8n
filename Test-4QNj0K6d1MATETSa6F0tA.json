@@ -1,0 +1,240 @@
+{
+  "updatedAt": "2026-01-20T18:30:40.277Z",
+  "createdAt": "2026-01-16T14:16:12.311Z",
+  "id": "4QNj0K6d1MATETSa6F0tA",
+  "name": "Test",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "e9e666ec-9f61-4f5a-bb99-d0e804345976",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -304,
+        0
+      ],
+      "id": "f00fdbfd-f1bd-4318-b435-815b3bb136e4",
+      "name": "Webhook",
+      "webhookId": "e9e666ec-9f61-4f5a-bb99-d0e804345976"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update productslinked set validated=1 where id in ({{ $json.body.codes.join(',')}})",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        -32,
+        -192
+      ],
+      "id": "25cd2bf1-3c62-4699-9b58-c8c0b5283dbc",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "e9e666ec-9f61-4f5a-bb99-d0e804345977",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -688,
+        -128
+      ],
+      "id": "632b81af-aa0f-408e-8252-7395a3ba4e9f",
+      "name": "Webhook1",
+      "webhookId": "e9e666ec-9f61-4f5a-bb99-d0e804345976"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update productslinked set validated=0 where id in ({{ $json.body.codes.join(',')}})",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        -416,
+        -320
+      ],
+      "id": "834c8bab-f677-457b-b17d-47c3dcdbea2b",
+      "name": "Execute a SQL query1",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "f07c9542-17f4-4286-b24c-44108ce73c10",
+  "activeVersionId": "f07c9542-17f4-4286-b24c-44108ce73c10",
+  "triggerCount": 2,
+  "shared": [
+    {
+      "updatedAt": "2026-01-16T14:16:12.311Z",
+      "createdAt": "2026-01-16T14:16:12.311Z",
+      "role": "workflow:owner",
+      "workflowId": "4QNj0K6d1MATETSa6F0tA",
+      "projectId": "LHTErTtaRYVEdo6Q"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2026-01-20T18:31:48.929Z",
+    "createdAt": "2026-01-20T18:30:40.307Z",
+    "versionId": "f07c9542-17f4-4286-b24c-44108ce73c10",
+    "workflowId": "4QNj0K6d1MATETSa6F0tA",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "e9e666ec-9f61-4f5a-bb99-d0e804345976",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -304,
+          0
+        ],
+        "id": "f00fdbfd-f1bd-4318-b435-815b3bb136e4",
+        "name": "Webhook",
+        "webhookId": "e9e666ec-9f61-4f5a-bb99-d0e804345976"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "update productslinked set validated=1 where id in ({{ $json.body.codes.join(',')}})",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5,
+        "position": [
+          -32,
+          -192
+        ],
+        "id": "25cd2bf1-3c62-4699-9b58-c8c0b5283dbc",
+        "name": "Execute a SQL query",
+        "credentials": {
+          "mySql": {
+            "id": "vJXa18SJcADLCV1n",
+            "name": "Conexus"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "e9e666ec-9f61-4f5a-bb99-d0e804345977",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -688,
+          -128
+        ],
+        "id": "632b81af-aa0f-408e-8252-7395a3ba4e9f",
+        "name": "Webhook1",
+        "webhookId": "e9e666ec-9f61-4f5a-bb99-d0e804345976"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "update productslinked set validated=0 where id in ({{ $json.body.codes.join(',')}})",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5,
+        "position": [
+          -416,
+          -320
+        ],
+        "id": "834c8bab-f677-457b-b17d-47c3dcdbea2b",
+        "name": "Execute a SQL query1",
+        "credentials": {
+          "mySql": {
+            "id": "vJXa18SJcADLCV1n",
+            "name": "Conexus"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Execute a SQL query",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Webhook1": {
+        "main": [
+          [
+            {
+              "node": "Execute a SQL query1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Rodrigo Novais",
+    "name": "Version f07c9542",
+    "description": "",
+    "autosaved": false
+  },
+  "tags": []
+}
