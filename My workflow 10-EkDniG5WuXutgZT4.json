@@ -1029,6 +1029,7 @@
   },
   "pinData": {},
   "versionId": "e3784bee-3afc-4225-8ff1-5afbafbd7005",
+  "activeVersionId": "e3784bee-3afc-4225-8ff1-5afbafbd7005",
   "triggerCount": 4,
   "shared": [
     {
@@ -1039,5 +1040,1030 @@
       "projectId": "LHTErTtaRYVEdo6Q"
     }
   ],
+  "activeVersion": {
+    "updatedAt": "2025-12-30T13:25:21.894Z",
+    "createdAt": "2025-12-30T13:25:21.894Z",
+    "versionId": "e3784bee-3afc-4225-8ff1-5afbafbd7005",
+    "workflowId": "EkDniG5WuXutgZT4",
+    "nodes": [
+      {
+        "parameters": {
+          "path": "campaigns",
+          "authentication": "jwtAuth",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          -144,
+          -48
+        ],
+        "id": "2b17988f-ec7c-47b7-a139-37f685ea84af",
+        "name": "Webhook",
+        "webhookId": "6c79b8a9-e0ca-4c14-88df-05b928c96b33",
+        "credentials": {
+          "jwtAuth": {
+            "id": "yCTEedeAq2juXzX5",
+            "name": "JWT Auth account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "bucketName": "upload",
+          "fileKey": "=n8n/{{ $json.query.id }}.csv"
+        },
+        "type": "n8n-nodes-base.s3",
+        "typeVersion": 1,
+        "position": [
+          80,
+          -48
+        ],
+        "id": "3a1de8b8-87dd-400f-9ebb-27cac2b3863a",
+        "name": "S31",
+        "credentials": {
+          "s3": {
+            "id": "cCGXGEbqFM5KuTWj",
+            "name": "S3 account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{\n{data:$input.all().map((item)=>item.json)[0].data}\n}}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          2512,
+          -48
+        ],
+        "id": "c2df7032-0447-4252-ac2d-1dfef39683a3",
+        "name": "Respond to Webhook"
+      },
+      {
+        "parameters": {
+          "options": {
+            "enableBOM": true
+          }
+        },
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1,
+        "position": [
+          304,
+          -48
+        ],
+        "id": "d62ea23b-0aea-4afe-bea7-c78201bc5fcd",
+        "name": "Extract from File",
+        "alwaysOutputData": true
+      },
+      {
+        "parameters": {
+          "jsCode": "const descriptions = []\n\nfor (const item of $input.all()) {\n  descriptions.push(item.json)\n}\n\nreturn {data:descriptions.map(({from,to,...rest})=>{\n  return Object.values(rest)[0]\n})}"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          528,
+          -144
+        ],
+        "id": "2fb6544b-6b71-4e9f-b5e9-497bc79c864a",
+        "name": "Code2"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "{{ $json.query }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4,
+        "position": [
+          960,
+          -144
+        ],
+        "id": "6d318932-a7d5-413c-8be6-36e61f156e56",
+        "name": "MySQL",
+        "credentials": {
+          "mySql": {
+            "id": "vJXa18SJcADLCV1n",
+            "name": "Conexus"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "07ab022f-7342-4bd6-9219-6941daff9372",
+                "name": "query",
+                "value": "=select p.id,p.ean,p.description,b.id as brand_id,b.description as brand,s.id as subcategory_id,s.description as subcategory,c.id as category_id,c.description as category,sc.id as section_id,sc.description as section from products p\ninner join subcategories s on prod_subcat_id=s.id\ninner join brands b on prod_brand_id=b.id\ninner join categories c on s.subcat_cat_id=c.id\ninner join sections sc on c.cat_sec_id=sc.id\nwhere BINARY p.description in ('{{ $json.data.join(\"','\") }}');",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          752,
+          -144
+        ],
+        "id": "285a8df4-f763-4923-b0b6-b65022f14bd0",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "mode": "combine",
+          "fieldsToMatchString": "description",
+          "joinMode": "enrichInput2",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          1184,
+          -48
+        ],
+        "id": "e70f6447-3993-4c40-98a2-4df111d131eb",
+        "name": "Merge"
+      },
+      {
+        "parameters": {
+          "jsCode": "const descriptions = []\n\nfor (const item of $input.all()) {\n  descriptions.push(item.json)\n}\n\nreturn descriptions.map(({from,to,...rest})=>{\n  return {from,to,description:Object.values(rest)[0]}\n})"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          960,
+          64
+        ],
+        "id": "bac41859-455d-442c-ae0d-1df5efdc21b4",
+        "name": "Code3"
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "campaigns",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          -144,
+          320
+        ],
+        "id": "77ecb819-d841-45ed-a05d-6b56a3be47e4",
+        "name": "Webhook2",
+        "webhookId": "7206835c-d3c1-40fe-8a76-011b2bdb5e70"
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ {id:$('cuid').item.json.cuid} }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          2320,
+          288
+        ],
+        "id": "3c4ca52f-de6c-4388-aeb7-1bb6625555d1",
+        "name": "Respond to Webhook2"
+      },
+      {
+        "parameters": {
+          "path": "offers",
+          "authentication": "jwtAuth",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          -144,
+          592
+        ],
+        "id": "6b855e80-5b94-4e88-8e0a-9003b33af812",
+        "name": "Webhook1",
+        "webhookId": "6dfc2248-0fda-423f-abe7-ce7622e42553",
+        "credentials": {
+          "jwtAuth": {
+            "id": "yCTEedeAq2juXzX5",
+            "name": "JWT Auth account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "bucketName": "upload",
+          "fileKey": "n8n/database.csv"
+        },
+        "type": "n8n-nodes-base.s3",
+        "typeVersion": 1,
+        "position": [
+          80,
+          592
+        ],
+        "id": "b915246f-db14-44d6-a60e-df8926b028e5",
+        "name": "S35",
+        "credentials": {
+          "s3": {
+            "id": "cCGXGEbqFM5KuTWj",
+            "name": "S3 account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {
+            "enableBOM": true,
+            "headerRow": true
+          }
+        },
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1,
+        "position": [
+          304,
+          592
+        ],
+        "id": "a74a15f1-4f5c-4c07-8d84-eb43206b0995",
+        "name": "Extract from File2",
+        "alwaysOutputData": true
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ $json }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          752,
+          592
+        ],
+        "id": "56341961-8b2b-4cb8-816a-881d60ba6bcc",
+        "name": "Respond to Webhook3"
+      },
+      {
+        "parameters": {
+          "url": "https://function-bun-production-62e9.up.railway.app/api/generate-cuid",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          752,
+          320
+        ],
+        "id": "9017cef8-4ca5-412a-a70a-1be97bb835ca",
+        "name": "cuid",
+        "retryOnFail": true
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          -144,
+          848
+        ],
+        "id": "f7eb7c4c-04cd-47af-ae7e-5e5d7dfdd163",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "jsCode": "const data = {\n  \"id\":\"id\",\n  \"name\":\"name\",\n  \"startDate\": \"startDate\",\n  \"endDate\":\"endDate\"\n}\n\nreturn data"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          80,
+          848
+        ],
+        "id": "0f272f4e-d907-40e3-9fab-e70d079091b7",
+        "name": "Code5"
+      },
+      {
+        "parameters": {
+          "options": {
+            "headerRow": false
+          }
+        },
+        "type": "n8n-nodes-base.convertToFile",
+        "typeVersion": 1.1,
+        "position": [
+          304,
+          848
+        ],
+        "id": "ed13da2b-1fad-4225-afe6-9936ddefa789",
+        "name": "Convert to File2"
+      },
+      {
+        "parameters": {
+          "operation": "upload",
+          "bucketName": "upload",
+          "fileName": "n8n/database.csv",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.s3",
+        "typeVersion": 1,
+        "position": [
+          528,
+          848
+        ],
+        "id": "17032796-e1a2-4fef-b5c8-44f15a24872b",
+        "name": "S34",
+        "credentials": {
+          "s3": {
+            "id": "cCGXGEbqFM5KuTWj",
+            "name": "S3 account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "const data = $('Code4').first().json.data\nconst test = {\n    \"name\": $('Webhook2').first().json.body.name,\n    startDate: $('Webhook2').first().json.body.startDate,\n    endDate: $('Webhook2').first().json.body.endDate,\n    type: $('Webhook2').first().json.body.typeId,\n    id: $input.first().json.cuid,\n  units:JSON.stringify($('Webhook2').first().json.body.units),\n  blocks:JSON.stringify($('Webhook2').first().json.body.blocks),\n};\n\ndata.push(test);\n\nreturn data\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          960,
+          320
+        ],
+        "id": "de73c4f8-8b84-489e-8c97-6e50a927dc03",
+        "name": "Code6"
+      },
+      {
+        "parameters": {
+          "jsCode": "const page = Number($(\"Webhook1\").first().json.query.page ?? 1);\nconst data = $input.all().length>0 ? $input.all().filter((item)=>item.json && item.json.name && item.json.name.includes(String($('Webhook1').first().json.query.q).toLocaleUpperCase())) : []\nconst data1 = data.slice(page - 1, page * 10).map((item) => item.json);\n\nreturn {\n  rows: data.length,\n  page,\n  data: data1,\n};\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          528,
+          592
+        ],
+        "id": "b825acc2-78f3-4892-8af6-59e4ab9a6d36",
+        "name": "Code7"
+      },
+      {
+        "parameters": {
+          "bucketName": "upload",
+          "fileKey": "=n8n/database.csv"
+        },
+        "type": "n8n-nodes-base.s3",
+        "typeVersion": 1,
+        "position": [
+          1840,
+          -48
+        ],
+        "id": "39d503da-741e-4ce1-b921-ff2d0ebe388f",
+        "name": "S36",
+        "credentials": {
+          "s3": {
+            "id": "cCGXGEbqFM5KuTWj",
+            "name": "S3 account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {
+            "enableBOM": true
+          }
+        },
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1,
+        "position": [
+          2064,
+          -48
+        ],
+        "id": "7a61d85a-0881-4686-9ffc-e16beb74fbdc",
+        "name": "Extract from File1"
+      },
+      {
+        "parameters": {
+          "jsCode": "const test = $input\n  .all()\n  .filter((item) => item.json.id === $(\"Webhook\").first().json.query.id)\n  .map((item) => item.json);\n\nreturn {\n  data: { ...test[0],units:JSON.parse(test[0].units),\n         blocks:JSON.parse(test[0].blocks),products: $(\"Code9\").item.json.data.filter((item)=>item.name) },\n};\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          2288,
+          -48
+        ],
+        "id": "3c416fd8-68f2-478b-a420-cf53a90b45e6",
+        "name": "Code8"
+      },
+      {
+        "parameters": {
+          "jsCode": "return {data:$input.all().map((item)=>item.json)};"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1632,
+          -48
+        ],
+        "id": "0a4d710d-46be-4b26-b5a1-e91dddefbf5d",
+        "name": "Code9"
+      },
+      {
+        "parameters": {
+          "operation": "upload",
+          "bucketName": "upload",
+          "fileName": "n8n/database.csv",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.s3",
+        "typeVersion": 1,
+        "position": [
+          1408,
+          320
+        ],
+        "id": "277392a1-9075-4d4a-bc4b-a95494886eca",
+        "name": "S33",
+        "credentials": {
+          "s3": {
+            "id": "cCGXGEbqFM5KuTWj",
+            "name": "S3 account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {
+            "headerRow": true
+          }
+        },
+        "type": "n8n-nodes-base.convertToFile",
+        "typeVersion": 1.1,
+        "position": [
+          1184,
+          320
+        ],
+        "id": "7a5a92c3-1762-447f-b36d-15b7048b377a",
+        "name": "Convert to File1"
+      },
+      {
+        "parameters": {
+          "jsCode": "const data = $('csv').all();\n\nreturn {data:data.map((item) => item.json).filter((item)=>Object.keys(item).length>0)}\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          528,
+          320
+        ],
+        "id": "ef5fc914-5cd6-4d50-84ba-2e9ad8dd23be",
+        "name": "Code4"
+      },
+      {
+        "parameters": {
+          "options": {
+            "enableBOM": true,
+            "headerRow": true
+          }
+        },
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1,
+        "position": [
+          304,
+          320
+        ],
+        "id": "520356d7-12df-42a0-b7a2-535378ef55fc",
+        "name": "csv",
+        "alwaysOutputData": true
+      },
+      {
+        "parameters": {
+          "bucketName": "upload",
+          "fileKey": "n8n/database.csv"
+        },
+        "type": "n8n-nodes-base.s3",
+        "typeVersion": 1,
+        "position": [
+          80,
+          320
+        ],
+        "id": "e2b8b8b2-1a61-4a11-a349-703957235dbb",
+        "name": "S32",
+        "credentials": {
+          "s3": {
+            "id": "cCGXGEbqFM5KuTWj",
+            "name": "S3 account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "return {}"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1632,
+          320
+        ],
+        "id": "f500a9d5-d98b-410d-8685-952cf82e6b66",
+        "name": "Code"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "n8n-nodes-base.convertToFile",
+        "typeVersion": 1.1,
+        "position": [
+          1840,
+          272
+        ],
+        "id": "b23b8434-ec26-4506-bdb0-002b2334235e",
+        "name": "Convert to File"
+      },
+      {
+        "parameters": {
+          "operation": "upload",
+          "bucketName": "upload",
+          "fileName": "=n8n/{{ $('cuid').item.json.cuid }}.csv",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.s3",
+        "typeVersion": 1,
+        "position": [
+          2064,
+          272
+        ],
+        "id": "fd2d2f8a-16c1-4f9c-ac2e-d47c25db2b71",
+        "name": "S3",
+        "credentials": {
+          "s3": {
+            "id": "cCGXGEbqFM5KuTWj",
+            "name": "S3 account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "path": "family",
+          "authentication": "jwtAuth",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          -80,
+          1072
+        ],
+        "id": "cd1fda13-1d48-4e42-959b-9c0b0ea85139",
+        "name": "Webhook3",
+        "webhookId": "6dfc2248-0fda-423f-abe7-ce7622e42553",
+        "credentials": {
+          "jwtAuth": {
+            "id": "yCTEedeAq2juXzX5",
+            "name": "JWT Auth account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ $json }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          1024,
+          1072
+        ],
+        "id": "67f2e020-876e-4ba6-9e62-ce80f53c025c",
+        "name": "Respond to Webhook4"
+      },
+      {
+        "parameters": {
+          "jsCode": "return {\n  data: $input.all().length>0 ? $input.all().map((item)=>item.json).filter((item)=>item.name) : [],\n};\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          384,
+          1152
+        ],
+        "id": "684aa9a0-b5b7-4dfc-9b79-47538630d9aa",
+        "name": "Code10"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "select f.id,f.name from families f\ninner join family_products fp on fp.family_id=f.id \nwhere product_id='{{ $json.query.id }}'  \ngroup by f.id,f.name",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          160,
+          1216
+        ],
+        "id": "28c771e4-4511-46c6-ac8f-9e8a7a8f9d61",
+        "name": "Execute a SQL query",
+        "alwaysOutputData": true,
+        "credentials": {
+          "postgres": {
+            "id": "bJB2Az0HP4yTZASS",
+            "name": "Portal v2"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "S31",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "S31": {
+        "main": [
+          [
+            {
+              "node": "Extract from File",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract from File": {
+        "main": [
+          [
+            {
+              "node": "Code2",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Code3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code2": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "MySQL": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "MySQL",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "node": "Code9",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code3": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Webhook2": {
+        "main": [
+          [
+            {
+              "node": "S32",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Respond to Webhook2": {
+        "main": [
+          []
+        ]
+      },
+      "Webhook1": {
+        "main": [
+          [
+            {
+              "node": "S35",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "S35": {
+        "main": [
+          [
+            {
+              "node": "Extract from File2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract from File2": {
+        "main": [
+          [
+            {
+              "node": "Code7",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "cuid": {
+        "main": [
+          [
+            {
+              "node": "Code6",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "Code5",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code5": {
+        "main": [
+          [
+            {
+              "node": "Convert to File2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Convert to File2": {
+        "main": [
+          [
+            {
+              "node": "S34",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code6": {
+        "main": [
+          [
+            {
+              "node": "Convert to File1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code7": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "S36": {
+        "main": [
+          [
+            {
+              "node": "Extract from File1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract from File1": {
+        "main": [
+          [
+            {
+              "node": "Code8",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code9": {
+        "main": [
+          [
+            {
+              "node": "S36",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code8": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "S33": {
+        "main": [
+          [
+            {
+              "node": "Code",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Convert to File1": {
+        "main": [
+          [
+            {
+              "node": "S33",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code4": {
+        "main": [
+          [
+            {
+              "node": "cuid",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "csv": {
+        "main": [
+          [
+            {
+              "node": "Code4",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "S32": {
+        "main": [
+          [
+            {
+              "node": "csv",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code": {
+        "main": [
+          [
+            {
+              "node": "Convert to File",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Convert to File": {
+        "main": [
+          [
+            {
+              "node": "S3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "S3": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Webhook3": {
+        "main": [
+          [
+            {
+              "node": "Execute a SQL query",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code10": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook4",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute a SQL query": {
+        "main": [
+          [
+            {
+              "node": "Code10",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Rodrigo Novais",
+    "name": null,
+    "description": null,
+    "autosaved": false
+  },
   "tags": []
 }
