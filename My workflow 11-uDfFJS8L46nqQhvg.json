@@ -296,6 +296,7 @@
   },
   "pinData": {},
   "versionId": "09ed44c0-475c-46c0-8aed-82344171dafd",
+  "activeVersionId": "09ed44c0-475c-46c0-8aed-82344171dafd",
   "triggerCount": 1,
   "shared": [
     {
@@ -306,5 +307,297 @@
       "projectId": "LHTErTtaRYVEdo6Q"
     }
   ],
+  "activeVersion": {
+    "updatedAt": "2025-12-01T16:46:18.210Z",
+    "createdAt": "2025-12-01T16:46:18.210Z",
+    "versionId": "09ed44c0-475c-46c0-8aed-82344171dafd",
+    "workflowId": "uDfFJS8L46nqQhvg",
+    "nodes": [
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $json.chatInput }}",
+          "options": {
+            "systemMessage": "=Você é um assistente que retorna dados de venda com base na solicitação recebida. Hoje é {{ $now.format('yyyy-MM-dd') }}.\n\n1 - A tabela principal é sales com os campos:\n\nunit_id (ID da loja)\ndate (Data da venda)\nvalue (Valor da venda)\nquantity (Quantidade vendida)\ncost (Custo da venda)\n\n2- Regras de geração da query:\n\nSe a solicitação mencionar total, resumo, quantidade total, valor total ou agrupamento, utilize GROUP BY.\n\nSe envolver produto específico, use:\nTRANSLATE(UPPER(name), 'ÁÀÂÃÉÈÊÍÌÎÓÒÔÕÚÙÛ', 'AAAAEEEIIIOOOOUUU') ILIKE '%PRODUTO%'\nSempre remova acentos tanto da entrada quanto na comparação com colunas usando TRANSLATE(...).\n\nQuando envolver preço unitário ou individual, use (value / quantity).\n\nSempre gere queries PostgreSQL válidas, sem comentários, sem crases, sem prefixos, e com ILIKE para nomes.\n\n3- Toda busca por produto deve incluir:\n\nINNER JOIN products_linked pl ON sales.code = pl.code AND sales.ean = pl.ean AND sales.unit_id = pl.unit_id\nINNER JOIN products p ON pl.product_id = p.prod_id\n\n4- Se a solicitação mencionar marca, subcategoria, categoria ou produto, use o relacionamento acima e os campos:\n\nprod_name (Nome do produto)\nprod_section_name (Seção do produto)\nprod_brand_name (Marca do produto)\nprod_subcategory_name (Subcategoria do produto)\nprod_category_name (Categoria do produto)\n\n5- Quando for aplicar filtro pro loja adicione sale.unit_id=\n\nVocê deve lembrar de remover o cedilha quando for fazer a busca\n\nApós gerar a query limpa, execute-a no banco de dados PostgreSQL com a ferramenta postgresTool.\nA resposta deve conter apenas o resultado da execução, sem explicações.\n\n6 - Margem\n\nCaso solicite a margem você deve usar ((value-cost)/value)\n\n7 - Tickets/Clientes\n\nCaso solicite você pode fazer usar a tabela 'tickets' com seus campos abaixo:\n\ndate (Data do movimento)\nquantity (Quantidade de tickets/clientes)\nunit_it (Código da loja)\n\n8 - Ticket médio\n\nPrimeiro você deve totalizar a venda da loja fazendo uma primeira execução e depois fazer uma outra execução para pegar quantidade de tickets para depois dividir a venda total(valor) por tickets\n\n9 - Classificação mercadológica\n\nQuando eu perguntar qual categoria,subcategoria ou seção deve ser um produto, você deve informar, você pode buscar dentro do nosso banco de dados para verificar se existe, geralmente ele vai passar a descrição de um produto e você deve sugerir qual seria a correta.\n\n10 - Quando buscar na web transforme o nome/subcategoria e marca em UPPERCASE, padronize o nome/subcategoria e marca para retornar.",
+            "returnIntermediateSteps": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 1.8,
+        "position": [
+          0,
+          0
+        ],
+        "id": "8c32a7e8-6bff-4007-aca7-b66f6d416396",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4o",
+            "mode": "list",
+            "cachedResultName": "gpt-4o"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          -220,
+          220
+        ],
+        "id": "b8003071-cbcf-424e-b842-953bcea854e9",
+        "name": "OpenAI Chat Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "746NrtVty7PbaSTv",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [
+          -100,
+          220
+        ],
+        "id": "617ea9ad-e288-4a54-906b-3a86cd51433b",
+        "name": "Simple Memory"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "{{ $fromAI('Query_Parameters',null,string) }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgresTool",
+        "typeVersion": 2.6,
+        "position": [
+          40,
+          220
+        ],
+        "id": "338f44a3-30de-4b7d-bd2b-54f2d4e75082",
+        "name": "Postgres",
+        "credentials": {
+          "postgres": {
+            "id": "o5qqKlZfmjuOVpBT",
+            "name": "7000"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "public": true,
+          "initialMessages": "Como posso lhe ajudar hoje?",
+          "options": {
+            "subtitle": "",
+            "title": "Assistente Virtual"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -440,
+          100
+        ],
+        "id": "3d76a9da-2c46-4fa1-b0a3-b7341e635299",
+        "name": "When chat message received",
+        "webhookId": "4796c071-e19b-4e75-967f-90939861922b"
+      },
+      {
+        "parameters": {},
+        "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+        "typeVersion": 1,
+        "position": [
+          160,
+          220
+        ],
+        "id": "d16159c2-7559-4fa6-badd-48009354c5ad",
+        "name": "Calculator"
+      },
+      {
+        "parameters": {
+          "descriptionType": "manual",
+          "toolDescription": "Buscar subcategorias",
+          "operation": "executeQuery",
+          "query": "select prod_subcategory_name from products group by prod_subcategory_name",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgresTool",
+        "typeVersion": 2.6,
+        "position": [
+          280,
+          220
+        ],
+        "id": "730d0c55-5f98-4d80-b360-fec3015d0c4e",
+        "name": "Postgres1",
+        "credentials": {
+          "postgres": {
+            "id": "o5qqKlZfmjuOVpBT",
+            "name": "7000"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "data": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Data', ``, 'json') }}",
+          "output": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Put_Output_In_Field', ``, 'string') }}",
+          "chartOptions": {},
+          "datasetOptions": {}
+        },
+        "type": "n8n-nodes-base.quickChartTool",
+        "typeVersion": 1,
+        "position": [
+          400,
+          220
+        ],
+        "id": "18f70f9d-37f9-4c0f-ad16-446054b50796",
+        "name": "QuickChart"
+      },
+      {
+        "parameters": {
+          "toolDescription": "Buscar descrição pelo EAN",
+          "method": "POST",
+          "url": "https://google.serper.dev/search",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "X-API-KEY",
+                "value": "03dcd9d3e09dd8e060db3c3903af74a6329041bf"
+              }
+            ]
+          },
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "q",
+                "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', ``, 'string') }}"
+              },
+              {
+                "name": "location",
+                "value": "Brazil"
+              },
+              {
+                "name": "gl",
+                "value": "br"
+              },
+              {
+                "name": "hl",
+                "value": "pt-br"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequestTool",
+        "typeVersion": 4.2,
+        "position": [
+          580,
+          220
+        ],
+        "id": "9242246e-ff02-4abf-9613-cd383f5624ff",
+        "name": "HTTP Request"
+      }
+    ],
+    "connections": {
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Simple Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When chat message received": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Calculator": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres1": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "QuickChart": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null,
+    "autosaved": false
+  },
   "tags": []
 }
