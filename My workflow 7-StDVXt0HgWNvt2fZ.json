@@ -37,6 +37,7 @@
   "meta": null,
   "pinData": {},
   "versionId": "2a880e22-9ebf-49d6-b586-05d7dc03fa3d",
+  "activeVersionId": "2a880e22-9ebf-49d6-b586-05d7dc03fa3d",
   "triggerCount": 1,
   "shared": [
     {
@@ -47,5 +48,40 @@
       "projectId": "LHTErTtaRYVEdo6Q"
     }
   ],
+  "activeVersion": {
+    "updatedAt": "2025-12-01T16:46:18.210Z",
+    "createdAt": "2025-12-01T16:46:18.210Z",
+    "versionId": "2a880e22-9ebf-49d6-b586-05d7dc03fa3d",
+    "workflowId": "StDVXt0HgWNvt2fZ",
+    "nodes": [
+      {
+        "parameters": {
+          "formTitle": "Requisição de Arte",
+          "formFields": {
+            "values": [
+              {
+                "fieldLabel": "O que você gostaria"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.formTrigger",
+        "typeVersion": 2.2,
+        "position": [
+          -220,
+          -120
+        ],
+        "id": "fb86e546-27ea-4c3a-8a17-ddc86f8d59d9",
+        "name": "On form submission",
+        "webhookId": "43bc6543-058a-4d54-b7cb-d08547344059"
+      }
+    ],
+    "connections": {},
+    "authors": "system migration",
+    "name": null,
+    "description": null,
+    "autosaved": false
+  },
   "tags": []
 }
