@@ -609,7 +609,7 @@
     ]
   },
   "versionId": "f40c400a-640d-4762-8990-e5f44adbc2a0",
-  "activeVersionId": "ddc3b0e7-fd46-47e1-b3d4-a2c2238817c6",
+  "activeVersionId": "f40c400a-640d-4762-8990-e5f44adbc2a0",
   "triggerCount": 1,
   "shared": [
     {
@@ -621,9 +621,9 @@
     }
   ],
   "activeVersion": {
-    "updatedAt": "2026-01-21T12:05:14.454Z",
-    "createdAt": "2026-01-21T12:05:10.162Z",
-    "versionId": "ddc3b0e7-fd46-47e1-b3d4-a2c2238817c6",
+    "updatedAt": "2026-01-21T13:35:56.691Z",
+    "createdAt": "2026-01-21T13:34:05.744Z",
+    "versionId": "f40c400a-640d-4762-8990-e5f44adbc2a0",
     "workflowId": "HCTn9rZGRpr7JUtb",
     "nodes": [
       {
@@ -908,7 +908,7 @@
       {
         "parameters": {
           "mode": "runOnceForEachItem",
-          "jsCode": "const data = $('Loop Over Items').item.json\ndata.nodes[15].parameters.bodyParameters.parameters[2].value=null\ndata.nodes[15].parameters.bodyParameters.parameters[3].value=null\nreturn {\n  json: { data },\n};\n"
+          "jsCode": "const data = $('Loop Over Items').item.json\ndata.nodes[15].parameters.bodyParameters.parameters[2].value = null\ndata.nodes[15].parameters.bodyParameters.parameters[3].value = null\ndata.activeVersion.nodes[15].parameters.bodyParameters.parameters[2].value = null\ndata.activeVersion.nodes[15].parameters.bodyParameters.parameters[3].value = null\nreturn {\n  json: { data },\n};\n"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
@@ -922,7 +922,7 @@
       {
         "parameters": {
           "mode": "runOnceForEachItem",
-          "jsCode": "const data = $('Loop Over Items').item.json\ndata.nodes[15].parameters.bodyParameters.parameters[2].value=null\ndata.nodes[15].parameters.bodyParameters.parameters[3].value=null\ndata.nodes[15].parameters.bodyParameters={}\nreturn {\n  json: { data },\n};\n"
+          "jsCode": "const data = $('Loop Over Items').item.json\ndata.nodes[15].parameters.bodyParameters.parameters[2].value = null\ndata.nodes[15].parameters.bodyParameters.parameters[3].value = null\ndata.activeVersion.nodes[15].parameters.bodyParameters.parameters[2].value = null\ndata.activeVersion.nodes[15].parameters.bodyParameters.parameters[3].value = null\nreturn {\n  json: { data },\n};\n"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
@@ -956,8 +956,8 @@
         "type": "n8n-nodes-base.github",
         "typeVersion": 1.1,
         "position": [
-          880,
-          -64
+          976,
+          -288
         ],
         "id": "37066bc2-7e99-48d6-97e5-1ab2c17b4a52",
         "name": "GitHub4",
@@ -982,7 +982,7 @@
               {
                 "id": "d6e03dc3-286a-4b63-9dc6-2d73cc916306",
                 "leftValue": "={{ JSON.stringify($('Parse').item.json.data,null,2) }}",
-                "rightValue": "={{JSON.stringify($json.data,null,2)}}",
+                "rightValue": "{{JSON.stringify($json.data,null,2)}}",
                 "operator": {
                   "type": "string",
                   "operation": "notEquals"
@@ -1196,7 +1196,7 @@
       }
     },
     "authors": "Rodrigo Novais",
-    "name": "Version ddc3b0e7",
+    "name": "Version f40c400a",
     "description": "",
     "autosaved": false
   },
