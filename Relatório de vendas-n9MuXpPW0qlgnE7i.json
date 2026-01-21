@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-01-12T16:28:21.812Z",
+  "updatedAt": "2026-01-21T11:41:24.666Z",
   "createdAt": "2025-01-17T10:34:28.398Z",
   "id": "n9MuXpPW0qlgnE7i",
   "name": "Relatório de vendas",
@@ -108,7 +108,8 @@
         -80
       ],
       "id": "765058f6-7ddc-4396-831b-255cf9ab7305",
-      "name": "Schedule Trigger"
+      "name": "Schedule Trigger",
+      "disabled": true
     },
     {
       "parameters": {
@@ -719,9 +720,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "6db02456-c9c1-4384-a1f8-f30c94b65057",
-  "activeVersionId": "6db02456-c9c1-4384-a1f8-f30c94b65057",
-  "triggerCount": 3,
+  "versionId": "9fc23082-b240-4f38-a68b-7292577d6abc",
+  "activeVersionId": "9fc23082-b240-4f38-a68b-7292577d6abc",
+  "triggerCount": 2,
   "shared": [
     {
       "updatedAt": "2025-01-17T10:34:28.398Z",
@@ -732,9 +733,9 @@
     }
   ],
   "activeVersion": {
-    "updatedAt": "2026-01-12T16:28:21.838Z",
-    "createdAt": "2026-01-12T16:28:21.838Z",
-    "versionId": "6db02456-c9c1-4384-a1f8-f30c94b65057",
+    "updatedAt": "2026-01-21T11:41:30.180Z",
+    "createdAt": "2026-01-21T11:41:24.697Z",
+    "versionId": "9fc23082-b240-4f38-a68b-7292577d6abc",
     "workflowId": "n9MuXpPW0qlgnE7i",
     "nodes": [
       {
@@ -839,7 +840,8 @@
           -80
         ],
         "id": "765058f6-7ddc-4396-831b-255cf9ab7305",
-        "name": "Schedule Trigger"
+        "name": "Schedule Trigger",
+        "disabled": true
       },
       {
         "parameters": {
@@ -1437,8 +1439,8 @@
       }
     },
     "authors": "Rodrigo Novais",
-    "name": null,
-    "description": null,
+    "name": "Version 9fc23082",
+    "description": "",
     "autosaved": false
   },
   "tags": [
