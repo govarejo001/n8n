@@ -447,6 +447,7 @@
   },
   "pinData": {},
   "versionId": "11f0e562-4168-4ba1-a831-a62b545119de",
+  "activeVersionId": "11f0e562-4168-4ba1-a831-a62b545119de",
   "triggerCount": 1,
   "shared": [
     {
@@ -457,5 +458,442 @@
       "projectId": "LHTErTtaRYVEdo6Q"
     }
   ],
+  "activeVersion": {
+    "updatedAt": "2025-12-01T16:46:18.210Z",
+    "createdAt": "2025-12-01T16:46:18.210Z",
+    "versionId": "11f0e562-4168-4ba1-a831-a62b545119de",
+    "workflowId": "AVBKGKnLuBPugDgJ",
+    "nodes": [
+      {
+        "parameters": {
+          "operation": "update",
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "units",
+            "mode": "list",
+            "cachedResultName": "units"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "id": "={{ $json.id }}",
+              "cnpj": "={{ $json.cnpj.replaceAll('.','').replaceAll('/','').replaceAll('-','') }}"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": false,
+                "defaultMatch": true,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "serviceToken",
+                "displayName": "serviceToken",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "isActive",
+                "displayName": "isActive",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "boolean",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "createdAt",
+                "displayName": "createdAt",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "updatedAt",
+                "displayName": "updatedAt",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "dateTime",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "serviceEmail",
+                "displayName": "serviceEmail",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "canSendCoupons",
+                "displayName": "canSendCoupons",
+                "required": true,
+                "defaultMatch": false,
+                "display": true,
+                "type": "boolean",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "code",
+                "displayName": "code",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "cnpj",
+                "displayName": "cnpj",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          784,
+          -208
+        ],
+        "id": "53ffeeb5-cefb-4568-8e72-4b70ea16afe8",
+        "name": "Atualizar CNPJ",
+        "credentials": {
+          "postgres": {
+            "id": "C8DsN3myOq1XZZ8n",
+            "name": "CRM"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "select",
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "units",
+            "mode": "list",
+            "cachedResultName": "units"
+          },
+          "returnAll": true,
+          "where": {
+            "values": [
+              {
+                "column": "cnpj",
+                "condition": "IS NULL"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          -128,
+          -368
+        ],
+        "id": "7198a8ff-8ce8-4028-a022-b5279067c5e7",
+        "name": "Buscar lojas",
+        "credentials": {
+          "postgres": {
+            "id": "C8DsN3myOq1XZZ8n",
+            "name": "CRM"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "select",
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "units",
+            "mode": "list",
+            "cachedResultName": "units"
+          },
+          "returnAll": true,
+          "options": {
+            "outputColumns": [
+              "id",
+              "cnpj"
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          -96,
+          -96
+        ],
+        "id": "aa30ea05-9808-474b-807c-02d22b51f19d",
+        "name": "Buscas lojas - portal",
+        "credentials": {
+          "postgres": {
+            "id": "bJB2Az0HP4yTZASS",
+            "name": "Portal v2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "combine",
+          "fieldsToMatchString": "id",
+          "outputDataFrom": "input2",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.1,
+        "position": [
+          352,
+          -208
+        ],
+        "id": "f48023c5-9d84-4403-94e4-08f900f8b5b3",
+        "name": "Combinar"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3,
+        "position": [
+          560,
+          -208
+        ],
+        "id": "941df9be-e737-4d2b-a6e7-58d71edbc706",
+        "name": "Loop"
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "triggerAtHour": 5
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -320,
+          0
+        ],
+        "id": "b8db62b4-7dab-40dd-9918-4b1b62292f1f",
+        "name": "Schedule Trigger"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "UPDATE customers c\nSET \"unitId\" = u.id\nFROM units u\nWHERE c.\"unitId\" IS NULL\n  AND c.\"cnpjRegistration\" = u.cnpj;\n",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          -96,
+          112
+        ],
+        "id": "adc6d58e-2428-4643-8619-58d56d1d4a97",
+        "name": "Atualizar unitId",
+        "credentials": {
+          "postgres": {
+            "id": "C8DsN3myOq1XZZ8n",
+            "name": "CRM"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "WITH latest_active_sales AS (\n  SELECT\n    c.cpf,\n    MAX(c.id) AS sale_id\n  FROM coupons c\n  JOIN units u ON u.id = c.\"unitId\"\n  WHERE u.\"isActive\" = true\n  GROUP BY c.cpf\n),\nlatest_any_sales AS (\n  SELECT\n    c.cpf,\n    MAX(c.id) AS sale_id\n  FROM coupons c\n  GROUP BY c.cpf\n),\nresolved_sales AS (\n  SELECT\n    cu.id AS customer_id,\n    cu.cpf,\n    COALESCE(las.sale_id, las2.sale_id) AS final_sale_id\n  FROM customers cu\n  LEFT JOIN latest_active_sales las ON cu.cpf = las.cpf\n  LEFT JOIN latest_any_sales las2 ON cu.cpf = las2.cpf\n  WHERE cu.\"cnpjRegistration\" IS NULL\n),\nfinal_update AS (\n  SELECT\n    rs.customer_id,\n    rs.cpf,\n    c.\"unitId\" AS new_unitId\n  FROM resolved_sales rs\n  JOIN coupons c ON c.id = rs.final_sale_id\n  WHERE c.\"unitId\" IS NOT NULL \n)\nUPDATE customers cu\nSET \"unitId\" = fu.new_unitId\nFROM final_update fu\nWHERE cu.id = fu.customer_id\n  AND cu.\"unitId\" IS DISTINCT FROM fu.new_unitId;\n",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          -96,
+          304
+        ],
+        "id": "dfa82f90-d1c4-45e9-9ccc-a4d2db8fbc4c",
+        "name": "Atualizar ult loja",
+        "credentials": {
+          "postgres": {
+            "id": "C8DsN3myOq1XZZ8n",
+            "name": "CRM"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "6dd39d53-f6e0-473c-b649-bd601c61c2d5",
+                "name": "id",
+                "value": "={{ Number($json.id) }}",
+                "type": "number"
+              },
+              {
+                "id": "be2efbbd-4a3f-4343-8dbb-1b2b63ceaac9",
+                "name": "cnpj",
+                "value": "={{ $json.cnpj }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          128,
+          -96
+        ],
+        "id": "b3767949-e392-4bd1-a4a4-3720f3395826",
+        "name": "Edit Fields"
+      }
+    ],
+    "connections": {
+      "Atualizar CNPJ": {
+        "main": [
+          [
+            {
+              "node": "Loop",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Buscar lojas": {
+        "main": [
+          [
+            {
+              "node": "Combinar",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Buscas lojas - portal": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Combinar": {
+        "main": [
+          [
+            {
+              "node": "Loop",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Loop": {
+        "main": [
+          [],
+          [
+            {
+              "node": "Atualizar CNPJ",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "node": "Buscar lojas",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Buscas lojas - portal",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Atualizar unitId",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Atualizar ult loja",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Combinar",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null,
+    "autosaved": false
+  },
   "tags": []
 }
