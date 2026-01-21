@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-01-12T16:31:57.022Z",
+  "updatedAt": "2026-01-21T11:39:44.951Z",
   "createdAt": "2025-01-07T23:24:29.323Z",
   "id": "2pIiDb7zFUsy52Mi",
   "name": "Enviar via E-mail",
@@ -197,11 +197,6 @@
       "main": [
         [
           {
-            "node": "Enviar E-mail",
-            "type": "main",
-            "index": 0
-          },
-          {
             "node": "If",
             "type": "main",
             "index": 0
@@ -222,6 +217,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Enviar E-mail",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     }
@@ -234,7 +236,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "f9d2660b-0b77-4813-8726-b71e40416b38",
+  "versionId": "9f5223c6-af85-4d52-bc6b-bf638d271329",
   "activeVersionId": "f9d2660b-0b77-4813-8726-b71e40416b38",
   "triggerCount": 0,
   "shared": [
