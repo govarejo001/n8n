@@ -455,6 +455,7 @@
   },
   "pinData": {},
   "versionId": "029321e5-f4f5-4bae-88c6-a469ffd3d134",
+  "activeVersionId": "029321e5-f4f5-4bae-88c6-a469ffd3d134",
   "triggerCount": 1,
   "shared": [
     {
@@ -465,5 +466,456 @@
       "projectId": "LHTErTtaRYVEdo6Q"
     }
   ],
+  "activeVersion": {
+    "updatedAt": "2025-12-30T13:31:21.609Z",
+    "createdAt": "2025-12-30T13:31:21.609Z",
+    "versionId": "029321e5-f4f5-4bae-88c6-a469ffd3d134",
+    "workflowId": "kCyZqjGpk3j6ecoc",
+    "nodes": [
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "{{ $json.query }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5,
+        "position": [
+          -32,
+          0
+        ],
+        "id": "bdaaefa7-be41-46d0-8154-2244882b977e",
+        "name": "Execute a SQL query",
+        "alwaysOutputData": true,
+        "credentials": {
+          "mySql": {
+            "id": "vJXa18SJcADLCV1n",
+            "name": "Conexus"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "const params = {}\nconst mapping = {\n  \"brandId\":\"b.id\",\n  \"subcategoryId\":\"sc.id\",\n  \"categoryId\":\"c.id\",\n  \"sectionId\":\"s.id\"\n}\n\nconst data = $input.first().json.query\nlet page = 1\nlet q = \"\"\nlet offset = 0\n\nif(data.q) q = data.q\nif(data.subcategoryId) params.subcategoryId = data.subcategoryId\nif(data.sectionId) params.sectionId = data.sectionId\nif(data.categoryId) params.categoryId = data.categoryId\nif(data.brandId) params.brandId = data.brandId\nif(data.page) page = data.page\noffset = ((page-1) * 10)\n\nlet query = `select \np.id,\np.ean,\np.description as name,\np.prod_brand_id as brandId,\nb.description as brand,\nc.id as categoryId,\nc.description as category,\ns.id as sectionId,\ns.description as section,\nsc.id as subcategoryId,\nsc.description as subcategory,\ncase when p.ean_valid=1 then true else false end as eanValid\nfrom products p\ninner join brands b on p.prod_brand_id=b.id\ninner join subcategories sc on p.prod_subcat_id=sc.id \ninner join categories c on sc.subcat_cat_id=c.id \ninner join sections s on c.cat_sec_id=s.id where substituir order by id asc limit 10 offset ${offset};`\nconst where = []\n\nif(q!==\"\") { \n  where.push(`(p.id like ('%${q.trim()}%') or p.ean like ('%${q.trim()}%') or p.description like ('%${q.trim()}%'))`)\n}\n\nif (Object.keys(params).length > 0) {\n  for (const [key, value] of Object.entries(params)) {\n    where.push(`and ${mapping[key]} = ${value}`)\n  }\n}\n\nif(q===\"\" & where.length===0){\n query =  query.replace('where', '')\n}\n\n\nquery = query.replace('substituir', where.join(' '))\n\nquery = query.replace('where and','where')\n\nreturn {\n  query\n}"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -256,
+          0
+        ],
+        "id": "d56c4072-9ee7-4575-9617-4571999f8b49",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "path": "cd95f7ee-8945-4364-87bc-a5bf93b4f43d",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -480,
+          -96
+        ],
+        "id": "b42af57d-7b69-429b-9edb-b6d62bdaff38",
+        "name": "Webhook",
+        "webhookId": "cd95f7ee-8945-4364-87bc-a5bf93b4f43d"
+      },
+      {
+        "parameters": {
+          "jsCode": "return $input.all().map((item)=>item.json).filter((item)=>item.id)"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          192,
+          80
+        ],
+        "id": "c5da5b8c-09c2-4eb5-a09f-08af4ca9d140",
+        "name": "Code in JavaScript1"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          -256,
+          -464
+        ],
+        "id": "504d1b3e-49dc-49ce-b75f-ef8e001204d8",
+        "name": "Respond to Webhook"
+      },
+      {
+        "parameters": {
+          "jsCode": "const params = {}\nconst mapping = {\n  \"brandId\":\"b.id\",\n  \"subcategoryId\":\"sc.id\",\n  \"categoryId\":\"c.id\",\n  \"sectionId\":\"s.id\"\n}\n\nconst data = $input.first().json.query\nlet page = 1\nlet q = \"\"\n\nif(data.q) q = data.q\nif(data.subcategoryId) params.subcategoryId = data.subcategoryId\nif(data.sectionId) params.sectionId = data.sectionId\nif(data.categoryId) params.categoryId = data.categoryId\nif(data.brandId) params.brandId = data.brandId\nif(data.page) page = data.page\noffset = ((page-1) * 10)\n\nlet query = `select \ncount(p.id) as qt\nfrom products p\ninner join brands b on p.prod_brand_id=b.id\ninner join subcategories sc on p.prod_subcat_id=sc.id \ninner join categories c on sc.subcat_cat_id=c.id \ninner join sections s on c.cat_sec_id=s.id where substituir`\nconst where = []\n\nif(q!==\"\") { \n  where.push(`(p.id like ('%${q.trim()}%') or p.ean like ('%${q.trim()}%') or p.description like ('%${q.trim()}%'))`)\n}\n\nif (Object.keys(params).length > 0) {\n  for (const [key, value] of Object.entries(params)) {\n    where.push(`and ${mapping[key]} = ${value}`)\n  }\n}\n\nif(q===\"\" & where.length===0){\n query =  query.replace('where', '')\n}\n\n\nquery = query.replace('substituir', where.join(' '))\n\nquery = query.replace('where and','where')\n\nreturn {\n  query\n}"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          864,
+          -240
+        ],
+        "id": "6302d5b8-cb92-4e78-8ba3-8361cdbc08df",
+        "name": "Code in JavaScript2"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "{{ $json.query }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5,
+        "position": [
+          1088,
+          -240
+        ],
+        "id": "6541e019-764b-43d3-967a-8afc8a64d6d5",
+        "name": "Execute a SQL query1",
+        "alwaysOutputData": true,
+        "credentials": {
+          "mySql": {
+            "id": "vJXa18SJcADLCV1n",
+            "name": "Conexus"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          1456,
+          -192
+        ],
+        "id": "b3e49b65-8af1-46dc-ac00-7cd6bd6114b7",
+        "name": "Merge"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "80c06f2a-f0a1-4918-a905-4f3d6c945600",
+                "name": "rows",
+                "value": "={{ $json.qt }}",
+                "type": "number"
+              },
+              {
+                "id": "2c8be566-7ba3-44ad-ba41-ac1bbf434a5d",
+                "name": "data",
+                "value": "={{ $json.data }}",
+                "type": "array"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          1888,
+          -208
+        ],
+        "id": "3fc59540-1905-42e4-8138-4fb51f7e1e5b",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "jsCode": "const data = {\n  rows: $input.first().json.rows,\n  data: $input.all()[1].json.data, \n    page: Number($('Webhook').first().json.query.page) ?? 1\n}\n\nreturn data"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1792,
+          -656
+        ],
+        "id": "e9371872-53b6-4b0e-82b9-817debfde40a",
+        "name": "Code in JavaScript3"
+      },
+      {
+        "parameters": {
+          "jsCode": "return {products:$input.all().map((item)=>item.json.id)}"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          416,
+          80
+        ],
+        "id": "55603c7c-40f4-4d64-8077-dbe49b910535",
+        "name": "Code in JavaScript4"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "select id,offer_name from products where id in ('{{ $json.products.join(\"','\") }}')",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          640,
+          80
+        ],
+        "id": "7b1b2cf0-5d60-4a68-95d2-c8243d998095",
+        "name": "Execute a SQL query2",
+        "credentials": {
+          "postgres": {
+            "id": "bJB2Az0HP4yTZASS",
+            "name": "Portal v2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "combine",
+          "fieldsToMatchString": "id",
+          "joinMode": "enrichInput2",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          1088,
+          0
+        ],
+        "id": "b1818f8e-90b3-457f-a3a5-9e1222eb470e",
+        "name": "Merge1"
+      },
+      {
+        "parameters": {
+          "mode": "runOnceForEachItem",
+          "jsCode": "return {\n    id:Number($input.item.json.id),\n    offer_name:$input.item.json.offer_name\n  }"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          864,
+          80
+        ],
+        "id": "6e448157-8bfd-44fd-b88e-abf6291060c9",
+        "name": "Code in JavaScript5"
+      },
+      {
+        "parameters": {
+          "jsCode": "return {data:$input.all().map((item)=>item.json)}"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1584,
+          0
+        ],
+        "id": "5c7d658e-e98a-43d8-b9f5-ac33ca05b9f9",
+        "name": "Code in JavaScript7"
+      },
+      {
+        "parameters": {
+          "sortFieldsUi": {
+            "sortField": [
+              {
+                "fieldName": "id"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.sort",
+        "typeVersion": 1,
+        "position": [
+          1296,
+          0
+        ],
+        "id": "bb93e97c-71e1-4192-a07d-8f2ca1a35851",
+        "name": "Sort"
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Code in JavaScript2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "Execute a SQL query",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute a SQL query": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript1",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Merge1",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript1": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript4",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript2": {
+        "main": [
+          [
+            {
+              "node": "Execute a SQL query1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute a SQL query1": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript3": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript4": {
+        "main": [
+          [
+            {
+              "node": "Execute a SQL query2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute a SQL query2": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript5",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript5": {
+        "main": [
+          [
+            {
+              "node": "Merge1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge1": {
+        "main": [
+          [
+            {
+              "node": "Sort",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript7": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Sort": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript7",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Rodrigo Novais",
+    "name": null,
+    "description": null,
+    "autosaved": false
+  },
   "tags": []
 }
