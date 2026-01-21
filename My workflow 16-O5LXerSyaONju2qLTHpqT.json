@@ -1,0 +1,242 @@
+{
+  "updatedAt": "2026-01-20T11:57:46.075Z",
+  "createdAt": "2026-01-14T11:32:59.238Z",
+  "id": "O5LXerSyaONju2qLTHpqT",
+  "name": "My workflow 16",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "59b76a2d-ea11-404e-b3c4-cf71da9f14b8",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -416,
+        -272
+      ],
+      "id": "9f3dcd35-28b2-4828-92d2-a4a470c11d91",
+      "name": "Webhook",
+      "webhookId": "59b76a2d-ea11-404e-b3c4-cf71da9f14b8"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select productslinked.id,code,ean,description,prodl_unit_id,units.name,prodl_prod_id,validated from productslinked \ninner join units on units.id=prodl_unit_id\n  where prodl_prod_id in ({{ $json.products }})",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        -64,
+        -160
+      ],
+      "id": "908fe030-a8c3-4a1e-b6e6-104788a0d9b2",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        128,
+        -160
+      ],
+      "id": "de7fe61c-e9dd-4c1c-8f03-12c1f928e269",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "return {products:Object.values($json.query.products)}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        -400
+      ],
+      "id": "05000ac9-d979-4771-a29b-306dc75755bc",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "74a08998-43f9-4d90-834a-9ccab4d5f32b",
+  "activeVersionId": "74a08998-43f9-4d90-834a-9ccab4d5f32b",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-01-14T11:32:59.238Z",
+      "createdAt": "2026-01-14T11:32:59.238Z",
+      "role": "workflow:owner",
+      "workflowId": "O5LXerSyaONju2qLTHpqT",
+      "projectId": "LHTErTtaRYVEdo6Q"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2026-01-16T14:33:35.242Z",
+    "createdAt": "2026-01-16T14:33:31.422Z",
+    "versionId": "74a08998-43f9-4d90-834a-9ccab4d5f32b",
+    "workflowId": "O5LXerSyaONju2qLTHpqT",
+    "nodes": [
+      {
+        "parameters": {
+          "path": "59b76a2d-ea11-404e-b3c4-cf71da9f14b8",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -416,
+          -272
+        ],
+        "id": "9f3dcd35-28b2-4828-92d2-a4a470c11d91",
+        "name": "Webhook",
+        "webhookId": "59b76a2d-ea11-404e-b3c4-cf71da9f14b8"
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "select productslinked.id,code,ean,description,prodl_unit_id,units.name,prodl_prod_id,validated from productslinked \ninner join units on units.id=prodl_unit_id\n  where prodl_prod_id in ({{ $json.products }})",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5,
+        "position": [
+          -64,
+          -160
+        ],
+        "id": "908fe030-a8c3-4a1e-b6e6-104788a0d9b2",
+        "name": "Execute a SQL query",
+        "credentials": {
+          "mySql": {
+            "id": "vJXa18SJcADLCV1n",
+            "name": "Conexus"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "respondWith": "allIncomingItems",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [
+          128,
+          -160
+        ],
+        "id": "de7fe61c-e9dd-4c1c-8f03-12c1f928e269",
+        "name": "Respond to Webhook"
+      },
+      {
+        "parameters": {
+          "jsCode": "return {products:Object.values($json.query.products)}"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -240,
+          -400
+        ],
+        "id": "05000ac9-d979-4771-a29b-306dc75755bc",
+        "name": "Code in JavaScript"
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute a SQL query": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "Execute a SQL query",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Rodrigo Novais",
+    "name": "Version 74a08998",
+    "description": "",
+    "autosaved": false
+  },
+  "tags": []
+}
