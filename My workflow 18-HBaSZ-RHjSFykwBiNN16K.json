@@ -1,0 +1,149 @@
+{
+  "updatedAt": "2026-02-02T21:49:39.049Z",
+  "createdAt": "2026-02-02T21:34:04.066Z",
+  "id": "HBaSZ-RHjSFykwBiNN16K",
+  "name": "My workflow 18",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select \nu.name as unit_name,\nproducts.id AS Codigo_Pai,\nproductslinked.code AS id_produto,\nproductslinked.ean AS Codigo_Interno,\nproducts.ean AS EAN,\nproducts.description AS Nome_Item,\nbrands.description AS Marca,\nsubcategories.description AS Subcategoria,\ncategories.description AS Categoria,\nsections.description AS Secao\nfrom products\ninner join brands on prod_brand_id = brands.id \ninner join subcategories on prod_subcat_id = subcategories.id\ninner join categories on subcat_cat_id = categories.id\ninner join sections on cat_sec_id = sections.id\ninner join productslinked on prodl_prod_id = products.id\ninner join units u on prodl_unit_id=u.id\nWHERE productslinked.prodl_unit_id NOT IN ('901','202','200','203','201')\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        -160,
+        -144
+      ],
+      "id": "19256f0e-7a67-448c-844c-0cba5a222714",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "mySql": {
+          "id": "vJXa18SJcADLCV1n",
+          "name": "Conexus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        -80
+      ],
+      "id": "1c494b2a-13cf-4d36-b0c9-62ae95f08322",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "protocol": "sftp",
+        "operation": "upload",
+        "path": "=/dados/share/DADOS/relatorio_pai/{{ $binary.data.fileName }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        448,
+        -80
+      ],
+      "id": "90824041-d18f-41d2-89c5-3851fad46500",
+      "name": "FTP"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "triggerAtHour": 10,
+              "triggerAtMinute": 51
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -384,
+        -80
+      ],
+      "id": "691f6fc8-51d3-4a1b-bf4a-284140383fa7",
+      "name": "Schedule Trigger1"
+    }
+  ],
+  "connections": {
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "FTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "6eb7c8b7-5f32-4022-96dc-9bcf141ee65b",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-02-02T21:34:04.066Z",
+      "createdAt": "2026-02-02T21:34:04.066Z",
+      "role": "workflow:owner",
+      "workflowId": "HBaSZ-RHjSFykwBiNN16K",
+      "projectId": "LHTErTtaRYVEdo6Q"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
